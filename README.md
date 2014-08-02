@@ -11,21 +11,34 @@ The development is still early stages, however the end result would be a Gantt p
 ### Current State of Development
 Jquery-gantt currently reads in json files from a static source, and outputs the results in a gantt style chart to a broswer screen. 
 
-Line items can be
+Line items can be:
 *  grouped to 3 levels
 *  dependencies created between items
 *  gantt bars moved to change dates
 *  gantt bars resized
+*  drag and drop rows
+
+User Interface:
 *  different view options, Day, Week, Month, Quarter, Annual
 *  Expandable table section for additional line item details
 
 ![](jQueryGantt.png)
 
-### Work Required?
-If you prefer to not use the automatic generator, push a branch named `gh-pages` to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
+### Work Required
+* Create onchange constructs to allow write of data to backend systems (ajax)
+* Create add, delete constructs to to allow add, delete of data to backend systems (ajax)
+* Dependencies read from depend_data.js file
+* Dependency drap and drop in user interface rework.
+* User interface design work for smaller screens 
+* Right mouse button menu, indent, outdent, properties, insert, delete,etc
+* Properties edit (open model and task/item html page, for custom fields edit)
+* Print (A4, A3 Landscape) PDF.
+* User Interface Uplift to modernise look and feel.
+* Add resources to tasks, drag and drop from searchable list
+* Resources read from resource_data.js file
+* Table columns, show hide additional details; health, reportable, milestone, deliverable
+* Critical Path filter
 
 ### Authors and Contributors
-You can @mention a GitHub username to generate a link to their profile. The resulting `<a>` element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (@defunkt), PJ Hyett (@pjhyett), and Tom Preston-Werner (@mojombo) founded GitHub.
+This plugin is being developed to be used in the Cloud Based Project, Portfolio Management application <a href="https://demo.oneviewapps.com" target="_blank">OneView PPM</a> by <a href="http://www.level35.net" target="_blank">Level35</a>.
 
-### Support or Contact
-Having trouble with Pages? Check out the documentation at http://help.github.com/pages or contact support@github.com and we’ll help you sort it out.
