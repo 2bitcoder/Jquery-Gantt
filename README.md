@@ -23,6 +23,7 @@ User Interface:
 *  Expandable table section for additional line item details
 
 ![](jQueryGantt.png)
+![](ganttImage2.jpg)
 
 ### Work Required
 * Create onchange constructs to allow write of data to backend systems (ajax)
