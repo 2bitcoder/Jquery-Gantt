@@ -1,0 +1,102 @@
+body {
+	line-height: 1;
+}
+
+body {
+	font-family: tahoma, verdana, helvetica;
+	font-size: 0.8em;
+	padding: 10px;
+}
+
+.Gantt {
+	border: 1px solid #000;
+	overflow-y: scroll;
+	height: 620px;
+}
+
+div.menu-container {
+	border-right: 1px solid #000;
+	overflow: hidden;
+	/* display: inline-block; */
+	float: left;
+	min-height: 588px;
+}
+div.head-bar{
+	height:30px;
+	border-bottom: 1px solid #000;
+}
+.menu-header{
+	position:relative;
+}
+.btnW{
+	position:absolute;
+	top:0;
+	right:0;
+	border: 1px solid #000;
+}
+.btnW:before{
+	content:'>>'
+}
+.btnW.contract:before{
+	content:'<<'
+}
+.menu-header .hdr-title{
+	border-bottom: 1px solid #000;
+	height: 59px;
+}
+.menu-container ul{
+	list-style-type: none;
+	display:block;
+	overflow: auto;
+}
+.menu-container ul li{
+	float:left;
+	padding-top:2px;
+	padding-bottom:2px;
+}
+.sub-task-list ul{
+	padding-left: 20px;
+}
+
+.expand-menu{
+	cursor: pointer;
+}
+
+div.task-container{
+	width: 710px;
+}
+.task{
+	font-weight:bold; 
+}
+
+.task-list-container{
+	overflow: auto;
+}
+
+div.gantt-chart-container {
+/* display: inline-block; */
+	float: left;
+	
+}
+
+.col-name{
+	width:305px;
+}
+.col-start{
+	width:100px;
+}
+.col-end{
+	width:100px;
+}
+.col-complete{
+	width:20px;
+}
+.col-status{
+	width:80px;
+}
+.col-interval{
+	width:30px;
+}
+
+
+
