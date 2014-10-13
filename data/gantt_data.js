@@ -1,6 +1,6 @@
 var ganttData =  [{
 		id: 1,
-		name: "Project Initiation Activities",
+		name: "Project Initiation Activitiesjhjhjh",
 		description: "Activities to start up a project",
 		complete:0, 						//rule:(if subtasks then calculate from the total percentages of children tasks)
 		action: "edit",
@@ -248,7 +248,7 @@ var ganttData =  [{
 		parentid:0,
 	},
 	{
-		id: 14,
+		id: 15,
 		name: "Core Software Testing",
 		description: "",
 		complete:0,
@@ -264,7 +264,7 @@ var ganttData =  [{
 		parentid:0
 	},
 	{
-		id: 15,
+		id: 18,
 		name: "Core Functionality Sign off",
 		description: "",
 		complete:0,

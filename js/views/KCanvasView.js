@@ -11,6 +11,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 			width: setting.screenWidth-setting.tHiddenWidth-20,
 			draggable:true,
 			dragBoundFunc:app.util.hfunc,
+			
 		});
 		this.Flayer=new Kinetic.Layer();
 		this.Blayer=new Kinetic.Layer();
@@ -18,39 +19,60 @@ app.KCanvasView=Backbone.KineticView.extend({
 		this.initializeFrontLayer();
 		this.initializeBackLayer();
 		this.bindEvents();
-		
-		
-		
-	},
-	initializeBackLayer:function(){
-		var shape=new Kinetic.Shape({
-			stroke: '#d0d0d0',
-			strokeWidth: 1,
-			sceneFunc:this.getSceneFunc()
-		});
-		this.Blayer.add(shape);
+
+		/*this.stage.on('dragmove', function(evt) {
+				this.setX(100);
+      			this.draw();
+      		});*/
+
+
+
+},
+initializeBackLayer:function(){
+	var shape=new Kinetic.Shape({
+		stroke: '#bbb',
+		strokeWidth: 0,
+		sceneFunc:this.getSceneFunc()
+	});
+	this.Blayer.add(shape);
 	
-	},
-	initializeFrontLayer:function(){
-		this.collection.each(this.addGroup,this);
-	},
-	bindEvents:function(){
-		var that=this;
-		var calculating=false;
-		this.listenTo(app.THCollection,'change:active',this.rendergroups);
-		this.listenTo(app.setting,'change:interval change:dpi',this.renderBars);
-		$('#gantt-container').mousewheel(function(e){
-			
-			if(calculating) return false;
-			
-			var cdpi=app.setting.get('dpi'),dpi=0;
-			calculating=true;
-			if(e.originalEvent.wheelDelta > 0){
-				dpi = Math.max(1,cdpi-1);
-			}
-			else
-				dpi = cdpi+1;
-			
+},
+initializeFrontLayer:function(){
+	this.collection.each(this.addGroup,this);
+},
+bindEvents:function(){
+	var that=this;
+	var calculating=false;
+	this.listenTo(app.THCollection,'change:active',this.rendergroups);
+	this.listenTo(app.setting,'change:interval change:dpi',this.renderBars);
+	$('#gantt-container').mousewheel(function(e){
+
+		if(calculating) return false;
+
+		var cdpi=app.setting.get('dpi'),dpi=0;
+		calculating=true;
+		if(e.originalEvent.wheelDelta > 0){
+			dpi = Math.max(1,cdpi-1);
+		}
+		else
+			dpi = cdpi+1;
+
+		if(dpi===1){
+			if(app.setting.get('interval')==='auto')
+				app.setting.set({interval:'daily'});
+		}
+		else
+			app.setting.set({interval:'auto',dpi:dpi});
+		calculating=false;
+		return false;
+	});
+	if(calculating) return false;
+
+	var cdpi=app.setting.get('dpi'),dpi=0;
+	calculating=true;
+	dpi = Math.max(0,cdpi+25);
+			// dpi = cdpi+1;
+
 			if(dpi===1){
 				if(app.setting.get('interval')==='auto')
 					app.setting.set({interval:'daily'});
@@ -58,19 +80,35 @@ app.KCanvasView=Backbone.KineticView.extend({
 			else
 				app.setting.set({interval:'auto',dpi:dpi});
 			calculating=false;
-			return false;
-		})
-	
-	},
-	addGroup:function(taskgroup){
-		this.groups.push(new Kinetic.BarGroup({model:taskgroup}));
-	},
-	initializeTaskGroup:function(){
-		
-	},
-	render: function(){
-		var groupi,gsetting=app.setting.getSetting('group');
-		gsetting.currentY=gsetting.iniY;
+			$('#gantt-container').on('dragmove',function(e){
+
+				if(calculating) return false;
+
+				var cdpi=app.setting.get('dpi'),dpi=0;
+				calculating=true;
+				dpi = cdpi+1;
+
+				if(dpi===1){
+					if(app.setting.get('interval')==='auto')
+						app.setting.set({interval:'daily'});
+				}
+				else
+					app.setting.set({interval:'auto',dpi:dpi});
+				calculating=false;
+				return false;
+			});
+
+
+		},
+		addGroup:function(taskgroup){
+			this.groups.push(new Kinetic.BarGroup({model:taskgroup}));
+		},
+		initializeTaskGroup:function(){
+
+		},
+		render: function(){
+			var groupi,gsetting=app.setting.getSetting('group');
+			gsetting.currentY=gsetting.iniY;
 		//console.log(this.groups);		
 		for(var i=0;i<this.groups.length;i++){
 			//console.log(gsetting.currentY);
@@ -78,6 +116,32 @@ app.KCanvasView=Backbone.KineticView.extend({
 			groupi.setY(gsetting.currentY);
 			gsetting.currentY += groupi.getCurrentHeight();
 			this.Flayer.add(groupi.group);
+		}
+
+		//loop through groups
+		for(var i=0; i<this.groups.length; i++){
+
+			//loop through tasks
+			for(var j=0; j<this.groups[i].children.length; j++){
+
+				//if threre is dependency
+				if(this.groups[i].children[j].model.attributes.dependency != ''){
+
+					//parse dependencies
+					var dependency = $.parseJSON(this.groups[i].children[j].model.attributes.dependency);
+
+					for( var l=0; l<dependency.length; l++){
+						for( var k=0; k<this.groups[i].children.length; k++){
+							if( dependency[l] == this.groups[i].children[k].model.attributes.id ){
+								Kinetic.Bar.createRelation(this.groups[i].children[j],this.groups[i].children[k]);
+							}
+						}
+					}					
+
+				}
+
+			}
+
 		}
 		this.stage.add(this.Blayer);
 		this.stage.add(this.Flayer);
@@ -107,7 +171,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 		}  
 		groupi=null;
 		this.Flayer.draw();
-	
+
 	},
 	setWidth:function(value){
 		
@@ -118,19 +182,19 @@ app.KCanvasView=Backbone.KineticView.extend({
 		var borderWidth=sdisplay.borderWidth || 1;
 		var offset=borderWidth/2;
 		var rowHeight=20;
+		var interval = app.setting.get('interval');
 		return function(context){
 			var lineWidth,sattr=setting.sattr;
 			
 			var i=0,
-				s=0,
-				iLen=0,
-				daysWidth=sattr.daysWidth,
-				x,
-				length,
-				hData=sattr.hData;
+			s=0,
+			iLen=0,
+			daysWidth=sattr.daysWidth,
+			x,
+			length,
+			hData=sattr.hData;
 			
 			lineWidth=Date.daysdiff(sattr.boundaryMin,sattr.boundaryMax)*sattr.daysWidth;
-			
 			context.beginPath();
 			//draw three lines
 			for(i=1;i<4;i++){
@@ -159,6 +223,12 @@ app.KCanvasView=Backbone.KineticView.extend({
 			}
 			
 			x=0,length=0,s=3,yf=1200;
+			var dragInt = parseInt(sattr.dragInterval);
+			var hideDate = false;
+			if( dragInt == 14 || dragInt == 30){
+				hideDate = true;
+			}
+			//console.log(hData[s]);
 			for(i=0,iLen=hData[s].length;i<iLen;i++){
 				length=hData[s][i].duration*daysWidth;
 				x = x+length;
@@ -168,21 +238,25 @@ app.KCanvasView=Backbone.KineticView.extend({
 				
 				context._context.save();
 				context._context.font = '6pt Arial,Helvetica,sans-serif';
-				context._context.textAlign = 'center';
+				context._context.textAlign = 'left';
 				context._context.textBaseline = 'middle';
-				context._context.fillText(hData[s][i].text, x-length+5,yi+rowHeight/2);
+				// date hide on specific views
+				if (hideDate) {
+						context._context.font = '1pt Arial,Helvetica,sans-serif';
+				};
+				context._context.fillText(hData[s][i].text, x-length+40,yi+rowHeight/2);
 				context._context.restore();
+
 			}
-			
 			context.strokeShape(this);
 			
 			
 		}
-	
+
 	},
 	renderBackLayer: function(){
 		
-	
+
 	}
 
 

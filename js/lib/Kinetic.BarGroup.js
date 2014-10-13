@@ -22,6 +22,8 @@
 		this.group=new Kinetic.Group(this.getGroupParams());
 		this.topbar=new Kinetic.Rect(this.getRectparams());
 		this.group.add(this.topbar);
+		// this.group.add(leftTrinagle);
+		// this.group.add(rightTrinagle);
 		
 		this.attr.height +=  setting.rowHeight;
 		//this.height=this.rowheight;
@@ -34,7 +36,7 @@
 		}
 		this.initialize();
 		
-	
+
 	}
 	Kinetic.BarGroup.prototype={
 		initialize:function(){
@@ -68,7 +70,7 @@
 					return children[i];
 			}
 			return false;
-		
+
 		},
 		renderDependency:function(){
 			var children=this.children,dependencies=[],bar;
@@ -83,7 +85,7 @@
 				
 			}
 		},
-	
+
 		makeDraggable: function(){
 			var that=this;
 			this.group.draggable(true);
@@ -138,15 +140,15 @@
 			bar.setY(this.getHeight()+this.setting.gap);
 			this.attr.height += this.setting.rowHeight;
 			bar.group.visible(this.model.get('active'));
-		
+
 		},
 		renderChildren:function(){
-			 
+
 			for(var i=0;i<this.children.length;i++){
 				this.children[i].renderBar();
 			}
 			this.renderTopBar();
-		
+
 		},
 		renderTopBar:function(){
 			var parent=this.model.get('parent');
@@ -165,7 +167,7 @@
 				}).getX2();
 				this.topbar.setX(minX);
 				this.topbar.setWidth(maxX-minX);
-			
+
 			});
 			this.listenTo(this.model,'change:active',this.toggleChildren);
 			this.listenTo(this.model,'onsort',this.renderSortedChildren);
@@ -182,8 +184,8 @@
 		},
 		calculateX:function(model){
 			var attrs=app.setting.getSetting('attr'),
-				boundaryMin=attrs.boundaryMin,
-				daysWidth=attrs.daysWidth;
+			boundaryMin=attrs.boundaryMin,
+			daysWidth=attrs.daysWidth;
 			return {
 				x1:(Date.daysdiff(boundaryMin,model.get('start'))-1)*daysWidth,
 				x2:Date.daysdiff(boundaryMin,model.get('end'))*daysWidth,
@@ -191,8 +193,8 @@
 		},
 		calculateParentDates:function(){
 			var attrs=app.setting.getSetting('attr'),
-				boundaryMin=attrs.boundaryMin,
-				daysWidth=attrs.daysWidth;
+			boundaryMin=attrs.boundaryMin,
+			daysWidth=attrs.daysWidth;
 			var days1=Math.round(this.getX1(true)/daysWidth),days2=Math.round(this.getX2(true)/daysWidth);
 			return {
 				start: boundaryMin.clone().addDays(days1),
@@ -219,7 +221,7 @@
 		},
 		sync:function(){
 			this.syncing=true;
-		
+
 			console.log('parent sync called');
 			//sync parent first
 			var pdates=this.calculateParentDates();

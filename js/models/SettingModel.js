@@ -37,7 +37,7 @@ app.SettingModel=Backbone.Model.extend({
 			mpc:1
 		};
 		this.sdisplay={
-			screenWidth:$('#ganttChart').innerWidth(),
+			screenWidth:$("#gantt-container").innerWidth()+786,
 			tHiddenWidth:305,
 			tableWidth:710,
 			
@@ -47,21 +47,23 @@ app.SettingModel=Backbone.Model.extend({
 			iniY:60,
 			active:false,
 			topBar:{
-				fill:'black',
-				height:5,
+				fill:'#666',
+				height:12,
 				strokeEnabled:false,
 			},
 			gap:3,
-			rowHeight:17,
+			rowHeight:22,
 			draggable:true,
 			dragBoundFunc:hfunc,
 		};
 		this.sbar={
-			barheight:10,
+			barheight:12,
 			rectoption:{
 				strokeEnabled:false,
 				fill:'grey'
 			},
+			gap:20,
+			rowheight: 60,
 			draggable:true,
 			resizable:true,
 			dragBoundFunc:hfunc,
@@ -98,8 +100,8 @@ app.SettingModel=Backbone.Model.extend({
 				type:'select',
 				options:{
 					'110':'complete',
-					'109':'pending',
-					'108' :'started'
+					'109':'open',
+					'108' :'ready'
 				}
 			},
 			'complete':{
@@ -329,11 +331,11 @@ app.SettingModel=Backbone.Model.extend({
 			obj=this.sform[i];
 			if(obj.editable){
 				if(obj.type==='text'){
-					elems[i]=$('<input type="text">');
+					elems[i]=$('<input type="text" class="content-edit">');
 					bindTextEvents(elems[i],obj,i);
 				}
 				else if(obj.type==='date'){
-					elems[i]=$('<input type="text">');
+					elems[i]=$('<input type="text" class="content-edit">');
 					bindDateEvents(elems[i],obj,i);
 				}
 			}
@@ -366,8 +368,8 @@ app.SettingModel=Backbone.Model.extend({
 			'status':function(value){
 				var statuses={
 					'110':'complete',
-					'109':'pending',
-					'108' : 'started'
+					'109':'open',
+					'108' : 'ready'
 				}
 				return statuses[value];
 			}
@@ -376,7 +378,9 @@ app.SettingModel=Backbone.Model.extend({
 		return function(field,value,model){
 			return dToText[field]?dToText[field](value,model):value;
 		}
-	}())
+	}()),
+
+	url:"ci_api/index.php/api/gantt/settings"
 	
 	
 

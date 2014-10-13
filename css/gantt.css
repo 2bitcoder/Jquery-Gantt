@@ -6,24 +6,29 @@ body {
 	font-family: tahoma, verdana, helvetica;
 	font-size: 0.8em;
 	padding: 10px;
+	background-color: #e5e5e5;
 }
 
 .Gantt {
 	border: 1px solid #000;
 	overflow-y: scroll;
-	height: 620px;
+	height: 99%;
 }
 
 div.menu-container {
-	border-right: 1px solid #000;
+	border-right: 3px solid rgba(0, 0, 0, 0.2);
 	overflow: hidden;
 	/* display: inline-block; */
-	float: left;
 	min-height: 588px;
+	left: 0%;
+	padding: 0 10px;
+	position: absolute;
+	z-index: 1;
+	background: rgb(255, 255, 255);
 }
 div.head-bar{
-	height:30px;
-	border-bottom: 1px solid #000;
+	/*height:36px;*/
+	/*border-bottom: 1px solid #000;*/
 }
 .menu-header{
 	position:relative;
@@ -35,14 +40,15 @@ div.head-bar{
 	border: 1px solid #000;
 }
 .btnW:before{
-	content:'>>'
+	content:'>'
 }
 .btnW.contract:before{
-	content:'<<'
+	content:'<'
 }
 .menu-header .hdr-title{
-	border-bottom: 1px solid #000;
-	height: 59px;
+	border-bottom: 3px solid rgba(0, 0, 0, 0.3);
+	height: 0px;
+	width: 104%;
 }
 .menu-container ul{
 	list-style-type: none;
@@ -51,19 +57,21 @@ div.head-bar{
 }
 .menu-container ul li{
 	float:left;
-	padding-top:2px;
-	padding-bottom:2px;
+	line-height: 1.5;
+	padding: 0 2px;
 }
 .sub-task-list ul{
-	padding-left: 20px;
+	padding-left: 30px;
 }
-
+.sub-task .col-name{
+	width: 297px;
+}
 .expand-menu{
 	cursor: pointer;
 }
 
 div.task-container{
-	width: 710px;
+	width: 750px;
 }
 .task{
 	font-weight:bold; 
@@ -74,8 +82,9 @@ div.task-container{
 }
 
 div.gantt-chart-container {
-/* display: inline-block; */
-	float: left;
+	/* display: inline-block; */
+	float: right;
+	width: 100%;
 	
 }
 
@@ -97,6 +106,39 @@ div.gantt-chart-container {
 .col-interval{
 	width:30px;
 }
-
-
-
+.col-duration{
+	width: 45px;
+}
+.remove-item{
+	padding-left: 3px;
+}
+i.icon{
+	margin: 0;
+}
+.ui.mini.buttons .button, .ui.mini.button{
+	padding: 2px;
+	margin-left: 3px;
+}
+.ui.button > .icon{
+	margin-right: 0;
+}
+.kineticjs-content{
+	float: right;
+	/*width: 100% !important;*/
+    transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+}
+.kineticjs-content canvas{
+	/*width: 100% !important;*/
+}
+@media only screen and (max-width: 760px){
+	div.gantt-chart-container{
+		float: none;
+		clear: both;
+		width: 100%;
+	}
+	/*div.kineticjs-content,canvas{
+		width: 488px !important;
+		}*/
+	}

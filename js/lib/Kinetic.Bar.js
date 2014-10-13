@@ -1,71 +1,71 @@
-(function(Kinetic,Backbone){
-	var dd=Kinetic.DD;
-	var barOptions=['draggable','dragBoundFunc','resizable','resizeBoundFunc','height','width','x','y'];
-	
-	var calculating=false;
-	function createHandle(option){
-		option.draggable=true;
-		option.opacity=1;
-		option.strokeEnabled=false;
-		option.width=2;
-		option.fill='black';
-		return new Kinetic.Rect(option);
-	}
-	function createSubGroup(option){
-		var gr=new Kinetic.Group();
-		var imgrect=new Kinetic.Rect({
-			x:0,
-			y:0,
-			height: option.height,
-			width: 20,
-			strokeEnabled:false,
-			fill:'yellow',
-			opacity:0.5
-		});
-		var anchor=new Kinetic.Circle({
-			x:10,
-			y:5,
-			radius: 3,
-			strokeWidth:1,
-			name: 'anchor',
-			stroke:'black',
-			fill:'white',
-		})
-		
-		var namerect=new Kinetic.Rect({
-			x:20,
-			y:0,
-			height: option.height,
-			width: 40,
-			strokeEnabled:false,
-			fill:'pink',
-		});
-		gr.add(imgrect);
-		gr.add(anchor);
-		gr.add(namerect);
-		return gr;
-	}
-	
-	var beforebind=function(func){
-		return function(){
-			if(calculating) return false;
-			calculating=true;
-			func.apply(this,arguments);
-			calculating=false;
-		}
-	}
-	
-	function getDragDir(stage){
-		return (stage.getPointerPosition().x-dd.startPointerPos.x>0)?'right':'left';
-	}
-	
-	Kinetic.Bar=function(options){
-		options || (options={});
-		
-		this.model=options.model;
-		
-		var setting=this.setting=app.setting.getSetting('bar');
-		
+			window.currentDpt= [];
+			(function(Kinetic,Backbone){
+				var dd=Kinetic.DD;
+				var barOptions=['draggable','dragBoundFunc','resizable','resizeBoundFunc','height','width','x','y'];
+
+				var calculating=false;
+				function createHandle(option){
+					option.draggable=true;
+					option.opacity=1;
+					option.strokeEnabled=false;
+					option.width=2;
+					option.fill='black';
+					return new Kinetic.Rect(option);
+				}
+				function createSubGroup(option){
+					var gr=new Kinetic.Group();
+					var imgrect=new Kinetic.Rect({
+						x:0,
+						y:0,
+						height: option.height,
+						width: 20,
+						strokeEnabled:false,
+						fill:'yellow',
+						opacity:0.5
+					});
+					var anchor=new Kinetic.Circle({
+						x:10,
+						y:5,
+						radius: 3,
+						strokeWidth:1,
+						name: 'anchor',
+						stroke:'black',
+						fill:'white',
+					})
+
+					var namerect=new Kinetic.Rect({
+						x:20,
+						y:0,
+						height: option.height,
+						width: 40,
+						strokeEnabled:false,
+						fill:'pink',
+					});
+					gr.add(imgrect);
+					gr.add(anchor);
+					gr.add(namerect);
+					return gr;
+				}
+
+				var beforebind=function(func){
+					return function(){
+						if(calculating) return false;
+						calculating=true;
+						func.apply(this,arguments);
+						calculating=false;
+					}
+				}
+
+				function getDragDir(stage){
+					return (stage.getPointerPosition().x-dd.startPointerPos.x>0)?'right':'left';
+				}
+
+				Kinetic.Bar=function(options){
+					options || (options={});
+
+					this.model=options.model;
+
+					var setting=this.setting=app.setting.getSetting('bar');
 		//this.barid = _.uniqueId('b');
 		this.subgroupoptions={
 			showOnHover: true,
@@ -83,11 +83,14 @@
 		rectoptions.x=0;
 		rectoptions.y=0;
 		rectoptions.name='mainbar';*/
-		
+
+		// coloring section
+		var parentModel = app.tasks.get(this.model.get('parentid'));
+		this.setting.rectoption.fill = parentModel.get('lightcolor');		
 		this.group=new Kinetic.Group(this.getGroupParams());
 		//remove the strokeEnabled if not provided in option
 		//rectoptions.strokeEnabled=false;
-	
+
 		var rect=this.rect=new Kinetic.Rect(this.getRectparams());
 		this.group.add(rect);
 		
@@ -102,10 +105,22 @@
 		if(setting.resizable){
 			this.makeResizable();
 		}
+
+		var leftx=this.leftHandle.getX();
+		var w=this.rightHandle.getX()-leftx+2;
+		var width = ( ( w ) * (this.model.get('complete') / 100) );
+		this.setting.rectoption.fill = parentModel.get('darkcolor');
+		opt =  this.getRectparams();
+		opt.x = 2;
+		opt.width = width-4;
+		if(width > 0){
+			var completeBar= this.completeBar = new Kinetic.Rect(opt);
+			this.group.add(completeBar);
+		}
 		
 		//addEvents
 		this.bindEvents();
-		//this.on('resize move',this.renderConnectors,this);
+		//this.on('resize move',this.renderConnectors,this);;
 	}
 	Kinetic.Bar.prototype={
 		//retrieves only width,height,x,y relative to point 0,0 on canvas;
@@ -136,6 +151,7 @@
 		setX1:function(value,options){
 			!options && (options={})
 			var prevx,width,dx;
+
 			//if value is in absolute sense then make it relative to parent
 			if(options.absolute && this.parent){
 				value=value-this.parent.getX(true);
@@ -148,8 +164,12 @@
 			
 			this.move(-1*dx,silent);
 			//if x2 has to remain same
+			// Draw percentage completed
 			if(options.osame){
 				this.rect.setWidth(dx+this.getWidth());
+				var width =( this.getWidth() * (this.model.get('complete') / 100) )-4;
+				if(width > 0)
+					this.completeBar.setWidth(width);
 				this.renderHandle();
 				if(!options.silent){
 					this.trigger('resizeleft',this);
@@ -175,6 +195,9 @@
 			//if x2 has to remain same
 			if(options.osame){
 				this.rect.setWidth(this.getWidth()-dx);
+				var width =( this.getWidth() * (this.model.get('complete') / 100) )-4;
+				if(width > 0)
+					this.completeBar.setWidth(width);
 				this.renderHandle();
 				if(!options.silent){
 					this.trigger('resizeright',this);
@@ -193,7 +216,7 @@
 		},
 		setParent:function(parent){
 			this.parent=parent;
-		
+
 		},
 		triggerParent:function(eventName){
 			if(this.parent){
@@ -217,12 +240,13 @@
 			
 			this.on('resize move',this.renderConnectors,this);
 			this.listenTo(this.model,'change',this.handleChange);
-		
+			this.on('change',this.handleChange,this);
+
 		},
 		handleChange:function(model){
-			console.log('handling change');
+			// console.log('handling change');
 			if(this.parent.syncing){
-				console.log('returning');
+				// console.log('returning');
 				return;
 			}
 			
@@ -239,26 +263,37 @@
 			}
 			console.log('drawing');
 			this.draw();
+			this.model.save();
 			
 		},
 		handleClickevents:function(evt){
 			var target,targetName,startBar;
 			target=evt.target;
 			targetName=target.getName();
+			window.startBar;
 			if(targetName!=='mainbar'){
 				Kinetic.Bar.disableConnector();
 				if(targetName=='anchor'){
 					target.stroke('red');
 					Kinetic.Bar.enableConnector(this);
+					var dept = this.model.get('dependency');
+					if(dept != ""){
+						window.currentDpt.push(this.model.get('dependency'));	
+					}
+					console.log(window.currentDpt);
+					window.startBar = this.model;
 				}
 			}
 			else{
 				if((startBar=Kinetic.Bar.isConnectorEnabled())){
 					Kinetic.Bar.createRelation(startBar,this);
+					window.currentDpt.push(this.model.get('id'));
+					window.startBar.set('dependency', JSON.stringify(window.currentDpt));
+					window.startBar.save();
 					Kinetic.Bar.disableConnector();
 				}
 			}
-			event.cancelBubble=true;
+			evt.cancelBubble=true;
 		},
 		makeResizable: function(){
 			var that=this;
@@ -343,7 +378,7 @@
 				this.getLayer().draw();
 				evt.cancelBubble = true;
 			});
-		
+
 		},
 		
 		makeDraggable: function(option){
@@ -384,14 +419,17 @@
 			this.leftHandle.setX(0);
 			this.rightHandle.setX(width-2);
 			this.rect.setWidth(width);
+			var width2 = this.rect.getWidth()  * (this.model.get('complete') / 100);
+			if(width2)
+				this.completeBar.setWidth(width2 - 4);
 		},
 		/*
 			dependentObj: {'elem':dependant,'connector':connector}
-		*/
-		addDependant:function(dependantObj){
-			this.listenTo(dependantObj.elem,'moveleft resizeleft',this.adjustleft)
-			this.dependants.push(dependantObj);
-		},
+			*/
+			addDependant:function(dependantObj){
+				this.listenTo(dependantObj.elem,'moveleft resizeleft',this.adjustleft)
+				this.dependants.push(dependantObj);
+			},
 		//renders the bar by its model 
 		renderBar:function(){
 			var x=this.calculateX();
@@ -434,7 +472,7 @@
 				}
 			}
 			return false;
-		
+
 		},
 		//@type Dependant:1, Dependency:2
 		renderConnector:function(obj,type){
@@ -481,17 +519,17 @@
 		calculateX:function(model){
 			!model && (model=this.model);
 			var attrs=app.setting.getSetting('attr'),
-				boundaryMin=attrs.boundaryMin,
-				daysWidth=attrs.daysWidth;
+			boundaryMin=attrs.boundaryMin,
+			daysWidth=attrs.daysWidth;
 			return {
-				x1:(Date.daysdiff(boundaryMin,model.get('start'))-1)*daysWidth,
+				x1:(Date.daysdiff(boundaryMin,model.get('start')))*daysWidth,
 				x2:Date.daysdiff(boundaryMin,model.get('end'))*daysWidth,
 			}
 		},
 		calculateDates:function(){
 			var attrs=app.setting.getSetting('attr'),
-				boundaryMin=attrs.boundaryMin,
-				daysWidth=attrs.daysWidth;
+			boundaryMin=attrs.boundaryMin,
+			daysWidth=attrs.daysWidth;
 			var days1=Math.round(this.getX1(true)/daysWidth),days2=Math.round(this.getX2(true)/daysWidth);
 			
 			return {
@@ -503,6 +541,7 @@
 		getRectparams:function(){
 			var setting=this.setting;
 			var xs=this.calculateX(this.model);
+			// console.log(this.model.get('complete'));
 			return _.extend({
 				x:0,
 				width:xs.x2-xs.x1,
@@ -527,15 +566,17 @@
 		},
 		draw:function(){
 			this.group.getLayer().draw();
+
 		},
 		sync:function(){
 			console.log('syncing '+this.model.cid);
 			var dates=this.calculateDates();
 			this.model.set({start:dates.start,end:dates.end});
 			console.log('syncing '+this.model.cid+' finished');
+			this.model.save();
 		}
 		
-	
+
 	}
 	//It creates a relation between dependant and dependency
 	//Dependant is the task which needs to be done after dependency
@@ -581,7 +622,7 @@
 	}
 	Kinetic.Bar.renderConnector=function(startBar,endBar,connector){
 		
-		var point1,point2,halfheight,points,color='black';
+		var point1,point2,halfheight,points,color='#000';
 		halfheight=parseInt(startBar.getHeight()/2);
 		point1={
 			x:startBar.getX2(),
@@ -593,7 +634,7 @@
 		}
 		var offset=5,arrowflank=4,arrowheight=5,bottomoffset=4;
 		
-	
+
 		if(point2.x-point1.x<0){
 			if(point2.y<point1.y){
 				halfheight= -1*halfheight;
@@ -601,15 +642,15 @@
 				//arrowheight=-1*arrowheight;
 			}
 			points=[
-				point1.x,point1.y,
-				point1.x+offset,point1.y,
-				point1.x+offset,point1.y+halfheight+bottomoffset,
-				point2.x-offset,point1.y+halfheight+bottomoffset,
-				point2.x-offset,point2.y,
-				point2.x,point2.y,
-				point2.x-arrowheight,point2.y-arrowflank,
-				point2.x-arrowheight,point2.y+arrowflank,
-				point2.x,point2.y
+			point1.x,point1.y,
+			point1.x+offset,point1.y,
+			point1.x+offset,point1.y+halfheight+bottomoffset,
+			point2.x-offset,point1.y+halfheight+bottomoffset,
+			point2.x-offset,point2.y,
+			point2.x,point2.y,
+			point2.x-arrowheight,point2.y-arrowflank,
+			point2.x-arrowheight,point2.y+arrowflank,
+			point2.x,point2.y
 			];
 			color='red';
 			
@@ -621,24 +662,24 @@
 				arrowheight=-1*arrowheight;
 			}
 			points=[
-				point1.x,point1.y,
-				point1.x+offset,point1.y,
-				point1.x+offset,point2.y-halfheight,
-				point1.x+offset-arrowflank,point2.y-halfheight-arrowheight,
-				point1.x+offset+arrowflank,point2.y-halfheight-arrowheight,
-				point1.x+offset,point2.y-halfheight
+			point1.x,point1.y,
+			point1.x+offset,point1.y,
+			point1.x+offset,point2.y-halfheight,
+			point1.x+offset-arrowflank,point2.y-halfheight-arrowheight,
+			point1.x+offset+arrowflank,point2.y-halfheight-arrowheight,
+			point1.x+offset,point2.y-halfheight
 			];
-		
+
 		}
 		else{
 			points=[
-				point1.x,point1.y,
-				point1.x+offset,point1.y,
-				point1.x+offset,point2.y,
-				point2.x,point2.y,
-				point2.x-arrowheight,point2.y-arrowflank,
-				point2.x-arrowheight,point2.y+arrowflank,
-				point2.x,point2.y
+			point1.x,point1.y,
+			point1.x+offset,point1.y,
+			point1.x+offset,point2.y,
+			point2.x,point2.y,
+			point2.x-arrowheight,point2.y-arrowflank,
+			point2.x-arrowheight,point2.y+arrowflank,
+			point2.x,point2.y
 			];
 		}
 		connector.setAttr('stroke',color);

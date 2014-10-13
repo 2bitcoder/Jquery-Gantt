@@ -7,6 +7,16 @@ app.TaskItemView=Backbone.View.extend({
 		
 		this.listenTo(this.model,'editrow',this.edit);
 		this.listenTo(this.model,'change:name change:start change:end change:complete change:status',this.renderRow);
+		this.$el.hover(function(e){
+			$(document).find('.item-selector').stop().css({
+				top: (e.currentTarget.offsetTop+106)+'px'
+			}).fadeIn();
+		}, function(e){
+			$(document).find('.item-selector').stop().fadeOut();
+		});
+		this.$el.on('click',function(){
+			$(document).find('.item-selector').stop().fadeOut();
+		});
 	},
 	render: function(parent){
 		var addClass='sub-task';
@@ -46,6 +56,7 @@ app.TaskItemView=Backbone.View.extend({
 		}
 		else{
 			this.model.set(name,value);
+			this.model.save();//1
 		//This has to be called in case no change takes place
 		}
 		this.renderRow();

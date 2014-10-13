@@ -47,6 +47,9 @@ app.TaskHierarchyModel=Backbone.Model.extend({
 		}
 		children.push(child);
 		
-	},
+	}
+	//,
+
+	//url:"ci_api/index.php/api/gantt/debug_request"
 	
 });
