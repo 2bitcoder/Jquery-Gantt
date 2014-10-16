@@ -1,126 +1,118 @@
-(function(app){
 var app= app || {};
 
-var hfunc=function(pos,evt){
-	var dragInterval=app.setting.getSetting('attr','dragInterval');
-	var n=Math.round((pos.x-evt.inipos.x)/dragInterval);
+var hfunc = function(pos, evt) {
+	var dragInterval = app.setting.getSetting('attr', 'dragInterval');
+	var n = Math.round((pos.x - evt.inipos.x) / dragInterval);
 	return {
-		x: evt.inipos.x+n*dragInterval,
+		x: evt.inipos.x + n * dragInterval,
 		y: this.getAbsolutePosition().y
-	}
+	};
+};
 
-
-	/*return {
-		x:pos.x,
-		y:this.getAbsolutePosition().y
-	}*/
-
-}
-
-app.SettingModel=Backbone.Model.extend({
+app.SettingModel = Backbone.Model.extend({
 	defaults:{
 		interval:'fix',
 		//days per interval
 		dpi:1
 	},
-	initialize:function(){
+	initialize: function() {
 		this.sattr={
-			hData:{},
-			dragInterval:1,
-			daysWidth:5,
-			cellWidth:35,
-			minDate:new Date(2020,1,1),
-			maxDate:new Date(0,0,0),
-			boundaryMin:new Date(0,0,0),
-			boundaryMax:new Date(2020,1,1),
+			hData: {},
+			dragInterval: 1,
+			daysWidth: 5,
+			cellWidth: 35,
+			minDate: new Date(2020,1,1),
+			maxDate: new Date(0,0,0),
+			boundaryMin: new Date(0,0,0),
+			boundaryMax: new Date(2020,1,1),
 			//months per cell
-			mpc:1
+			mpc: 1
 		};
-		this.sdisplay={
-			screenWidth:$("#gantt-container").innerWidth()+786,
-			tHiddenWidth:305,
-			tableWidth:710,
+		this.sdisplay = {
+			screenWidth:  $('#gantt-container').innerWidth() + 786,
+			tHiddenWidth: 305,
+			tableWidth: 710,
 			
 		};
-		this.sgroup={
-			currentY:0,
-			iniY:60,
-			active:false,
-			topBar:{
-				fill:'#666',
-				height:12,
-				strokeEnabled:false,
+		this.sgroup = {
+			currentY: 0,
+			iniY: 60,
+			active: false,
+			topBar: {
+				fill: '#666',
+				height: 12,
+				strokeEnabled: false,
 			},
-			gap:3,
-			rowHeight:22,
-			draggable:true,
-			dragBoundFunc:hfunc,
+			gap: 3,
+			rowHeight: 22,
+			draggable: true,
+			dragBoundFunc: hfunc,
 		};
 		this.sbar={
-			barheight:12,
-			rectoption:{
-				strokeEnabled:false,
-				fill:'grey'
+			barheight: 12,
+			rectoption: {
+				strokeEnabled: false,
+				fill: 'grey'
 			},
-			gap:20,
-			rowheight: 60,
-			draggable:true,
-			resizable:true,
-			dragBoundFunc:hfunc,
-			resizeBoundFunc:hfunc,
-			subgroup:true,
+			gap: 20,
+			rowheight:  60,
+			draggable: true,
+			resizable: true,
+			dragBoundFunc: hfunc,
+			resizeBoundFunc: hfunc,
+			subgroup: true,
 		},
 		this.sform={
-			'name':{
-				editable:true,
-				type:'text',
+			'name': {
+				editable: true,
+				type: 'text',
 			},
-			'start':{
-				editable:true,
-				type:'date',
-				d2t:function(d){
+			'start': {
+				editable: true,
+				type: 'date',
+				d2t: function(d){
 					return d.toString('dd/MM/yyyy');
 				},
-				t2d:function(t){
-					return Date.parseExact(app.util.correctdate(t),'dd/MM/yyyy')
+				t2d: function(t){
+					return Date.parseExact(app.util.correctdate(t), 'dd/MM/yyyy');
 				}
 			},
-			'end':{
-				editable:true,
-				type:'date',
-				d2t:function(d){
+			'end': {
+				editable: true,
+				type: 'date',
+				d2t: function(d){
 					return d.toString('dd/MM/yyyy');
 				},
-				t2d:function(t){
-					return Date.parseExact(app.util.correctdate(t),'dd/MM/yyyy')
+				t2d: function(t){
+					return Date.parseExact(app.util.correctdate(t), 'dd/MM/yyyy');
 				}
 			},
-			'status':{
-				editable:true,
-				type:'select',
-				options:{
-					'110':'complete',
-					'109':'open',
-					'108' :'ready'
+			'status': {
+				editable: true,
+				type: 'select',
+				options: {
+					'110': 'complete',
+					'109': 'open',
+					'108' : 'ready'
 				}
 			},
-			'complete':{
-				editable:true,
-				type:'text',
+			'complete': {
+				editable: true,
+				type: 'text',
 			},
-			'duration':{
-				editable:true,
-				type:'text',
-				d2t:function(t,model){
+			'duration': {
+				editable: true,
+				type: 'text',
+				d2t: function(t,model){
 					return Date.daysdiff(model.get('start'),model.get('end'));
 				}
 			}
 		
-		}
-		this.getFormElem=this.createElem();
-		this.collection=app.tasks;
+		};
+		this.getFormElem = this.createElem();
+		this.collection = app.tasks;
 		this.calculateIntervals();
-		this.on('change:interval change:dpi',this.calculateIntervals)
+		this.on('change:interval change:dpi', this.calculateIntervals);
 	},
 	getSetting:function(from,attr){
 		if(attr){
@@ -144,10 +136,10 @@ app.SettingModel=Backbone.Model.extend({
 		this.sattr.maxDate=maxDate;
 		
 	},
-	setAttributes:function(){
+	setAttributes: function() {
 		var end,interval,sattr=this.sattr,dattr=this.sdisplay,duration,size,cellWidth,dpi,retfunc,start,last,i=0,j=0,iLen=0,next=null;
 		
-		interval=this.get('interval');
+		interval = this.get('interval');
 		//TODO:needs improvement instaed of cloning convert into time for better performance
 		if(interval==='daily'){
 			this.set('dpi',1,{silent:true});
@@ -386,4 +378,3 @@ app.SettingModel=Backbone.Model.extend({
 
 
 });
-})(app);

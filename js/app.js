@@ -1,29 +1,25 @@
 var app = app || {};
 $(function() {
-	$.get( "data/tasks.json", function( data ) {
-		ganttData = data;
-		window.data=data;
+	$.get( 'data/tasks.json', function( data ) {
 		app.ENTER_KEY=13;
-		app.tasks=new app.TaskCollection();
-		app.tasks.add(ganttData,{parse:true});
-		//console.log(app.tasks);
-		app.setting=new app.SettingModel();
-		app.THCollection=app.TaskHierarchyCollection.importData(app.tasks,'parentid',0,'sortindex'); 
-		console.log(app.THCollection);
-		new app.GanttView().render();
-		//new app.TasksView();
+		app.tasks = new app.TaskCollection();
+		app.tasks.add(data, {parse: true});
+		app.setting = new app.SettingModel();
 
+		app.THCollection = app.TaskHierarchyCollection.importData(app.tasks, 'parentid', 0, 'sortindex'); 
+		new app.GanttView().render();
+		
 		// initalize parent selector
-		$selector = $(".select-parent.dropdown").find('.menu');
+		var $selector = $('.select-parent.dropdown').find('.menu');
 		$selector.append('<div class="item" data-value="0">Main Project</div>');
 		for (var i = 0; i < data.length; i++) {
-			if(data[i].parentid == 0){
+			if(data[i].parentid === 0){
 				$selector.append('<div class="item" data-value="'+data[i].id+'">'+data[i].name+'</div>');
 			}
-		};
-
+		}
+		
 		// initialize dropdown
-		$(".select-parent.dropdown").dropdown();
+		$('.select-parent.dropdown').dropdown();
 	});
 	// line adjustment
 	setTimeout(function(){
@@ -31,8 +27,8 @@ $(function() {
 	},1000);
 
 	// Resources from backend
-	$.get("data/resources.json",function(data){
-		$resources = '<select id="resources"  name="resources[]" multiple="multiple">';
+	$.get('data/resources.json',function(data){
+		var $resources = '<select id="resources"  name="resources[]" multiple="multiple">';
 		for (var i = 0; i < data.length; i++) {
 			$resources += '<option value="'+data[i].res_id+'">'+data[i].res_name+'</option>';
 		}
@@ -41,7 +37,7 @@ $(function() {
 		$('.resources').append($resources);
 
 		// initialize multiple selectors
-		$('#resources').chosen({width: "95%"});
+		$('#resources').chosen({width: '95%'});
 	});
 
 	// assign random parent color

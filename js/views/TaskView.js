@@ -5,7 +5,7 @@ app.TaskView=Backbone.View.extend({
 	className: 'task-list-container',
 	
 	initialize: function(){
-		this.listenTo(this.model,'change:active',this.toggleParent);
+		this.listenTo(this.model, 'change:active', this.toggleParent);
 	},
 	events:{
 		'click .task .expand-menu': 'handleClick',
@@ -15,42 +15,41 @@ app.TaskView=Backbone.View.extend({
 	makeSortable:function(){
 		var that=this;
 		this.$childel.sortable({
-			'axis':"y",
-			'helper':function(evt,elem){
+			axis: 'y',
+			helper: function(evt,elem){
 				var title=elem.find('.col-name').text();
 				return $('<div>'+title+'</div>');
 			},
-			'change':function(evt,ui){
-				// ---
-				var item=ui.item,changedItem;
+			change:function(evt,ui){
+				var item = ui.item,changedItem;
 				var id1,id2,model1,model2,temp;
 				id1=item.attr('id');
 				if(ui.originalPosition.top<ui.position.top){
-				//dom position is updated after this function is called
-				changedItem=ui.placeholder.prev(":not(:hidden)");
+					//dom position is updated after this function is called
+					changedItem = ui.placeholder.prev(':not(:hidden)');
+				}
+				else{
+					changedItem = ui.placeholder.next(':not(:hidden)');
+				}
+				id2=changedItem.attr('id');
+				model1=app.tasks.get(id1);
+				model2=app.tasks.get(id2);
+
+				console.log(model1.get('name'), model1.get('sortindex'));
+				console.log(model2.get('name'), model2.get('sortindex'));
+
+				temp=model1.get('sortindex');
+				model1.set('sortindex', model2.get('sortindex'));
+				model2.set('sortindex', temp);
+
+				model1.save();
+				model2.save();
+			},
+			stop: function() {
+				that.model.trigger('onsort');
 			}
-			else{
-				changedItem=ui.placeholder.next(":not(:hidden)");
-			}
-			id2=changedItem.attr('id');
-			model1=app.tasks.get(id1);
-			model2=app.tasks.get(id2);
-
-			temp=model1.get('sortindex');
-			model1.set('sortindex',model2.get('sortindex'),{silent:true});
-			model2.set('sortindex',temp,{silent:true});
-
-			model1.save();
-			model2.save();
-			
-			model1=null,model2=null,changedItem=null,item=null;
-
-		},
-		'stop':function(){
-			that.model.trigger('onsort');
-		}
 		
-	});
+		});
 
 	},
 	render: function(){
