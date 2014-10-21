@@ -11,17 +11,14 @@ app.KCanvasView=Backbone.KineticView.extend({
 			width: setting.screenWidth - setting.tHiddenWidth - 20,
 			draggable:true,
 			dragBoundFunc: app.util.hfunc,
-			
 		});
+		
 		this.Flayer=new Kinetic.Layer();
 		this.Blayer=new Kinetic.Layer();
 		
 		this.initializeFrontLayer();
 		this.initializeBackLayer();
 		this.bindEvents();
-		app.tasks.on('change', function(model) {
-			
-		});
 	},
 	initializeBackLayer:function(){
 		var shape = new Kinetic.Shape({

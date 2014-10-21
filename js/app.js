@@ -1,15 +1,22 @@
 var app = app || {};
-$(function() {
-	$.get( 'data/tasks.json', function( data ) {
-		app.ENTER_KEY=13;
+$(function () {
+    'use strict';
+	$.get('data/tasks.json', function( data ) {
 		app.tasks = new app.TaskCollection();
 		app.tasks.add(data, {parse: true});
+
 		app.setting = new app.SettingModel();
 
-		app.THCollection = app.TaskHierarchyCollection.importData(app.tasks, 'parentid', 0, 'sortindex'); 
+		app.THCollection = app.TaskHierarchyCollection.importData(
+			/*collection  =*/ app.tasks,
+			/*parentAttribute  =*/'parentid',
+			/*rootid =*/0,
+			/*sortBy=*/ 'sortindex'
+		);
+
 		new app.GanttView().render();
-		
-		// initalize parent selector
+
+		// initalize parent selector for "add task form"
 		var $selector = $('.select-parent.dropdown').find('.menu');
 		$selector.append('<div class="item" data-value="0">Main Project</div>');
 		for (var i = 0; i < data.length; i++) {
@@ -17,7 +24,7 @@ $(function() {
 				$selector.append('<div class="item" data-value="'+data[i].id+'">'+data[i].name+'</div>');
 			}
 		}
-		
+
 		// initialize dropdown
 		$('.select-parent.dropdown').dropdown();
 	});
