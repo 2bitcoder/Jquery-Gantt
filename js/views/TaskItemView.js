@@ -9,7 +9,7 @@ app.TaskItemView=Backbone.View.extend({
 		this.listenTo(this.model,'change:name change:start change:end change:complete change:status',this.renderRow);
 		this.$el.hover(function(e){
 			$(document).find('.item-selector').stop().css({
-				top: (e.currentTarget.offsetTop+106)+'px'
+				top: ($(e.currentTarget).offset().top)+'px'
 			}).fadeIn();
 		}, function(e){
 			$(document).find('.item-selector').stop().fadeOut();
