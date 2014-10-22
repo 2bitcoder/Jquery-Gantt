@@ -6,7 +6,7 @@ Backbone.sync = function() {};
 
 $(function () {
     'use strict';
-	$.get('data/tasks.json', function( data ) {
+	$.getJSON('data/tasks.json', function( data ) {
 		app.tasks = new app.TaskCollection();
 		app.tasks.add(data, {parse: true});
 
