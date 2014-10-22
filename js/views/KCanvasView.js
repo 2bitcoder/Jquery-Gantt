@@ -3,19 +3,25 @@ app.KCanvasView=Backbone.KineticView.extend({
 	initialize: function(){
 		this.groups=[];
 		this.collection = app.THCollection;
+
 		var setting = app.setting.getSetting('display');
 		
-		this.stage=new Kinetic.Stage({
+		this.stage = new Kinetic.Stage({
 			container : 'gantt-container',
 			height: 580,
 			width: setting.screenWidth - setting.tHiddenWidth - 20,
-			draggable:true,
+			draggable: true,
 			dragBoundFunc: app.util.hfunc,
 		});
 		
-		this.Flayer=new Kinetic.Layer();
-		this.Blayer=new Kinetic.Layer();
+		this.Flayer = new Kinetic.Layer();
+		this.Blayer = new Kinetic.Layer();
 		
+		app.tasks.on('change:sortindex', function() {
+			this.rendergroups();
+			console.log('render');
+		}.bind(this));
+
 		this.initializeFrontLayer();
 		this.initializeBackLayer();
 		this.bindEvents();
@@ -34,67 +40,71 @@ app.KCanvasView=Backbone.KineticView.extend({
 	},
 	bindEvents:function(){
 		var calculating=false;
-		this.listenTo(app.THCollection,'change:active',this.rendergroups);
-		this.listenTo(app.setting,'change:interval change:dpi',this.renderBars);
+		this.listenTo(app.THCollection, 'change:active', this.rendergroups);
+		this.listenTo(app.setting, 'change:interval change:dpi', this.renderBars);
 		$('#gantt-container').mousewheel(function(e){
 			if(calculating) {
 				return false;
 			}
-
-			var cdpi=app.setting.get('dpi'),dpi=0;
+			var cdpi = app.setting.get('dpi'), dpi=0;
 			calculating=true;
-			if(e.originalEvent.wheelDelta > 0){
-				dpi = Math.max(1,cdpi-1);
+			if (e.originalEvent.wheelDelta > 0){
+				dpi = Math.max(1, cdpi - 1);
 			} else {
-				dpi = cdpi+1;
+				dpi = cdpi + 1;
 			}
-			if(dpi===1){
-				if(app.setting.get('interval')==='auto')
+			if (dpi === 1){
+				if (app.setting.get('interval') === 'auto') {
 					app.setting.set({interval:'daily'});
+				}
 			} else {
-				app.setting.set({interval:'auto',dpi:dpi});
+				app.setting.set({interval: 'auto', dpi: dpi});
 			}
-			calculating=false;
+			calculating = false;
 			return false;
 		});
-		if(calculating) {
+
+		if (calculating) {
 			return false;
 		}
 
-		var cdpi=app.setting.get('dpi'),dpi=0;
-		calculating=true;
-		dpi = Math.max(0,cdpi+25);
-			// dpi = cdpi+1;
+		var cdpi = app.setting.get('dpi'), dpi=0;
+		calculating  =true;
+		dpi = Math.max(0, cdpi + 25);
 
-		if(dpi===1){
-			if(app.setting.get('interval')==='auto')
+		if (dpi === 1) {
+			if(app.setting.get('interval')==='auto') {
 				app.setting.set({interval:'daily'});
+			}
 		} else {
-			app.setting.set({interval:'auto',dpi:dpi});
+			app.setting.set({interval: 'auto', dpi: dpi});
 		}
-		calculating=false;
-		$('#gantt-container').on('dragmove',function(e){
-				if(calculating) {
-					return false;
-				}
 
-			var cdpi=app.setting.get('dpi'),dpi=0;
-			calculating=true;
-			dpi = cdpi+1;
+		calculating = false;
+		$('#gantt-container').on('dragmove', function(){
+			if(calculating) {
+				return false;
+			}
+			var cdpi = app.setting.get('dpi'), dpi=0;
+			calculating = true;
+			dpi = cdpi + 1;
 
 			if(dpi===1){
-				if(app.setting.get('interval')==='auto')
-					app.setting.set({interval:'daily'});
-			}
-			else
+				if (app.setting.get('interval') === 'auto') {
+					app.setting.set({interval: 'daily'});
+				}
+			} else {
 				app.setting.set({interval:'auto',dpi:dpi});
-			calculating=false;
+			}
+			calculating = false;
 			return false;
 		});
 	},
 
-	addGroup:function(taskgroup){
-		this.groups.push(new Kinetic.BarGroup({model:taskgroup}));
+	addGroup: function(taskgroup) {
+		this.groups.push(new Kinetic.BarGroup({
+			model: taskgroup
+		}));
 	},
 
 	initializeTaskGroup:function(){
@@ -102,71 +112,68 @@ app.KCanvasView=Backbone.KineticView.extend({
 	},
 
 	render: function(){
-		var groupi, gsetting = app.setting.getSetting('group');
-		gsetting.currentY=gsetting.iniY;
+		var gsetting = app.setting.getSetting('group');
+
+		gsetting.currentY = gsetting.iniY;
 		
-		for(var i=0;i<this.groups.length;i++){
-			groupi=this.groups[i];
+		this.groups.forEach(function(groupi) {
 			groupi.setY(gsetting.currentY);
 			gsetting.currentY += groupi.getCurrentHeight();
 			this.Flayer.add(groupi.group);
-		}
+		}.bind(this));
+
 
 		//loop through groups
-		for(var i=0; i<this.groups.length; i++){
+		for(var i = 0; i < this.groups.length; i++){
 
 			//loop through tasks
-			for(var j=0; j<this.groups[i].children.length; j++){
+			for(var j = 0; j < this.groups[i].children.length; j++){
 
 				//if threre is dependency
-				if(this.groups[i].children[j].model.attributes.dependency != ''){
+				if (this.groups[i].children[j].model.attributes.dependency !== ''){
 
 					//parse dependencies
 					var dependency = $.parseJSON(this.groups[i].children[j].model.attributes.dependency);
 
-					for( var l=0; l<dependency.length; l++){
-						for( var k=0; k<this.groups[i].children.length; k++){
-							if( dependency[l] == this.groups[i].children[k].model.attributes.id ){
-								Kinetic.Bar.createRelation(this.groups[i].children[j],this.groups[i].children[k]);
+					for(var l=0; l < dependency.length; l++){
+						for( var k=0; k < this.groups[i].children.length; k++){
+							if (dependency[l] == this.groups[i].children[k].model.attributes.id ){
+								Kinetic.Bar.createRelation(this.groups[i].children[j], this.groups[i].children[k]);
 							}
 						}
 					}					
-
 				}
-
 			}
-
 		}
+
 		this.stage.add(this.Blayer);
 		this.stage.add(this.Flayer);
-		
 		return this;
 	},
+
 	renderBars:function(){
 		for(var i=0;i<this.groups.length;i++){
-			//console.log(gsetting.currentY);
 			this.groups[i].renderChildren();
 		} 
 		this.Flayer.draw();
 		this.Blayer.draw();
 	},
+
 	rendergroups:function(){
-		var groupi,gsetting=app.setting.getSetting('group'),sorted=[];
-		sorted=_.sortBy(this.groups,function(itemview){ return itemview.model.get('parent').get('sortindex') });
-		gsetting.currentY=gsetting.iniY;
-		//console.log(this.groups);		
-		for(var i=0;i<sorted.length;i++){
-			//console.log(gsetting.currentY);
-			groupi=sorted[i];
+		var gsetting = app.setting.getSetting('group');
+		var sorted = _.sortBy(this.groups,function(itemview){
+			return itemview.model.get('parent').get('sortindex');
+		});
+		gsetting.currentY = gsetting.iniY;
+
+		sorted.forEach(function(groupi) {
 			groupi.setY(gsetting.currentY);
 			gsetting.currentY += groupi.getCurrentHeight();
-		}  
-		groupi=null;
+			groupi.renderSortedChildren();
+		});
 		this.Flayer.draw();
-
 	},
-	setWidth:function(value){
-		
+	setWidth: function(value) {
 		this.stage.setWidth(value);
 	},
 	getSceneFunc:function(){

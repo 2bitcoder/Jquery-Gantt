@@ -16,7 +16,7 @@ app.SettingModel = Backbone.Model.extend({
 		dpi:1
 	},
 	initialize: function() {
-		this.sattr={
+		this.sattr = {
 			hData: {},
 			dragInterval: 1,
 			daysWidth: 5,
@@ -28,12 +28,13 @@ app.SettingModel = Backbone.Model.extend({
 			//months per cell
 			mpc: 1
 		};
+
 		this.sdisplay = {
 			screenWidth:  $('#gantt-container').innerWidth() + 786,
 			tHiddenWidth: 305,
 			tableWidth: 710,
-			
 		};
+
 		this.sgroup = {
 			currentY: 0,
 			iniY: 60,
@@ -48,7 +49,7 @@ app.SettingModel = Backbone.Model.extend({
 			draggable: true,
 			dragBoundFunc: hfunc,
 		};
-		this.sbar={
+		this.sbar = {
 			barheight: 12,
 			rectoption: {
 				strokeEnabled: false,

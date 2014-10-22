@@ -2,7 +2,7 @@ var app= app || {};
 app.TaskHierarchyCollection = Backbone.Collection.extend({
 	model: app.TaskHierarchyModel,
 },{
-	//@param data: type collection
+	// static function
 	importData:function(collection, parentAttribute, rootid, sortBy){
 		if(!collection instanceof Backbone.Collection){
 			throw 'TaskHierarchyCollection can not import data of unknown collection';

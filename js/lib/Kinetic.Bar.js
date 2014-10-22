@@ -1,71 +1,71 @@
-			window.currentDpt= [];
-			(function(Kinetic,Backbone){
-				var dd=Kinetic.DD;
-				var barOptions=['draggable','dragBoundFunc','resizable','resizeBoundFunc','height','width','x','y'];
+window.currentDpt= [];
+(function(Kinetic,Backbone){
+	var dd=Kinetic.DD;
+	var barOptions=['draggable','dragBoundFunc','resizable','resizeBoundFunc','height','width','x','y'];
 
-				var calculating=false;
-				function createHandle(option){
-					option.draggable=true;
-					option.opacity=1;
-					option.strokeEnabled=false;
-					option.width=2;
-					option.fill='black';
-					return new Kinetic.Rect(option);
-				}
-				function createSubGroup(option){
-					var gr=new Kinetic.Group();
-					var imgrect=new Kinetic.Rect({
-						x:0,
-						y:0,
-						height: option.height,
-						width: 20,
-						strokeEnabled:false,
-						fill:'yellow',
-						opacity:0.5
-					});
-					var anchor=new Kinetic.Circle({
-						x:10,
-						y:5,
-						radius: 3,
-						strokeWidth:1,
-						name: 'anchor',
-						stroke:'black',
-						fill:'white',
-					})
+	var calculating=false;
+	function createHandle(option){
+		option.draggable=true;
+		option.opacity=1;
+		option.strokeEnabled=false;
+		option.width=2;
+		option.fill='black';
+		return new Kinetic.Rect(option);
+	}
+	function createSubGroup(option){
+		var gr=new Kinetic.Group();
+		var imgrect=new Kinetic.Rect({
+			x:0,
+			y:0,
+			height: option.height,
+			width: 20,
+			strokeEnabled:false,
+			fill:'yellow',
+			opacity:0.5
+		});
+		var anchor=new Kinetic.Circle({
+			x:10,
+			y:5,
+			radius: 3,
+			strokeWidth:1,
+			name: 'anchor',
+			stroke:'black',
+			fill:'white',
+		})
 
-					var namerect=new Kinetic.Rect({
-						x:20,
-						y:0,
-						height: option.height,
-						width: 40,
-						strokeEnabled:false,
-						fill:'pink',
-					});
-					gr.add(imgrect);
-					gr.add(anchor);
-					gr.add(namerect);
-					return gr;
-				}
+		var namerect=new Kinetic.Rect({
+			x:20,
+			y:0,
+			height: option.height,
+			width: 40,
+			strokeEnabled:false,
+			fill:'pink',
+		});
+		gr.add(imgrect);
+		gr.add(anchor);
+		gr.add(namerect);
+		return gr;
+	}
 
-				var beforebind=function(func){
-					return function(){
-						if(calculating) return false;
-						calculating=true;
-						func.apply(this,arguments);
-						calculating=false;
-					}
-				}
+	var beforebind=function(func){
+		return function(){
+			if(calculating) return false;
+			calculating=true;
+			func.apply(this,arguments);
+			calculating=false;
+		}
+	}
 
-				function getDragDir(stage){
-					return (stage.getPointerPosition().x-dd.startPointerPos.x>0)?'right':'left';
-				}
+	function getDragDir(stage){
+		return (stage.getPointerPosition().x-dd.startPointerPos.x>0)?'right':'left';
+	}
 
-				Kinetic.Bar=function(options){
-					options || (options={});
+	Kinetic.Bar=function(options){
+		options || (options={});
 
-					this.model=options.model;
+		this.model=options.model;
 
-					var setting=this.setting=app.setting.getSetting('bar');
+		var setting=this.setting=app.setting.getSetting('bar');
 		//this.barid = _.uniqueId('b');
 		this.subgroupoptions={
 			showOnHover: true,
@@ -432,9 +432,9 @@
 			},
 		//renders the bar by its model 
 		renderBar:function(){
-			var x=this.calculateX();
-			this.setX1(x.x1,{absolute:true,silent:true});
-			this.setX2(x.x2,{absolute:true,silent:true,osame:true});
+			var x = this.calculateX();
+			this.setX1(x.x1,{absolute:true, silent:true});
+			this.setX2(x.x2,{absolute:true, silent:true, osame:true});
 			this.renderConnectors();
 		},
 		

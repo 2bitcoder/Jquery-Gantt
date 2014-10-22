@@ -1,4 +1,9 @@
 var app = app || {};
+
+// disable sync while developing
+Backbone.sync = function() {};
+
+
 $(function () {
     'use strict';
 	$.get('data/tasks.json', function( data ) {
