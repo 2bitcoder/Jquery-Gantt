@@ -39,7 +39,7 @@ $(function () {
 	},1000);
 
 	// Resources from backend
-	$.get('data/resources.json',function(data){
+	$.getJSON('data/resources.json',function(data){
 		var $resources = '<select id="resources"  name="resources[]" multiple="multiple">';
 		for (var i = 0; i < data.length; i++) {
 			$resources += '<option value="'+data[i].res_id+'">'+data[i].res_name+'</option>';
