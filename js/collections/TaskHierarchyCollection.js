@@ -1,6 +1,6 @@
 var app= app || {};
 app.TaskHierarchyCollection = Backbone.Collection.extend({
-	model: app.TaskHierarchyModel,
+	model: app.TaskHierarchyModel
 },{
 	// static function
 	importData:function(collection, parentAttribute, rootid, sortBy){

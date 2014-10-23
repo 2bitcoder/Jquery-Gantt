@@ -22,6 +22,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 			console.log('render');
 		}.bind(this));
 
+
 		this.initializeFrontLayer();
 		this.initializeBackLayer();
 		this.bindEvents();

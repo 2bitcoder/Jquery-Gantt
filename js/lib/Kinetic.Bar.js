@@ -64,6 +64,7 @@ window.currentDpt= [];
 		options || (options={});
 
 		this.model=options.model;
+		this.listenTo(this.model, 'change:complete', this._updateCompleteBar);
 
 		var setting=this.setting=app.setting.getSetting('bar');
 		//this.barid = _.uniqueId('b');
@@ -91,7 +92,7 @@ window.currentDpt= [];
 		//remove the strokeEnabled if not provided in option
 		//rectoptions.strokeEnabled=false;
 
-		var rect=this.rect=new Kinetic.Rect(this.getRectparams());
+		var rect = this.rect  =new Kinetic.Rect(this.getRectparams());
 		this.group.add(rect);
 		
 		if(setting.subgroup){
@@ -123,6 +124,16 @@ window.currentDpt= [];
 		//this.on('resize move',this.renderConnectors,this);;
 	}
 	Kinetic.Bar.prototype={
+		_updateCompleteBar : function() {
+			var leftx=this.leftHandle.getX();
+			var w = this.rightHandle.getX() - leftx+2;
+			var width = ( ( w ) * (this.model.get('complete') / 100) ) - 4;
+
+			if(width > 0){
+				this.completeBar.width(width);
+				this.completeBar.getLayer().batchDraw();
+			}
+		},
 		//retrieves only width,height,x,y relative to point 0,0 on canvas;
 		getX1: function(absolute){
 			var retval=0;
@@ -540,7 +551,7 @@ window.currentDpt= [];
 		},
 		getRectparams:function(){
 			var setting=this.setting;
-			var xs=this.calculateX(this.model);
+			var xs  =this.calculateX(this.model);
 			// console.log(this.model.get('complete'));
 			return _.extend({
 				x:0,
