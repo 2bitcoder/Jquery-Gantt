@@ -9,8 +9,8 @@ body {
 body {
   font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   background: #FFFFFF;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   color: #555555;
   text-rendering: optimizeLegibility;
   min-width: 320px;
@@ -66,17 +66,17 @@ p a {
 }
 
 .ui.page.grid.segment {
-  padding-top: 3.5rem;
-  padding-bottom: 3.5rem;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .masthead.segment {
-  background; #fff;
+  background: #fff;
   -webkit-background-size: cover;
   background-size: cover;
-  margin: 0em;
+  margin: 0;
   padding-top: 4rem;
   overflow: hidden;
   -webkit-box-shadow: 0 -20px 10px 0 rgba(0, 0, 0, 0.1) inset !important;
@@ -93,7 +93,7 @@ p a {
 
 .masthead.segment .information p {
   max-width: 600px;
-  margin: 0em 0px 2em 0em;
+  margin: 0 0 2em 0;
   font-size: 1.2em;
 }
 
@@ -103,7 +103,7 @@ p a {
 
 .masthead.segment .image {
   position: absolute;
-  left: 0%;
+  left: 0;
   bottom: -110px;
 }
 
@@ -113,8 +113,8 @@ p a {
 
 .ui.shape .icon,
 .link.list .icon {
-  margin: 0em;
-  padding: 0em;
+  margin: 0;
+  padding: 0;
 }
 
 .ui.cube.shape .side {
@@ -164,7 +164,7 @@ div.menu-container,#gantt-container{
 }
 .content-edit{
   outline: 1px solid #0090d3;
-  box-shadow: 0px 0px 3px 2px rgba(124,252,14,0.4);
+  box-shadow: 0 0 3px 2px rgba(124,252,14,0.4);
   padding: 5px 1px;
   width: 67% !important;
   border-radius: 5px;
@@ -190,7 +190,7 @@ div.menu-container,#gantt-container{
 
 @media only screen and (max-width : 768px) {
   .ui.page.grid.segment {
-    padding-top: 2rem;
+    padding-top: 0.5rem;
     padding-bottom: 2rem;
   }
   /*rtl:ignore*/
@@ -231,7 +231,7 @@ div.menu-container,#gantt-container{
   }
 
   .overview .divided.grid .header + p {
-    min-height: 0px;
+    min-height: 0;
   }
 
   .masthead.segment .column {
