@@ -7,8 +7,7 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 		if(!collection instanceof Backbone.Collection){
 			throw 'TaskHierarchyCollection can not import data of unknown collection';
 		}
-		
-		
+
 		if (!rootid) {
 			rootid = 0;
 		}
@@ -36,6 +35,13 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 			if (grouped[id]) {
 				newModel.addChildren(grouped[id]);
 			}
+		});
+
+		collection.on('add', function(model) {
+			newCol.add({
+				parent : model,
+				children : []
+			});
 		});
 		// for(i=0;i<sorted.length;i++){ 
 		// 	tcol={};

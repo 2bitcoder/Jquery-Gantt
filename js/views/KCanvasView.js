@@ -11,16 +11,34 @@ app.KCanvasView=Backbone.KineticView.extend({
 			height: 580,
 			width: setting.screenWidth - setting.tHiddenWidth - 20,
 			draggable: true,
-			dragBoundFunc: app.util.hfunc,
+			dragBoundFunc: app.util.hfunc
 		});
 		
-		this.Flayer = new Kinetic.Layer();
-		this.Blayer = new Kinetic.Layer();
+		this.Flayer = new Kinetic.Layer({});
+		this.Blayer = new Kinetic.Layer({});
 		
 		app.tasks.on('change:sortindex', function() {
 			this.rendergroups();
-			console.log('render');
+			console.log('render after resorting');
 		}.bind(this));
+
+		this.listenTo(this.collection, 'add', function(model) {
+			debugger;
+			this.groups.push(new Kinetic.BarGroup({
+				model: model
+			}));
+
+			var gsetting = app.setting.getSetting('group');
+			gsetting.currentY = gsetting.iniY;
+
+			this.groups.forEach(function(groupi) {
+				groupi.setY(gsetting.currentY);
+				gsetting.currentY += groupi.getCurrentHeight();
+				this.Flayer.add(groupi.group);
+			}.bind(this));
+			this.rendergroups();
+			console.log('render after adding');
+		});
 
 
 		this.initializeFrontLayer();
@@ -108,10 +126,6 @@ app.KCanvasView=Backbone.KineticView.extend({
 		}));
 	},
 
-	initializeTaskGroup:function(){
-
-	},
-
 	render: function(){
 		var gsetting = app.setting.getSetting('group');
 
@@ -162,7 +176,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 
 	rendergroups:function(){
 		var gsetting = app.setting.getSetting('group');
-		var sorted = _.sortBy(this.groups,function(itemview){
+		var sorted = _.sortBy(this.groups, function(itemview){
 			return itemview.model.get('parent').get('sortindex');
 		});
 		gsetting.currentY = gsetting.iniY;
