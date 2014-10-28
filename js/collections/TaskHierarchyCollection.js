@@ -1,6 +1,31 @@
 var app= app || {};
 app.TaskHierarchyCollection = Backbone.Collection.extend({
-	model: app.TaskHierarchyModel
+	model: app.TaskHierarchyModel,
+//	initialize : function() {
+//
+//	},
+	comparator : function(model) {
+		return model.get('parent').get('sortindex');
+	},
+	checkSortedIndex : function() {
+		var sortIndex = 0;
+		this.each(function(model) {
+			model.get('parent').set('sortindex', ++sortIndex);
+			model.get('children').each(function(child) {
+				child.set('sortindex', ++sortIndex);
+			});
+		});
+		this.trigger('resort');
+	},
+	subscribe : function(collection) {
+		this.listenTo(collection, 'add change:sortindex', function(model) {
+//			if(model.)
+			this.add({
+				parent : model,
+				children : []
+			});
+		});
+	}
 },{
 	// static function
 	importData:function(collection, parentAttribute, rootid, sortBy){
@@ -37,12 +62,8 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 			}
 		});
 
-		collection.on('add', function(model) {
-			newCol.add({
-				parent : model,
-				children : []
-			});
-		});
+		newCol.subscribe(collection);
+
 		// for(i=0;i<sorted.length;i++){ 
 		// 	tcol={};
 		// 	model=null;

@@ -23,7 +23,6 @@ app.KCanvasView=Backbone.KineticView.extend({
 		}.bind(this));
 
 		this.listenTo(this.collection, 'add', function(model) {
-			debugger;
 			this.groups.push(new Kinetic.BarGroup({
 				model: model
 			}));

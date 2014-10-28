@@ -40,10 +40,10 @@ app.TaskItemView=Backbone.View.extend({
 		return this;
 	},
 	edit:function(evt){
-		var target=$(evt.target);
-		var width=parseInt(target.css('width'))-5;
-		var field=target.attr('class').split('-')[1];
-		var form=app.setting.getFormElem(field,this.model,this.onEdit,this);
+		var target = $(evt.target);
+		var width  =parseInt(target.css('width'))-5;
+		var field = target.attr('class').split('-')[1];
+		var form = app.setting.getFormElem(field,this.model,this.onEdit,this);
 		form.css({width:width+'px',height:'10px'});
 		target.html(form);
 		form.focus();
