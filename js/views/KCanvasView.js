@@ -17,10 +17,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 		this.Flayer = new Kinetic.Layer({});
 		this.Blayer = new Kinetic.Layer({});
 		
-		app.tasks.on('change:sortindex', function() {
-			this.rendergroups();
-			console.log('render after resorting');
-		}.bind(this));
+		this.listenTo(app.tasks, 'change:sortindex', this.renderRequest);
 
 		this.listenTo(this.collection, 'add', function(model) {
 			this.groups.push(new Kinetic.BarGroup({
@@ -36,14 +33,27 @@ app.KCanvasView=Backbone.KineticView.extend({
 				this.Flayer.add(groupi.group);
 			}.bind(this));
 			this.rendergroups();
-			console.log('render after adding');
+			console.error('render after adding');
 		});
-
-
 		this.initializeFrontLayer();
 		this.initializeBackLayer();
 		this.bindEvents();
 	},
+	renderRequest : (function() {
+		var waiting = false;
+		return function() {
+			if (waiting) {
+				return;
+			} else {
+				waiting = true;
+				setTimeout(function() {
+					this.rendergroups();
+					console.log('render after sorting');
+					waiting = false;
+				}.bind(this), 10);
+			}
+		};
+	})(),
 	initializeBackLayer:function(){
 		var shape = new Kinetic.Shape({
 			stroke: '#bbb',

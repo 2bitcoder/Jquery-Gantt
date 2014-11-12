@@ -48,6 +48,9 @@
 			this.renderDependency();
 			this.bindEvents();
 		},
+		destroy : function() {
+			this.group.destroy();
+		},
 		renderSortedChildren:function(nodraw){
 			!nodraw && (nodraw=false);
 			var sorted=_.sortBy(this.children,function(itembar){
@@ -233,9 +236,8 @@
 			}
 			console.log('setting sync to false');
 			this.syncing=false;
-		},
-		
-	}
-	_.extend(Kinetic.BarGroup.prototype,Backbone.Events);
+		}
+	};
 
+	_.extend(Kinetic.BarGroup.prototype,Backbone.Events);
 }(Kinetic,Backbone));

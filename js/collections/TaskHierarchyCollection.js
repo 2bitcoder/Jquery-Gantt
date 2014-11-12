@@ -18,12 +18,19 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 		this.trigger('resort');
 	},
 	subscribe : function(collection) {
-		this.listenTo(collection, 'add change:sortindex', function(model) {
-//			if(model.)
-			this.add({
-				parent : model,
-				children : []
-			});
+		this.listenTo(collection, 'add', function(model) {
+			if (model.get('parentid')) {
+				var parent = this.find(function(m) {
+					return m.get('parent').id === model.get('parentid');
+				});
+				parent.addChild(model);
+				this.trigger('add', parent);
+			} else {
+				this.add({
+					parent : model,
+					children : []
+				});
+			}
 		});
 	}
 },{
