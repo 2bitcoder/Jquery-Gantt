@@ -1,72 +1,75 @@
 var app=app || {};
 
 app.TaskView=Backbone.View.extend({
-	tagName: 'div',
-	className: 'task-list-container',
+	tagName: 'li',
+	className: 'task-list-container drag-item',
 	
 	initialize: function(){
 		this.listenTo(this.model, 'change:active', this.toggleParent);
 	},
-	events:{
+	events: {
 		'click .task .expand-menu': 'handleClick',
 		'click .add-item button': 'addItem',
 		'click .remove-item button': 'removeItem'
 	},
 	makeSortable:function(){
-		var that=this;
-		this.$childel.sortable({
-			axis: 'y',
-			helper: function(evt,elem){
-				var title=elem.find('.col-name').text();
-				return $('<div>'+title+'</div>');
-			},
-			change:function(evt,ui){
-				var item = ui.item,changedItem;
-				var id1,id2,model1,model2,temp;
-				id1=item.attr('id');
-				if(ui.originalPosition.top<ui.position.top){
-					//dom position is updated after this function is called
-					changedItem = ui.placeholder.prev(':not(:hidden)');
-				}
-				else{
-					changedItem = ui.placeholder.next(':not(:hidden)');
-				}
-				id2=changedItem.attr('id');
-				model1=app.tasks.get(id1);
-				model2=app.tasks.get(id2);
-
-				console.log(model1.get('name'), model1.get('sortindex'));
-				console.log(model2.get('name'), model2.get('sortindex'));
-
-				temp=model1.get('sortindex');
-				model1.set('sortindex', model2.get('sortindex'));
-				model2.set('sortindex', temp);
-
-				model1.save();
-				model2.save();
-			},
-			stop: function() {
-				that.model.trigger('onsort');
-			}
-		
-		});
+//		var that=this;
+//		this.$childel.sortable({
+//			axis: 'y',
+//			helper: function(evt,elem){
+//				var title=elem.find('.col-name').text();
+//				return $('<div>'+title+'</div>');
+//			},
+//			change:function(evt,ui){
+//				var item = ui.item,changedItem;
+//				var id1,id2,model1,model2,temp;
+//				id1=item.attr('id');
+//				if(ui.originalPosition.top<ui.position.top){
+//					//dom position is updated after this function is called
+//					changedItem = ui.placeholder.prev(':not(:hidden)');
+//				}
+//				else{
+//					changedItem = ui.placeholder.next(':not(:hidden)');
+//				}
+//				id2=changedItem.attr('id');
+//				model1=app.tasks.get(id1);
+//				model2=app.tasks.get(id2);
+//
+//				console.log(model1.get('name'), model1.get('sortindex'));
+//				console.log(model2.get('name'), model2.get('sortindex'));
+//
+//				temp=model1.get('sortindex');
+//				model1.set('sortindex', model2.get('sortindex'));
+//				model2.set('sortindex', temp);
+//
+//				model1.save();
+//				model2.save();
+//			},
+//			stop: function() {
+//				that.model.trigger('onsort');
+//			}
+//		});
 
 	},
 	render: function(){
-		var parent,itemView,children;
-		parent=this.model.get('parent');
-		itemView=new app.TaskItemView({model:parent});
-		this.$parentel=itemView.render(true).$el;
+		var parent = this.model.get('parent');
+		var itemView  =new app.TaskItemView({
+			model : parent
+		});
+
+		this.$parentel = itemView.render(true).$el;
 		this.$el.append(this.$parentel);
-		this.$childel=$('<ul class="sub-task-list"></ul>');
+
+		this.$childel = $('<ol class="sub-task-list sortable"></ol>');
+
 		this.$el.append(this.$childel);
-		children=_.sortBy(this.model.get('children'),function(model){
+		var children=_.sortBy(this.model.get('children'),function(model){
 			return model.get('sortindex');
 		});
-		
 		for(var i=0;i<children.length;i++){
 			itemView=new app.TaskItemView({model:children[i]});
-			this.$childel.append(itemView.render().el);
+			itemView.render();
+			this.$childel.append(itemView.el);
 		}
 		this.toggleParent();
 		this.makeSortable();

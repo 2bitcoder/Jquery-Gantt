@@ -1,0 +1,60 @@
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ol.sortable li.placeholder {
+    /*position: relative;*/
+    /** More li styles **/
+}
+ol.sortable li.placeholder:before {
+    /*position: absolute;*/
+    /** Define arrowhead **/
+}
+
+/* line 1, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
+body.dragging, body.dragging * {
+    cursor: move !important; }
+
+/* line 4, /Users/jonasvonandrian/jquery-sortable/source/css/jquery-sortable.css.sass */
+.dragged {
+    position: absolute;
+    top: 0;
+    opacity: 0.5;
+    z-index: 2000; }
+
+
+ol.sortable li {
+    /*display: block;*/
+    /*margin: 2px;*/
+    /*padding: 2px;*/
+    /*border: 1px solid #cccccc;*/
+    /*color: #0088cc;*/
+    /*background: #eeeeee;*/
+}
+
+ol.sortable li.placeholder {
+    /*position: relative;*/
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+ol.sortable li.placeholder:before {
+    /*position: absolute;*/
+    /*z-index: 20;*/
+    content: "__________";
+    width: 250px;
+    height: 10px;
+    /*margin-top: 5px;*/
+    /*left: 10px;*/
+    /*top: 4px;*/
+    border: 1px dashed lightblue;
+    /*border-left-color: red;*/
+    /*border-right: none;*/
+}
