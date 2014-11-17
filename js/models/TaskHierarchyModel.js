@@ -3,31 +3,37 @@ var app=app || {};
 app.TaskHierarchyModel = Backbone.Model.extend({
 	defaults:{
 		parent: null,
-		children: [],
-		active: true,
+		active: true
 	},
-	addChildren:function(children, options){
+	initialize : function() {
+		this.children = new Backbone.Collection();
+		this.listenTo(this.children, 'change:parentid', function(child) {
+			this.children.remove(child);
+		});
+		this.listenTo(this.children, 'add remove change:start change:end', this._checkTime);
+	},
+	addChildren:function(children){
 		children.forEach(function(child) {
-			this.addChild(child, options);
+			this.children.add(child);
 		}.bind(this));
 	},
-	addChild:function(child,options){
-		options = options || {};
-		var parent = this.get('parent');
-		var children=this.get('children');
-		if (children.length === 0) {
-			parent.set('start', child.get('start'), options);
-			parent.set('end', child.get('end'), options);
-		} else{
-			var start = child.get('start');
-			var end = child.get('end');
-			if(start.compareTo(parent.get('start')) === -1) {
-				parent.set('start', start, options);
+	_checkTime : function() {
+		console.log('checking time on', this.get('parent').get('name'));
+		var startTime = this.children.at(0).get('start');
+		var endTime = this.children.at(0).get('end');
+		this.children.each(function(child) {
+			var childStartTime = child.get('start');
+			var childEndTime = child.get('end');
+			if(childStartTime.compareTo(startTime) === -1) {
+				startTime = childStartTime;
 			}
-			if(end.compareTo(parent.get('end')) === 1){
-				parent.set('end', end, options);
+			if(childEndTime.compareTo(endTime) === 1){
+				endTime = childEndTime;
 			}
-		}
-		children.push(child);
-	}	
+		}.bind(this));
+		this.get('parent').set('start', startTime);
+		console.log('new start', startTime);
+		this.get('parent').set('end', endTime);
+
+	}
 });

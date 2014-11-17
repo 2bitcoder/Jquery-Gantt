@@ -28,12 +28,11 @@ app.TaskItemView=Backbone.View.extend({
 		else{
 			this.isParent = false;
 			this.setElement($('<li>'));
+			this.$el.data({
+				id : this.model.id
+			});
 		}
 		this.$el.addClass(addClass);
-//		if (this.isParent) {
-////			this.$handle = $('<div>');
-//			this.$el.append(this.$handle);
-//		}
 		this.$el.attr('id', this.model.cid);
 		return this.renderRow();
 	},

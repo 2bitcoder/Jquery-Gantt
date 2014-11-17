@@ -251,8 +251,12 @@ window.currentDpt= [];
 			
 			this.on('resize move',this.renderConnectors,this);
 			this.listenTo(this.model,'change',this.handleChange);
-			this.on('change',this.handleChange,this);
+			this.on('change', this.handleChange,this);
 
+		},
+		destroy : function() {
+			this.group.destroy();
+			this.stopListening();
 		},
 		handleChange:function(model){
 			// console.log('handling change');

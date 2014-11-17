@@ -59,11 +59,14 @@ app.TaskView=Backbone.View.extend({
 
 		this.$parentel = itemView.render(true).$el;
 		this.$el.append(this.$parentel);
+		this.$el.data({
+			id : parent.id
+		});
 
 		this.$childel = $('<ol class="sub-task-list sortable"></ol>');
 
 		this.$el.append(this.$childel);
-		var children=_.sortBy(this.model.get('children'),function(model){
+		var children = _.sortBy(this.model.children.models, function(model){
 			return model.get('sortindex');
 		});
 		for(var i=0;i<children.length;i++){
@@ -108,7 +111,4 @@ app.TaskView=Backbone.View.extend({
 		this.$childel.slideToggle();
 		this.$parentel.find('.expand-menu').html(str);
 	}
-
-
-
-})
+});

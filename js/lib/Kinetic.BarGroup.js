@@ -7,27 +7,18 @@
 		this.model=options.model || {};
 		
 		setting=this.setting=app.setting.getSetting('group');
-		this.attr={
-			height:0,
-		}
+		this.attr = {
+			height: 0
+		};
 		this.syncing=false;
-		
-		//rectOption.y=0;
-		
 		this.children=[];
-		//this.height=0;
-		//this.rowheight=30;
-		//this.gap=5;  
-		
-		this.group=new Kinetic.Group(this.getGroupParams());
-		this.topbar=new Kinetic.Rect(this.getRectparams());
+
+		this.group = new Kinetic.Group(this.getGroupParams());
+		this.topbar = new Kinetic.Rect(this.getRectparams());
 		this.group.add(this.topbar);
-		// this.group.add(leftTrinagle);
-		// this.group.add(rightTrinagle);
-		
+
 		this.attr.height +=  setting.rowHeight;
-		//this.height=this.rowheight;
-		
+
 		if(setting.draggable){
 			this.makeDraggable();
 		}
@@ -35,15 +26,30 @@
 			this.topbar.makeResizable();
 		}
 		this.initialize();
-		
-
 	}
 	Kinetic.BarGroup.prototype={
 		initialize:function(){
-			var children=this.model.get('children');
-			for(var i=0;i<children.length;i++){
-				this.addChild(new Kinetic.Bar({model:children[i]}));
-			}
+			this.model.children.each(function(child) {
+				this.addChild(new Kinetic.Bar({
+					model:child
+				}));
+			}.bind(this));
+
+			this.listenTo(this.model.children, 'add', function(child) {
+				this.addChild(new Kinetic.Bar({
+					model:child
+				}));
+				this.renderSortedChildren(true);
+			}.bind(this));
+
+			this.listenTo(this.model.children, 'remove', function(child) {
+				var viewForDelete = _.find(this.children, function(m) {
+					return m.model === child
+				});
+				this.children = _.without(this.children, viewForDelete);
+				viewForDelete.destroy();
+				this.renderSortedChildren(true);
+			}.bind(this));
 			this.renderSortedChildren(true);
 			this.renderDependency();
 			this.bindEvents();
@@ -53,7 +59,7 @@
 		},
 		renderSortedChildren:function(nodraw){
 			!nodraw && (nodraw=false);
-			var sorted=_.sortBy(this.children,function(itembar){
+			var sorted=_.sortBy(this.children, function(itembar){
 				return itembar.model.get('sortindex');
 			});
 			this.attr.height=this.setting.rowHeight;
@@ -143,7 +149,6 @@
 			bar.setY(this.getHeight()+this.setting.gap);
 			this.attr.height += this.setting.rowHeight;
 			bar.group.visible(this.model.get('active'));
-
 		},
 		renderChildren:function(){
 			for(var i=0;i<this.children.length;i++){
@@ -155,6 +160,7 @@
 		renderTopBar:function(){
 			var parent=this.model.get('parent');
 			var x=this.calculateX(parent);
+
 			this.topbar.setX(x.x1-this.group.getX());
 			this.topbar.setWidth(x.x2-x.x1);
 		},
@@ -173,8 +179,12 @@
 			});
 			this.listenTo(this.model,'change:active',this.toggleChildren);
 			this.listenTo(this.model,'onsort',this.renderSortedChildren);
-			
-			
+			console.log(this.model);
+			this.listenTo(this.model.get('parent'),'change:start change:end', function(){
+				this.topbar.setAttrs(this.getRectparams());
+				this.topbar.getLayer().draw();
+			});
+
 		},
 		getGroupParams: function(){
 			var setting=app.setting.getSetting('group');
