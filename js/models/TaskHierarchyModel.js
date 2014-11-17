@@ -18,6 +18,9 @@ app.TaskHierarchyModel = Backbone.Model.extend({
 		}.bind(this));
 	},
 	_checkTime : function() {
+		if (this.children.length === 0) {
+			return;
+		}
 		var startTime = this.children.at(0).get('start');
 		var endTime = this.children.at(0).get('end');
 		this.children.each(function(child) {

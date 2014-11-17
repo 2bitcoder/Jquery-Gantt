@@ -6,51 +6,47 @@ Backbone.sync = function() {};
 
 $(function () {
     'use strict';
-	$.getJSON('data/tasks.json', function( data ) {
-		app.tasks = new app.TaskCollection();
-		app.tasks.add(data, {parse: true});
+	app.tasks = new app.TaskCollection();
+	app.tasks.add(demoTasks, {parse: true});
 
-		app.setting = new app.SettingModel();
+	app.setting = new app.SettingModel();
 
-		app.THCollection = app.TaskHierarchyCollection.importData(
-			/*collection  =*/ app.tasks,
-			/*parentAttribute  =*/'parentid',
-			/*rootid =*/0,
-			/*sortBy=*/ 'sortindex'
-		);
+	app.THCollection = app.TaskHierarchyCollection.importData(
+		/*collection  =*/ app.tasks,
+		/*parentAttribute  =*/'parentid',
+		/*rootid =*/0,
+		/*sortBy=*/ 'sortindex'
+	);
 
-		new app.GanttView().render();
+	new app.GanttView().render();
 
-		// initalize parent selector for "add task form"
-		var $selector = $('.select-parent.dropdown').find('.menu');
-		$selector.append('<div class="item" data-value="0">Main Project</div>');
-		for (var i = 0; i < data.length; i++) {
-			if(data[i].parentid === 0){
-				$selector.append('<div class="item" data-value="'+data[i].id+'">'+data[i].name+'</div>');
-			}
+	// initalize parent selector for "add task form"
+	var $selector = $('.select-parent.dropdown').find('.menu');
+	$selector.append('<div class="item" data-value="0">Main Project</div>');
+	for (var i = 0; i < demoTasks.length; i++) {
+		if(demoTasks[i].parentid === 0){
+			$selector.append('<div class="item" data-value="'+demoTasks[i].id+'">'+demoTasks[i].name+'</div>');
 		}
+	}
 
-		// initialize dropdown
-		$('.select-parent.dropdown').dropdown();
-	});
+	// initialize dropdown
+	$('.select-parent.dropdown').dropdown();
 	// line adjustment
 	setTimeout(function(){
 		$('button[data-action="view-monthly"]').trigger('click');
 	},1000);
 
 	// Resources from backend
-	$.getJSON('data/resources.json',function(data){
-		var $resources = '<select id="resources"  name="resources[]" multiple="multiple">';
-		for (var i = 0; i < data.length; i++) {
-			$resources += '<option value="'+data[i].res_id+'">'+data[i].res_name+'</option>';
-		}
-		$resources += '</select>';
-		// add backend to the task list
-		$('.resources').append($resources);
+	var $resources = '<select id="resources"  name="resources[]" multiple="multiple">';
+	for (var i = 0; i < demoResources.length; i++) {
+		$resources += '<option value="'+demoResources[i].res_id+'">'+demoResources[i].res_name+'</option>';
+	}
+	$resources += '</select>';
+	// add backend to the task list
+	$('.resources').append($resources);
 
-		// initialize multiple selectors
-		$('#resources').chosen({width: '95%'});
-	});
+	// initialize multiple selectors
+	$('#resources').chosen({width: '95%'});
 
 	// assign random parent color
 	$('input[name="color"]').val('#'+Math.floor(Math.random()*16777215).toString(16));

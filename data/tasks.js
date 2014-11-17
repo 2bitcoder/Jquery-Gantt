@@ -1,4 +1,4 @@
-[{
+var demoTasks = [{
     "id": 1,
     "name": "Project Initiation Activities",
     "action": "edit",
@@ -283,4 +283,4 @@
     "deliverable": false,
     "parentid": 0,
     "sortindex": 15
-}]
+}];
