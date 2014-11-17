@@ -18,7 +18,6 @@ app.TaskHierarchyModel = Backbone.Model.extend({
 		}.bind(this));
 	},
 	_checkTime : function() {
-		console.log('checking time on', this.get('parent').get('name'));
 		var startTime = this.children.at(0).get('start');
 		var endTime = this.children.at(0).get('end');
 		this.children.each(function(child) {
@@ -32,7 +31,6 @@ app.TaskHierarchyModel = Backbone.Model.extend({
 			}
 		}.bind(this));
 		this.get('parent').set('start', startTime);
-		console.log('new start', startTime);
 		this.get('parent').set('end', endTime);
 
 	}

@@ -179,7 +179,6 @@
 			});
 			this.listenTo(this.model,'change:active',this.toggleChildren);
 			this.listenTo(this.model,'onsort',this.renderSortedChildren);
-			console.log(this.model);
 			this.listenTo(this.model.get('parent'),'change:start change:end', function(){
 				this.topbar.setAttrs(this.getRectparams());
 				this.topbar.getLayer().draw();
