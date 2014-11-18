@@ -5,9 +5,7 @@ function ContextMenuView() {
         callback: function(key) {
 //            debugger;
             var id = $(this.parent()).attr('id');
-            console.log(id);
             if(key == 'delete'){
-                var id = $(this).attr('id');
                 var model = app.tasks.get(id);
                 model.set('action','delete');
                 model.save();
@@ -16,7 +14,6 @@ function ContextMenuView() {
                 });
             }
             if(key == 'properties'){
-                var id = $(this).attr('id');
                 var model = app.tasks.get(id);
                 var $property = '.property-';
                 var status = {
@@ -50,21 +47,19 @@ function ContextMenuView() {
                     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
                 }
             }
-            console.log(this);
             if(key == 'rowAbove'){
                 var data = {
-                    reference_id : $(this).parent().attr('id')
+                    reference_id : id
                 };
                 self.addTask(data, 'above');
             }
             if(key == 'rowBelow'){
                 var data = {
-                    reference_id : $(this).parent().attr('id')
+                    reference_id : id
                 };
                 self.addTask(data, 'below');
             }
             if(key == 'indent'){
-                var id = $(this).attr('id');
                 var model = app.tasks.get(id);
                 $(this).find('.expand-menu').remove();
                 var rel_id = $(this).closest('div').prev().find('.sub-task').last().attr('id');
@@ -85,7 +80,6 @@ function ContextMenuView() {
                 location.reload();
             }
             if(key == 'outdent'){
-                var id = $(this).attr('id');
                 var model = app.tasks.get(id);
                 model.set('parentid',0);
                 model.save();

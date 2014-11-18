@@ -39,7 +39,7 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 				var parent = this.find(function(m) {
 					return m.get('parent').id === model.get('parentid');
 				});
-				parent.addChild(model);
+				parent.children.add(model);
 				this.trigger('add', parent);
 			} else {
 				this.add({
