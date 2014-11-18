@@ -1,8 +1,11 @@
 function ContextMenuView() {
     var self = this;
     $('.task-container').contextMenu({
-        selector: 'ul',
+        selector: 'div',
         callback: function(key) {
+//            debugger;
+            var id = $(this.parent()).attr('id');
+            console.log(id);
             if(key == 'delete'){
                 var id = $(this).attr('id');
                 var model = app.tasks.get(id);
@@ -47,15 +50,16 @@ function ContextMenuView() {
                     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
                 }
             }
+            console.log(this);
             if(key == 'rowAbove'){
                 var data = {
-                    reference_id : $(this).attr('id')
+                    reference_id : $(this).parent().attr('id')
                 };
                 self.addTask(data, 'above');
             }
             if(key == 'rowBelow'){
                 var data = {
-                    reference_id : $(this).attr('id')
+                    reference_id : $(this).parent().attr('id')
                 };
                 self.addTask(data, 'below');
             }
@@ -126,5 +130,6 @@ ContextMenuView.prototype.addTask = function(data, insertPos) {
     }
     data.sortindex = sortindex;
     data.parentid = ref_model.get('parentid');
+    data.id = data.id || Math.random().toString();
     app.tasks.add(data, {parse : true});
 };

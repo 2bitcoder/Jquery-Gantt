@@ -59,10 +59,10 @@ app.TaskView=Backbone.View.extend({
 
 		this.$parentel = itemView.render(true).$el;
 		this.$el.append(this.$parentel);
+
 		this.$el.data({
 			id : parent.id
 		});
-
 		this.$childel = $('<ol class="sub-task-list sortable"></ol>');
 
 		this.$el.append(this.$childel);
