@@ -1,0 +1,21 @@
+{
+  "name": "GanttJS",
+  "version": "0.1.0",
+  "description": "",
+  "main": "test_server.js",
+  "scripts": {
+    "start": "node test_server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:2bitcoder/Jquery-Gantt.git"
+  },
+  "license": "MIT License",
+  "dependencies": {
+    "body-parser": "1.9.2",
+    "express": "4.10.1",
+    "lodash": "^2.4.1",
+    "morgan": "1.5.0",
+    "serve-static": "^1.7.1"
+  }
+}

@@ -16,4 +16,4 @@ wbsid: 4,
 res_id: 13, 
 res_name: "Joe Black" , 
 res_allocation: 100}	  
-]
+];

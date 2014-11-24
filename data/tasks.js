@@ -1,4 +1,4 @@
-var demoTasks = [{
+module.exports = [{
     "id": 1,
     "name": "Project Initiation Activities",
     "action": "edit",
