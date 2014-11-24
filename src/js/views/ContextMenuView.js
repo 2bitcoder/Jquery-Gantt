@@ -124,6 +124,7 @@ ContextMenuView.prototype.addTask = function(data, insertPos) {
     }
     data.sortindex = sortindex;
     data.parentid = ref_model.get('parentid');
-    data.id = data.id || Math.random().toString();
-    app.tasks.add(data, {parse : true});
+//    data.id = data.id || Math.random().toString();
+    var task = app.tasks.add(data, {parse : true});
+    task.save();
 };

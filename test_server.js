@@ -56,7 +56,6 @@ app.put('/api/tasks/:id', function(req, res) {
     });
 
     if (task) {
-      console.dir(req.body);
       _(req.body).each(function(val, key) {
         task[key] = val;
       });

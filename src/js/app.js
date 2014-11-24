@@ -11,7 +11,7 @@ $(function () {
 
 	app.tasks.fetch({
 		success : function() {
-			console.log('success loading tasks');
+			console.log('Success loading tasks.');
 			app.setting = new app.SettingModel();
 
 			app.THCollection = app.TaskHierarchyCollection.importData(

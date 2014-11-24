@@ -33,7 +33,6 @@ app.KCanvasView=Backbone.KineticView.extend({
 				this.Flayer.add(groupi.group);
 			}.bind(this));
 			this.rendergroups();
-			console.error('render after adding');
 		});
 		this.initializeFrontLayer();
 		this.initializeBackLayer();
@@ -48,7 +47,6 @@ app.KCanvasView=Backbone.KineticView.extend({
 				waiting = true;
 				setTimeout(function() {
 					this.rendergroups();
-					console.log('render after sorting');
 					waiting = false;
 				}.bind(this), 10);
 			}
@@ -251,7 +249,6 @@ app.KCanvasView=Backbone.KineticView.extend({
 			if( dragInt == 14 || dragInt == 30){
 				hideDate = true;
 			}
-			//console.log(hData[s]);
 			for(i=0,iLen=hData[s].length;i<iLen;i++){
 				length=hData[s][i].duration*daysWidth;
 				x = x+length;
