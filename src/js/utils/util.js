@@ -1,32 +1,22 @@
-var app = app || {};
+var monthsCode=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-app.util = (function(){
+module.exports.correctdate = function(str) {
+	"use strict";
+	return str;
+};
 
-	// var dateRegrex=/^(\d{1,2})\/(\d{1,2})\/(\d{4})/;
-	var monthsCode=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+module.exports.formatdata = function(val, type) {
+	"use strict";
+	if (type === 'm') {
+		return monthsCode[val];
+	}
+	return val;
+};
+
+module.exports.hfunc = function(pos) {
+	"use strict";
 	return {
-		correctdate: function(str) {
-			// var matches,datestr='';
-			// matches=str.match(dateRegrex);
-			// if(matches.length<4) throw 'Unknown date format';
-			// for(i=1;i<3;i++){
-			// 	datestr = datestr + ((matches[i].length<2)?'0'+matches[i]:matches[i]);
-			// 	datestr += '/';
-			// }
-			// datestr += matches[3];
-			return str;
-		},
-		formatdata: function(val, type) {
-			if(type==='m'){
-				return monthsCode[val];
-			}
-			return val;
-		},
-		hfunc:function(pos){
-			return {
-				x:pos.x,
-				y: this.getAbsolutePosition().y
-			};
-		}
+		x: pos.x,
+		y: this.getAbsolutePosition().y
 	};
-}());
+};

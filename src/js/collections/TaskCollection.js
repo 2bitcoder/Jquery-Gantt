@@ -1,7 +1,9 @@
-var app= app || {};
+var TaskModel = require('../models/TaskModel');
 
-app.TaskCollection = Backbone.Collection.extend({
+var TaskCollection = Backbone.Collection.extend({
 	url : 'api/tasks',
-	model: app.TaskModel
+	model: TaskModel
 });
+
+module.exports = TaskCollection;
 

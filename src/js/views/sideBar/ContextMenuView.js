@@ -1,20 +1,23 @@
-function ContextMenuView() {
+function ContextMenuView(app) {
+    "use strict";
+    this.app = app;
+}
+
+ContextMenuView.prototype.render = function() {
     var self = this;
     $('.task-container').contextMenu({
         selector: 'div',
         callback: function(key) {
-//            debugger;
             var id = $(this.parent()).attr('id');
-            if(key == 'delete'){
-                var model = app.tasks.get(id);
-                model.set('action','delete');
+            var model = self.app.tasks.get(id);
+            if(key === 'delete'){
+                model.destroy();
                 model.save();
                 $(this).fadeOut(function(){
                     $(this).remove();
                 });
             }
-            if(key == 'properties'){
-                var model = app.tasks.get(id);
+            if(key === 'properties'){
                 var $property = '.property-';
                 var status = {
                     '108': 'Ready',
@@ -47,30 +50,28 @@ function ContextMenuView() {
                     return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
                 }
             }
-            if(key == 'rowAbove'){
+            if(key === 'rowAbove'){
                 var data = {
                     reference_id : id
                 };
                 self.addTask(data, 'above');
             }
-            if(key == 'rowBelow'){
-                var data = {
+            if(key === 'rowBelow'){
+                self.addTask({
                     reference_id : id
-                };
-                self.addTask(data, 'below');
+                }, 'below');
             }
-            if(key == 'indent'){
-                var model = app.tasks.get(id);
+            if(key === 'indent'){
                 $(this).find('.expand-menu').remove();
                 var rel_id = $(this).closest('div').prev().find('.sub-task').last().attr('id');
-                var prevModel = app.tasks.get(rel_id);
+                var prevModel = this.app.tasks.get(rel_id);
                 var parent_id = prevModel.get('parentid');
                 model.set('parentid', parent_id);
                 model.save();
                 var tobeChild = $(this).next().children();
                 jQuery.each(tobeChild, function(index, data){
                     var childId = $(this).attr('id');
-                    var childModel = app.tasks.get(childId);
+                    var childModel = this.app.tasks.get(childId);
                     childModel.set('parentid',parent_id);
                     childModel.save();
                 });
@@ -79,8 +80,7 @@ function ContextMenuView() {
                 });
                 location.reload();
             }
-            if(key == 'outdent'){
-                var model = app.tasks.get(id);
+            if(key === 'outdent'){
                 model.set('parentid',0);
                 model.save();
                 var tobeChild = $(this).parent().children();
@@ -88,7 +88,7 @@ function ContextMenuView() {
                 jQuery.each(tobeChild, function(index, data){
                     if(index > currIndex){
                         var childId = $(this).attr('id');
-                        var childModel = app.tasks.get(childId);
+                        var childModel = self.app.tasks.get(childId);
                         childModel.set('parentid',model.get('id'));
                         childModel.save();
                     }
@@ -112,19 +112,20 @@ function ContextMenuView() {
             "delete": {name: "Delete Row", icon: ""}
         }
     });
-}
+};
 
 ContextMenuView.prototype.addTask = function(data, insertPos) {
     var sortindex = 0;
-    var ref_model = app.tasks.get(data.reference_id);
+    var ref_model = this.app.tasks.get(data.reference_id);
     if (ref_model) {
         sortindex = ref_model.get('sortindex') + (insertPos === 'above' ? -0.5 : 0.5)
     } else {
-        sortindex = (app.tasks.last().get('sortindex') + 1);
+        sortindex = (this.app.tasks.last().get('sortindex') + 1);
     }
     data.sortindex = sortindex;
     data.parentid = ref_model.get('parentid');
-//    data.id = data.id || Math.random().toString();
-    var task = app.tasks.add(data, {parse : true});
+    var task = this.app.tasks.add(data, {parse : true});
     task.save();
 };
+
+module.exports = ContextMenuView;

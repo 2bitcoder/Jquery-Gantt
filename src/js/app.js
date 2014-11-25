@@ -1,27 +1,33 @@
-var app = app || {};
 var demoResources = [{"wbsid":1,"res_id":1,"res_name":"Joe Black","res_allocation":60},{"wbsid":3,"res_id":2,"res_name":"John Blackmore","res_allocation":40}];
 
-// disable sync while developing
-//Backbone.sync = function() {};
+var TaskCollection = require('./collections/taskCollection');
+var TaskHierarchyCollection = require('./collections/TaskHierarchyCollection');
+var Settings = require('./models/SettingModel');
 
+var GanttView = require('./views/GanttView');
 
+var prepareAddForm = require('./views/prepareAddForm');
 $(function () {
     'use strict';
-	app.tasks = new app.TaskCollection();
+	var app = window.app || {};
+	app.tasks = new TaskCollection();
 
 	app.tasks.fetch({
 		success : function() {
 			console.log('Success loading tasks.');
-			app.setting = new app.SettingModel();
+			app.setting = new Settings({}, {app : app});
 
-			app.THCollection = app.TaskHierarchyCollection.importData(
+			app.THCollection = TaskHierarchyCollection.importData(
 				/*collection  =*/ app.tasks,
 				/*parentAttribute  =*/'parentid',
 				/*rootid =*/0,
 				/*sortBy=*/ 'sortindex'
 			);
 
-			new app.GanttView().render();
+			prepareAddForm();
+			new GanttView({
+				app : app
+			}).render();
 
 			// initalize parent selector for "add task form"
 			var $selector = $('.select-parent.dropdown').find('.menu');
@@ -60,9 +66,4 @@ $(function () {
 			console.error(err);
 		}
 	}, {parse: true});
-	return;
-
-
-
-	// Item highlighter
 });

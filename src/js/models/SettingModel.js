@@ -1,4 +1,4 @@
-var app= app || {};
+var util = require('../utils/util');
 
 var hfunc = function(pos, evt) {
 	var dragInterval = app.setting.getSetting('attr', 'dragInterval');
@@ -9,13 +9,14 @@ var hfunc = function(pos, evt) {
 	};
 };
 
-app.SettingModel = Backbone.Model.extend({
+var SettingModel = Backbone.Model.extend({
 	defaults:{
 		interval:'fix',
 		//days per interval
 		dpi:1
 	},
-	initialize: function() {
+	initialize: function(attrs, params) {
+		this.app = params.app;
 		this.sattr = {
 			hData: {},
 			dragInterval: 1,
@@ -75,7 +76,7 @@ app.SettingModel = Backbone.Model.extend({
 					return d.toString('dd/MM/yyyy');
 				},
 				t2d: function(t){
-					return Date.parseExact(app.util.correctdate(t), 'dd/MM/yyyy');
+					return Date.parseExact( util.correctdate(t), 'dd/MM/yyyy');
 				}
 			},
 			'end': {
@@ -85,7 +86,7 @@ app.SettingModel = Backbone.Model.extend({
 					return d.toString('dd/MM/yyyy');
 				},
 				t2d: function(t){
-					return Date.parseExact(app.util.correctdate(t), 'dd/MM/yyyy');
+					return Date.parseExact( util.correctdate(t), 'dd/MM/yyyy');
 				}
 			},
 			'status': {
@@ -111,7 +112,7 @@ app.SettingModel = Backbone.Model.extend({
 		
 		};
 		this.getFormElem = this.createElem();
-		this.collection = app.tasks;
+		this.collection = this.app.tasks;
 		this.calculateIntervals();
 		this.on('change:interval change:dpi', this.calculateIntervals);
 	},
@@ -260,7 +261,7 @@ app.SettingModel = Backbone.Model.extend({
 		}
 		
 		//enter duration of first month
-		hData['2'].push({duration:Date.daysdiff(start,start.clone().moveToLastDayOfMonth()),text:app.util.formatdata(start.getMonth(),'m')});
+		hData['2'].push({duration:Date.daysdiff(start,start.clone().moveToLastDayOfMonth()),text: util.formatdata(start.getMonth(),'m')});
 		
 		j=start.getMonth()+1;
 		i=start.getFullYear();
@@ -269,7 +270,7 @@ app.SettingModel = Backbone.Model.extend({
 		while(i<=iLen){
 			while(j<12){
 				if(i==iLen && j==endmonth) break; 
-				hData['2'].push({duration:Date.getDaysInMonth(i,j),text:app.util.formatdata(j,'m')});
+				hData['2'].push({duration:Date.getDaysInMonth(i,j),text: util.formatdata(j,'m')});
 				j += 1;
 				
 			}
@@ -277,7 +278,7 @@ app.SettingModel = Backbone.Model.extend({
 			j=0;
 		}
 		if(end.getMonth()!==start.getMonth && end.getFullYear()!==start.getFullYear()){
-			hData['2'].push({duration:Date.daysdiff(end.clone().moveToFirstDayOfMonth(),end),text:app.util.formatdata(end.getMonth(),'m')});
+			hData['2'].push({duration:Date.daysdiff(end.clone().moveToFirstDayOfMonth(),end),text: util.formatdata(end.getMonth(),'m')});
 		
 		}
 		sattr.hData=hData;
@@ -371,11 +372,7 @@ app.SettingModel = Backbone.Model.extend({
 		return function(field,value,model){
 			return dToText[field]?dToText[field](value,model):value;
 		}
-	}()),
-
-	url:"ci_api/index.php/api/gantt/settings"
-	
-	
-
-
+	}())
 });
+
+module.exports = SettingModel;

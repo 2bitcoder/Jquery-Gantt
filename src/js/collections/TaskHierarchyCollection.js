@@ -1,6 +1,10 @@
-var app= app || {};
-app.TaskHierarchyCollection = Backbone.Collection.extend({
-	model: app.TaskHierarchyModel,
+var TaskHierarchyModel = require('../models/TaskHierarchyModel');
+
+var TaskHierarchyCollection = Backbone.Collection.extend({
+	model: TaskHierarchyModel,
+	initialize : function(models, options) {
+		this.tasks = options.tasks
+	},
 	comparator : function(model) {
 		return model.get('parent').get('sortindex');
 	},
@@ -18,10 +22,10 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 		var sortIndex = 0;
 		var self = this;
 		data.forEach(function(parentData) {
-			var parentModel = app.tasks.get(parentData.id);
+			var parentModel = self.tasks.get(parentData.id);
 			parentModel.set('sortindex', ++sortIndex);
 			parentData.children.forEach(function(childData) {
-				var childModel = app.tasks.get(childData.id);
+				var childModel = self.tasks.get(childData.id);
 				childModel.set('sortindex', ++sortIndex);
 				if (childModel.get('parentid') !== parentModel.id) {
 					childModel.set('parentid', parentModel.id);
@@ -70,7 +74,9 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 			return model.get(sortBy);
 		});
 
-		var newCol = new app.TaskHierarchyCollection();
+		var newCol = new TaskHierarchyCollection([], {
+			tasks : collection
+		});
 
 		sorted.forEach(function(model) {
 			var tcol = {
@@ -86,23 +92,9 @@ app.TaskHierarchyCollection = Backbone.Collection.extend({
 		});
 
 		newCol.subscribe(collection);
-
-		// for(i=0;i<sorted.length;i++){ 
-		// 	tcol={};
-		// 	model=null;
-		// 	id=sorted[i].get('id');
-		// 	tcol['parent']=sorted[i];
-		// 	tcol['children']=[];
-		// 	model=newCol.add(tcol,{silent:true});
-		// 	if(grouped[id]){
-		// 		//console.log(grouped[id]);
-		// 		model.addChildren(grouped[id]);
-		// 	}
-			
-		// }
-		
 		return newCol;
 		
 	}
-
 });
+
+module.exports = TaskHierarchyCollection;

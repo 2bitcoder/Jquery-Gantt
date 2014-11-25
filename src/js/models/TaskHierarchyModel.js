@@ -1,6 +1,5 @@
-var app=app || {};
 
-app.TaskHierarchyModel = Backbone.Model.extend({
+var TaskHierarchyModel = Backbone.Model.extend({
 	defaults:{
 		parent: null,
 		active: true
@@ -38,3 +37,5 @@ app.TaskHierarchyModel = Backbone.Model.extend({
 
 	}
 });
+
+module.exports = TaskHierarchyModel;

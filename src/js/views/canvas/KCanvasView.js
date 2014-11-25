@@ -1,30 +1,55 @@
-var app= app || {};
-app.KCanvasView=Backbone.KineticView.extend({
-	initialize: function(){
-		this.groups=[];
-		this.collection = app.THCollection;
+var BarGroup = require('./BarGroup');
+var Bar = require('./Bar');
 
-		var setting = app.setting.getSetting('display');
+var viewOptions = ['model', 'collection'];
+
+var KineticView = Backbone.KineticView = function(options) {
+	this.cid = _.uniqueId('view');
+	_.extend(this, _.pick(options, viewOptions));
+	this.initialize.apply(this, arguments);
+};
+_.extend(KineticView.prototype, Backbone.Events, {
+	initialize: function(){},
+	render: function() {
+		return this;
+	}
+});
+
+
+KineticView.extend=Backbone.Model.extend;
+
+var KCanvasView = KineticView.extend({
+	initialize: function(params){
+		this.app = params.app;
+		this.groups=[];
+		this.collection =  this.app.THCollection;
+
+		var setting =  this.app.setting.getSetting('display');
 		
 		this.stage = new Kinetic.Stage({
 			container : 'gantt-container',
 			height: 580,
 			width: setting.screenWidth - setting.tHiddenWidth - 20,
 			draggable: true,
-			dragBoundFunc: app.util.hfunc
+			dragBoundFunc:  function(pos) {
+				return {
+					x: pos.x,
+					y: this.getAbsolutePosition().y
+				};
+			}
 		});
 		
 		this.Flayer = new Kinetic.Layer({});
 		this.Blayer = new Kinetic.Layer({});
 		
-		this.listenTo(app.tasks, 'change:sortindex', this.renderRequest);
+		this.listenTo( this.app.tasks, 'change:sortindex', this.renderRequest);
 
 		this.listenTo(this.collection, 'add', function(model) {
-			this.groups.push(new Kinetic.BarGroup({
+			this.groups.push(new BarGroup({
 				model: model
 			}));
 
-			var gsetting = app.setting.getSetting('group');
+			var gsetting =  this.app.setting.getSetting('group');
 			gsetting.currentY = gsetting.iniY;
 
 			this.groups.forEach(function(groupi) {
@@ -66,13 +91,13 @@ app.KCanvasView=Backbone.KineticView.extend({
 	},
 	bindEvents:function(){
 		var calculating=false;
-		this.listenTo(app.THCollection, 'change:active', this.rendergroups);
-		this.listenTo(app.setting, 'change:interval change:dpi', this.renderBars);
+		this.listenTo( this.app.THCollection, 'change:active', this.rendergroups);
+		this.listenTo( this.app.setting, 'change:interval change:dpi', this.renderBars);
 		$('#gantt-container').mousewheel(function(e){
 			if(calculating) {
 				return false;
 			}
-			var cdpi = app.setting.get('dpi'), dpi=0;
+			var cdpi =  this.app.setting.get('dpi'), dpi=0;
 			calculating=true;
 			if (e.originalEvent.wheelDelta > 0){
 				dpi = Math.max(1, cdpi - 1);
@@ -80,11 +105,11 @@ app.KCanvasView=Backbone.KineticView.extend({
 				dpi = cdpi + 1;
 			}
 			if (dpi === 1){
-				if (app.setting.get('interval') === 'auto') {
-					app.setting.set({interval:'daily'});
+				if ( this.app.setting.get('interval') === 'auto') {
+					 this.app.setting.set({interval:'daily'});
 				}
 			} else {
-				app.setting.set({interval: 'auto', dpi: dpi});
+				 this.app.setting.set({interval: 'auto', dpi: dpi});
 			}
 			calculating = false;
 			return false;
@@ -94,16 +119,16 @@ app.KCanvasView=Backbone.KineticView.extend({
 			return false;
 		}
 
-		var cdpi = app.setting.get('dpi'), dpi=0;
+		var cdpi =  this.app.setting.get('dpi'), dpi=0;
 		calculating  =true;
 		dpi = Math.max(0, cdpi + 25);
 
 		if (dpi === 1) {
-			if(app.setting.get('interval')==='auto') {
-				app.setting.set({interval:'daily'});
+			if( this.app.setting.get('interval')==='auto') {
+				 this.app.setting.set({interval:'daily'});
 			}
 		} else {
-			app.setting.set({interval: 'auto', dpi: dpi});
+			 this.app.setting.set({interval: 'auto', dpi: dpi});
 		}
 
 		calculating = false;
@@ -111,16 +136,16 @@ app.KCanvasView=Backbone.KineticView.extend({
 			if(calculating) {
 				return false;
 			}
-			var cdpi = app.setting.get('dpi'), dpi=0;
+			var cdpi =  this.app.setting.get('dpi'), dpi=0;
 			calculating = true;
 			dpi = cdpi + 1;
 
 			if(dpi===1){
-				if (app.setting.get('interval') === 'auto') {
-					app.setting.set({interval: 'daily'});
+				if ( this.app.setting.get('interval') === 'auto') {
+					 this.app.setting.set({interval: 'daily'});
 				}
 			} else {
-				app.setting.set({interval:'auto',dpi:dpi});
+				 this.app.setting.set({interval:'auto',dpi:dpi});
 			}
 			calculating = false;
 			return false;
@@ -128,13 +153,14 @@ app.KCanvasView=Backbone.KineticView.extend({
 	},
 
 	addGroup: function(taskgroup) {
-		this.groups.push(new Kinetic.BarGroup({
-			model: taskgroup
+		this.groups.push(new BarGroup({
+			model: taskgroup,
+			settings : this.app.setting
 		}));
 	},
 
 	render: function(){
-		var gsetting = app.setting.getSetting('group');
+		var gsetting =  this.app.setting.getSetting('group');
 
 		gsetting.currentY = gsetting.iniY;
 		
@@ -160,7 +186,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 					for(var l=0; l < dependency.length; l++){
 						for( var k=0; k < this.groups[i].children.length; k++){
 							if (dependency[l] == this.groups[i].children[k].model.attributes.id ){
-								Kinetic.Bar.createRelation(this.groups[i].children[j], this.groups[i].children[k]);
+								Bar.createRelation(this.groups[i].children[j], this.groups[i].children[k]);
 							}
 						}
 					}					
@@ -182,7 +208,7 @@ app.KCanvasView=Backbone.KineticView.extend({
 	},
 
 	rendergroups:function(){
-		var gsetting = app.setting.getSetting('group');
+		var gsetting =  this.app.setting.getSetting('group');
 		var sorted = _.sortBy(this.groups, function(itemview){
 			return itemview.model.get('parent').get('sortindex');
 		});
@@ -199,11 +225,11 @@ app.KCanvasView=Backbone.KineticView.extend({
 		this.stage.setWidth(value);
 	},
 	getSceneFunc:function(){
-		var setting=app.setting,sdisplay=setting.sdisplay;
+		var setting= this.app.setting,sdisplay=setting.sdisplay;
 		var borderWidth=sdisplay.borderWidth || 1;
 		var offset=borderWidth/2;
 		var rowHeight=20;
-		var interval = app.setting.get('interval');
+		var interval =  this.app.setting.get('interval');
 		return function(context){
 			var lineWidth,sattr=setting.sattr;
 			
@@ -281,3 +307,5 @@ app.KCanvasView=Backbone.KineticView.extend({
 
 
 });
+
+module.exports = KCanvasView;

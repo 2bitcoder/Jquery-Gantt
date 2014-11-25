@@ -1,0 +1,13 @@
+<div>
+    <ul>
+        <% var setting=app.setting;%>
+        <% if(isParent){ %> <li class="expand-menu"><i class="triangle down icon"></i></li><% } %>
+        <li class="col-name"><% print(setting.conDToT("name",name)); %></li>
+        <li class="col-start"><% print(setting.conDToT("start",start));%></li>
+        <li class="col-end"><% print(setting.conDToT("end",end)); %></li>
+        <li class="col-complete"><% print(setting.conDToT("complete",complete)); %></li>
+        <li class="col-status"><% print(setting.conDToT("status",status)); %></li>
+        <li class="col-duration"><% print(setting.conDToT("duration",0,{"start":start,"end":end})); %></li>
+        <li class="remove-item"><button class="mini red ui button"> <i class="small trash icon"></i></button></li>
+    </ul>
+</div>

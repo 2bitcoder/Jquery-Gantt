@@ -1,10 +1,11 @@
-var app=app || {};
+var TaskItemView = require('./TaskItemView');
 
-app.TaskView=Backbone.View.extend({
+var TaskView = Backbone.View.extend({
 	tagName: 'li',
 	className: 'task-list-container drag-item',
-	
-	initialize: function(){
+
+	initialize: function(params){
+		this.app = params.app;
 		this.listenTo(this.model, 'change:active', this.toggleParent);
 	},
 	events: {
@@ -12,49 +13,11 @@ app.TaskView=Backbone.View.extend({
 		'click .add-item button': 'addItem',
 		'click .remove-item button': 'removeItem'
 	},
-	makeSortable:function(){
-//		var that=this;
-//		this.$childel.sortable({
-//			axis: 'y',
-//			helper: function(evt,elem){
-//				var title=elem.find('.col-name').text();
-//				return $('<div>'+title+'</div>');
-//			},
-//			change:function(evt,ui){
-//				var item = ui.item,changedItem;
-//				var id1,id2,model1,model2,temp;
-//				id1=item.attr('id');
-//				if(ui.originalPosition.top<ui.position.top){
-//					//dom position is updated after this function is called
-//					changedItem = ui.placeholder.prev(':not(:hidden)');
-//				}
-//				else{
-//					changedItem = ui.placeholder.next(':not(:hidden)');
-//				}
-//				id2=changedItem.attr('id');
-//				model1=app.tasks.get(id1);
-//				model2=app.tasks.get(id2);
-//
-//				console.log(model1.get('name'), model1.get('sortindex'));
-//				console.log(model2.get('name'), model2.get('sortindex'));
-//
-//				temp=model1.get('sortindex');
-//				model1.set('sortindex', model2.get('sortindex'));
-//				model2.set('sortindex', temp);
-//
-//				model1.save();
-//				model2.save();
-//			},
-//			stop: function() {
-//				that.model.trigger('onsort');
-//			}
-//		});
-
-	},
 	render: function(){
 		var parent = this.model.get('parent');
-		var itemView  =new app.TaskItemView({
-			model : parent
+		var itemView = new TaskItemView({
+			model : parent,
+			app : this.app
 		});
 
 		this.$parentel = itemView.render(true).$el;
@@ -70,17 +33,15 @@ app.TaskView=Backbone.View.extend({
 			return model.get('sortindex');
 		});
 		for(var i=0;i<children.length;i++){
-			itemView=new app.TaskItemView({model:children[i]});
+			itemView=new TaskItemView({model:children[i], app : this.app});
 			itemView.render();
 			this.$childel.append(itemView.el);
 		}
 		this.toggleParent();
-		this.makeSortable();
 		return this;
 	},
 	handleClick:function(ev){
-		var visible=false;
-		visible=this.$childel.is(':visible')
+		var visible=this.$childel.is(':visible')
 		this.model.set('active',!visible);
 		this.model.save();
 		//this.toggleParent();
@@ -91,7 +52,7 @@ app.TaskView=Backbone.View.extend({
 	removeItem: function(evt){
 		var $parentUL = $(evt.currentTarget).closest('ol');
 		var id = $parentUL.attr('id');
-		taskModel = app.tasks.get(id);
+		var taskModel = this.app.tasks.get(id);
 		if($parentUL.hasClass('task')){
 			$parentUL.next('ul').fadeOut(1000, function(){
 				$(this).remove();
@@ -114,3 +75,5 @@ app.TaskView=Backbone.View.extend({
 		this.$parentel.find('.expand-menu').html(str);
 	}
 });
+
+module.exports = TaskView;

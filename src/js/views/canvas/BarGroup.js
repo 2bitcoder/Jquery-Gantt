@@ -1,42 +1,42 @@
-(function(Kinetic,Backbone){
-	Kinetic.BarGroup=function(options){
-		var groupOption,rectOption,setting;
-		this.cid = _.uniqueId('bg');
-		options || (options={});
-		
-		this.model=options.model || {};
-		
-		setting=this.setting=app.setting.getSetting('group');
-		this.attr = {
-			height: 0
-		};
-		this.syncing=false;
-		this.children=[];
+var Bar = require('./Bar');
 
-		this.group = new Kinetic.Group(this.getGroupParams());
-		this.topbar = new Kinetic.Rect(this.getRectparams());
-		this.group.add(this.topbar);
+var BarGroup = function(options){
+	this.cid = _.uniqueId('bg');
+	this.settings = options.settings;
+	this.model = options.model;
+	var setting = this.setting = options.settings.getSetting('group');
+	this.attr = {
+		height: 0
+	};
+	this.syncing=false;
+	this.children=[];
 
-		this.attr.height +=  setting.rowHeight;
+	this.group = new Kinetic.Group(this.getGroupParams());
+	this.topbar = new Kinetic.Rect(this.getRectparams());
+	this.group.add(this.topbar);
 
-		if(setting.draggable){
-			this.makeDraggable();
-		}
-		if(setting.resizable){
-			this.topbar.makeResizable();
-		}
-		this.initialize();
+	this.attr.height +=  setting.rowHeight;
+
+	if(setting.draggable){
+		this.makeDraggable();
 	}
-	Kinetic.BarGroup.prototype={
+	if(setting.resizable){
+		this.topbar.makeResizable();
+	}
+	this.initialize();
+};
+
+BarGroup.prototype={
 		initialize:function(){
 			this.model.children.each(function(child) {
-				this.addChild(new Kinetic.Bar({
-					model:child
+				this.addChild(new Bar({
+					model:child,
+					settings : this.settings
 				}));
 			}.bind(this));
 
 			this.listenTo(this.model.children, 'add', function(child) {
-				this.addChild(new Kinetic.Bar({
+				this.addChild(new Bar({
 					model:child
 				}));
 				this.renderSortedChildren(true);
@@ -88,7 +88,7 @@
 				for(var j=0;j<dependencies.length;j++){
 					bar=this.findById(dependencies[j]['id']);
 					if(bar){
-						Kinetic.Bar.createRelation(bar,children[i]);
+						Bar.createRelation(bar,children[i]);
 					}
 				}
 				
@@ -186,15 +186,14 @@
 
 		},
 		getGroupParams: function(){
-			var setting=app.setting.getSetting('group');
 			return _.extend({
 				x:0,
 				y:0,
-			},setting.topBar);
+			}, this.setting.topBar);
 			
 		},
 		calculateX:function(model){
-			var attrs=app.setting.getSetting('attr'),
+			var attrs= this.settings.getSetting('attr'),
 			boundaryMin=attrs.boundaryMin,
 			daysWidth=attrs.daysWidth;
 			return {
@@ -248,5 +247,6 @@
 		}
 	};
 
-	_.extend(Kinetic.BarGroup.prototype,Backbone.Events);
-}(Kinetic,Backbone));
+_.extend(BarGroup.prototype, Backbone.Events);
+
+module.exports = BarGroup;

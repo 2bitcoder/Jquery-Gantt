@@ -1,5 +1,3 @@
-window.currentDpt= [];
-(function(Kinetic,Backbone){
 	var dd=Kinetic.DD;
 	var barOptions=['draggable','dragBoundFunc','resizable','resizeBoundFunc','height','width','x','y'];
 
@@ -60,13 +58,13 @@ window.currentDpt= [];
 		return (stage.getPointerPosition().x-dd.startPointerPos.x>0)?'right':'left';
 	}
 
-	Kinetic.Bar=function(options){
-		options || (options={});
-
+	var Bar=function(options){
 		this.model=options.model;
-		this.listenTo(this.model, 'change:complete', this._updateCompleteBar);
+		this.settings = options.settings;
 
-		var setting=this.setting=app.setting.getSetting('bar');
+		this.listenTo(this.model, 'change:complete', this._updateCompleteBar);
+		
+		var setting = this.setting = this.settings.getSetting('bar');
 		//this.barid = _.uniqueId('b');
 		this.subgroupoptions={
 			showOnHover: true,
@@ -86,7 +84,7 @@ window.currentDpt= [];
 		rectoptions.name='mainbar';*/
 
 		// coloring section
-		var parentModel = app.tasks.get(this.model.get('parentid'));
+		var parentModel = this.model.collection.get(this.model.get('parentid'));
 		this.setting.rectoption.fill = parentModel.get('lightcolor');		
 		this.group=new Kinetic.Group(this.getGroupParams());
 		//remove the strokeEnabled if not provided in option
@@ -123,7 +121,7 @@ window.currentDpt= [];
 		this.bindEvents();
 		//this.on('resize move',this.renderConnectors,this);;
 	}
-	Kinetic.Bar.prototype={
+	Bar.prototype={
 		_updateCompleteBar : function() {
 			var leftx=this.leftHandle.getX();
 			var w = this.rightHandle.getX() - leftx+2;
@@ -287,10 +285,10 @@ window.currentDpt= [];
 			targetName=target.getName();
 			window.startBar;
 			if(targetName!=='mainbar'){
-				Kinetic.Bar.disableConnector();
+				Bar.disableConnector();
 				if(targetName=='anchor'){
 					target.stroke('red');
-					Kinetic.Bar.enableConnector(this);
+					Bar.enableConnector(this);
 					var dept = this.model.get('dependency');
 					if(dept != ""){
 						window.currentDpt.push(this.model.get('dependency'));	
@@ -300,12 +298,12 @@ window.currentDpt= [];
 				}
 			}
 			else{
-				if((startBar=Kinetic.Bar.isConnectorEnabled())){
-					Kinetic.Bar.createRelation(startBar,this);
+				if((startBar=Bar.isConnectorEnabled())){
+					Bar.createRelation(startBar,this);
 					window.currentDpt.push(this.model.get('id'));
 					window.startBar.set('dependency', JSON.stringify(window.currentDpt));
 					window.startBar.save();
-					Kinetic.Bar.disableConnector();
+					Bar.disableConnector();
 				}
 			}
 			evt.cancelBubble=true;
@@ -492,10 +490,10 @@ window.currentDpt= [];
 		//@type Dependant:1, Dependency:2
 		renderConnector:function(obj,type){
 			if(type==1){
-				Kinetic.Bar.renderConnector(this,obj.elem,obj.connector);
+				Bar.renderConnector(this,obj.elem,obj.connector);
 			}
 			else{
-				Kinetic.Bar.renderConnector(obj.elem,this,obj.connector);
+				Bar.renderConnector(obj.elem,this,obj.connector);
 			}
 		},
 		//renders all connectors
@@ -533,7 +531,7 @@ window.currentDpt= [];
 		},
 		calculateX:function(model){
 			!model && (model=this.model);
-			var attrs=app.setting.getSetting('attr'),
+			var attrs= this.settings.getSetting('attr'),
 			boundaryMin=attrs.boundaryMin,
 			daysWidth=attrs.daysWidth;
 			return {
@@ -596,7 +594,7 @@ window.currentDpt= [];
 	//It creates a relation between dependant and dependency
 	//Dependant is the task which needs to be done after dependency
 	//Suppose task B requires task A to be done beforehand. So, A is dependancy/requirement for B whereas B is dependant on A.
-	Kinetic.Bar.createRelation=function(dependency,dependant){
+	Bar.createRelation=function(dependency,dependant){
 		var connector,parent;
 		parent=dependant.group.getParent();
 		connector=this.createConnector();
@@ -613,7 +611,7 @@ window.currentDpt= [];
 		
 	}
 	
-	Kinetic.Bar.createConnector=function(){
+	Bar.createConnector=function(){
 		return new Kinetic.Line({
 			strokeWidth: 1,
 			stroke: 'black',
@@ -621,21 +619,21 @@ window.currentDpt= [];
 		});
 		
 	},
-	Kinetic.Bar.enableConnector=function(start){
+	Bar.enableConnector=function(start){
 		Kinetic.Connect.start=start;
 		start.subgroupoptions.hideOnHoverOut=false;
 	}
-	Kinetic.Bar.disableConnector=function(){
+	Bar.disableConnector=function(){
 		if(!Kinetic.Connect.start) return;
 		var start=Kinetic.Connect.start;
 		start.subgroupoptions.hideOnHoverOut=true;
 		Kinetic.Connect.start=null;
 	}
 	
-	Kinetic.Bar.isConnectorEnabled=function(){
+	Bar.isConnectorEnabled=function(){
 		return Kinetic.Connect.start;
 	}
-	Kinetic.Bar.renderConnector=function(startBar,endBar,connector){
+	Bar.renderConnector=function(startBar,endBar,connector){
 		
 		var point1,point2,halfheight,points,color='#000';
 		halfheight=parseInt(startBar.getHeight()/2);
@@ -708,5 +706,6 @@ window.currentDpt= [];
 	
 	
 	
-	_.extend(Kinetic.Bar.prototype,Backbone.Events);
-})(Kinetic,Backbone);
+	_.extend(Bar.prototype, Backbone.Events);
+
+	module.exports = Bar;

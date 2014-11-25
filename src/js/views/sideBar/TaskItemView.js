@@ -1,16 +1,19 @@
-var app= app || {};
-app.TaskItemView=Backbone.View.extend({
+var fs = require('fs');
+var template = fs.readFileSync(__dirname + '/taskTemplate.html', 'utf8');
+
+var TaskItemView=Backbone.View.extend({
 	tagName : 'li',
-	template: _.template($('#itemView').html()),
+	template: _.template(template),
 	isParent: false,
-	initialize: function(){
+	initialize: function(params){
+		this.app = params.app;
 		this.listenTo(this.model,'editrow',this.edit);
 		this.listenTo(this.model,'change:name change:start change:end change:complete change:status',this.renderRow);
 		this.$el.hover(function(e){
 			$(document).find('.item-selector').stop().css({
 				top: ($(e.currentTarget).offset().top)+'px'
 			}).fadeIn();
-		}, function(e){
+		}, function(){
 			$(document).find('.item-selector').stop().fadeOut();
 		});
 		this.$el.on('click',function(){
@@ -38,19 +41,20 @@ app.TaskItemView=Backbone.View.extend({
 	},
 	renderRow:function(){
 		var data = this.model.toJSON();
-		data['isParent'] = this.isParent;
+		data.isParent = this.isParent;
 //		if (this.isParent) {
 //			this.$handle.html(this.template(data));
 //		} else {
-			this.$el.html(this.template(data));
+		data.app = this.app;
+		this.$el.html(this.template(data));
 //		}
 		return this;
 	},
 	edit:function(evt){
 		var target = $(evt.target);
-		var width  =parseInt(target.css('width'))-5;
+		var width  = parseInt(target.css('width'), 10) - 5;
 		var field = target.attr('class').split('-')[1];
-		var form = app.setting.getFormElem(field,this.model,this.onEdit,this);
+		var form = this.app.setting.getFormElem(field,this.model,this.onEdit,this);
 		form.css({width:width+'px',height:'10px'});
 		target.html(form);
 		form.focus();
@@ -58,7 +62,7 @@ app.TaskItemView=Backbone.View.extend({
 	onEdit:function(name,value){
 		if(name==='duration'){
 			var start=this.model.get('start');
-			var end=start.clone().addDays(parseInt(value)-1);
+			var end=start.clone().addDays(parseInt(value, 10)-1);
 			this.model.set('end',end);
 		}
 		else{
@@ -68,6 +72,6 @@ app.TaskItemView=Backbone.View.extend({
 		}
 		this.renderRow();
 	}
-
-
 });
+
+module.exports = TaskItemView;
