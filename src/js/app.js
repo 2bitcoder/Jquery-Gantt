@@ -1,7 +1,6 @@
 var demoResources = [{"wbsid":1,"res_id":1,"res_name":"Joe Black","res_allocation":60},{"wbsid":3,"res_id":2,"res_name":"John Blackmore","res_allocation":40}];
 
 var TaskCollection = require('./collections/taskCollection');
-var TaskHierarchyCollection = require('./collections/TaskHierarchyCollection');
 var Settings = require('./models/SettingModel');
 
 var GanttView = require('./views/GanttView');
@@ -16,17 +15,11 @@ $(function () {
 		success : function() {
 			console.log('Success loading tasks.');
 			app.setting = new Settings({}, {app : app});
-
-			app.THCollection = TaskHierarchyCollection.importData(
-				/*collection  =*/ app.tasks,
-				/*parentAttribute  =*/'parentid',
-				/*rootid =*/0,
-				/*sortBy=*/ 'sortindex'
-			);
-
+			app.tasks.linkChildren();
 			prepareAddForm();
 			new GanttView({
-				app : app
+				app : app,
+				collection : app.tasks
 			}).render();
 
 			// initalize parent selector for "add task form"

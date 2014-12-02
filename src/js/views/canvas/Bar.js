@@ -120,7 +120,8 @@
 		//addEvents
 		this.bindEvents();
 		//this.on('resize move',this.renderConnectors,this);;
-	}
+	};
+
 	Bar.prototype={
 		_updateCompleteBar : function() {
 			var leftx=this.leftHandle.getX();

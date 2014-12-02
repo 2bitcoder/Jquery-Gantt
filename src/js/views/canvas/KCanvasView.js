@@ -22,8 +22,7 @@ var KCanvasView = KineticView.extend({
 	initialize: function(params){
 		this.app = params.app;
 		this.groups=[];
-		this.collection =  this.app.THCollection;
-
+		this.settings = this.app.setting;
 		var setting =  this.app.setting.getSetting('display');
 		
 		this.stage = new Kinetic.Stage({
@@ -45,6 +44,9 @@ var KCanvasView = KineticView.extend({
 		this.listenTo( this.app.tasks, 'change:sortindex', this.renderRequest);
 
 		this.listenTo(this.collection, 'add', function(model) {
+			if (!parseInt(model.get('parentid'), 10)) {
+				return;
+			}
 			this.groups.push(new BarGroup({
 				model: model
 			}));
@@ -54,7 +56,7 @@ var KCanvasView = KineticView.extend({
 
 			this.groups.forEach(function(groupi) {
 				groupi.setY(gsetting.currentY);
-				gsetting.currentY += groupi.getCurrentHeight();
+				gsetting.currentY += groupi.getHeight();
 				this.Flayer.add(groupi.group);
 			}.bind(this));
 			this.rendergroups();
@@ -68,13 +70,12 @@ var KCanvasView = KineticView.extend({
 		return function() {
 			if (waiting) {
 				return;
-			} else {
-				waiting = true;
-				setTimeout(function() {
-					this.rendergroups();
-					waiting = false;
-				}.bind(this), 10);
 			}
+			waiting = true;
+			setTimeout(function() {
+				this.rendergroups();
+				waiting = false;
+			}.bind(this), 10);
 		};
 	})(),
 	initializeBackLayer:function(){
@@ -87,17 +88,22 @@ var KCanvasView = KineticView.extend({
 		
 	},
 	initializeFrontLayer:function(){
-		this.collection.each(this.addGroup,this);
+		this.collection.each(function(task) {
+			"use strict";
+			if (!task.get('parentid')) {
+				this.addGroup(task);
+			}
+		}, this);
 	},
 	bindEvents:function(){
 		var calculating=false;
-		this.listenTo( this.app.THCollection, 'change:active', this.rendergroups);
+		this.listenTo( this.collection, 'change:active', this.rendergroups);
 		this.listenTo( this.app.setting, 'change:interval change:dpi', this.renderBars);
 		$('#gantt-container').mousewheel(function(e){
 			if(calculating) {
 				return false;
 			}
-			var cdpi =  this.app.setting.get('dpi'), dpi=0;
+			var cdpi =  this.settings.get('dpi'), dpi=0;
 			calculating=true;
 			if (e.originalEvent.wheelDelta > 0){
 				dpi = Math.max(1, cdpi - 1);
@@ -113,7 +119,7 @@ var KCanvasView = KineticView.extend({
 			}
 			calculating = false;
 			return false;
-		});
+		}.bind(this));
 
 		if (calculating) {
 			return false;
@@ -149,7 +155,7 @@ var KCanvasView = KineticView.extend({
 			}
 			calculating = false;
 			return false;
-		});
+		}.bind(this));
 	},
 
 	addGroup: function(taskgroup) {
@@ -166,7 +172,7 @@ var KCanvasView = KineticView.extend({
 		
 		this.groups.forEach(function(groupi) {
 			groupi.setY(gsetting.currentY);
-			gsetting.currentY += groupi.getCurrentHeight();
+			gsetting.currentY += groupi.getHeight();
 			this.Flayer.add(groupi.group);
 		}.bind(this));
 
@@ -210,14 +216,13 @@ var KCanvasView = KineticView.extend({
 	rendergroups:function(){
 		var gsetting =  this.app.setting.getSetting('group');
 		var sorted = _.sortBy(this.groups, function(itemview){
-			return itemview.model.get('parent').get('sortindex');
+			return itemview.model.get('sortindex');
 		});
 		gsetting.currentY = gsetting.iniY;
-
 		sorted.forEach(function(groupi) {
 			groupi.setY(gsetting.currentY);
-			gsetting.currentY += groupi.getCurrentHeight();
 			groupi.renderSortedChildren();
+			gsetting.currentY += groupi.getHeight();
 		});
 		this.Flayer.draw();
 	},
@@ -225,7 +230,7 @@ var KCanvasView = KineticView.extend({
 		this.stage.setWidth(value);
 	},
 	getSceneFunc:function(){
-		var setting= this.app.setting,sdisplay=setting.sdisplay;
+		var setting= this.app.setting, sdisplay = setting.sdisplay;
 		var borderWidth=sdisplay.borderWidth || 1;
 		var offset=borderWidth/2;
 		var rowHeight=20;

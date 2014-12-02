@@ -37,7 +37,8 @@ BarGroup.prototype={
 
 			this.listenTo(this.model.children, 'add', function(child) {
 				this.addChild(new Bar({
-					model:child
+					model:child,
+					settings : this.settings
 				}));
 				this.renderSortedChildren(true);
 			}.bind(this));
@@ -135,7 +136,7 @@ BarGroup.prototype={
 			if(this.model.get('active'))
 				return this.attr.height;
 			else{
-				return app.setting.getSetting('group','rowHeight');
+				return this.settings.getSetting('group','rowHeight');
 			}
 		},
 		
@@ -158,7 +159,7 @@ BarGroup.prototype={
 
 		},
 		renderTopBar:function(){
-			var parent=this.model.get('parent');
+			var parent=this.model;
 			var x=this.calculateX(parent);
 
 			this.topbar.setX(x.x1-this.group.getX());
@@ -179,7 +180,7 @@ BarGroup.prototype={
 			});
 			this.listenTo(this.model,'change:active',this.toggleChildren);
 			this.listenTo(this.model,'onsort',this.renderSortedChildren);
-			this.listenTo(this.model.get('parent'),'change:start change:end', function(){
+			this.listenTo(this.model,'change:start change:end', function(){
 				this.topbar.setAttrs(this.getRectparams());
 				this.topbar.getLayer().draw();
 			});
@@ -213,7 +214,7 @@ BarGroup.prototype={
 			
 		},
 		getRectparams:function(){
-			var parent=this.model.get('parent');
+			var parent=this.model;
 			var xs=this.calculateX(parent);
 			var setting=this.setting;
 			return _.extend({
