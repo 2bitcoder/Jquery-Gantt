@@ -48,7 +48,8 @@ var KCanvasView = KineticView.extend({
 				return;
 			}
 			this.groups.push(new BarGroup({
-				model: model
+				model: model,
+				settings : this.settings
 			}));
 
 			var gsetting =  this.app.setting.getSetting('group');

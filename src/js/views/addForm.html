@@ -1,0 +1,74 @@
+<div class="ui small modal add-new-task flip">
+    <i class="close icon"></i>
+    <div class="header">
+    </div>
+    <div class="content">
+        <form id="new-task-form" action="/" type="POST">
+            <div class="ui form segment">
+                <p>Let's go ahead and set a new goal.</p>
+                <div class="field">
+                    <label>Task name</label>
+                    <input type="text" name="name" placeholder="New task name" required>
+                </div>
+                <div class="field">
+                    <label>Discription</label>
+                    <textarea name="description" placeholder="The detailed description of your task"></textarea>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Select parent</label>
+                        <!--<div class="ui dropdown selection">-->
+                            <select name="parentid" class="ui dropdown">
+                            </select>
+                        <!--</div>-->
+                    </div>
+                    <div class="field resources">
+                        <label>Assign Resources</label>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label>Start Date</label>
+                        <input type="date" name="start" placeholder="Start Date" required>
+                    </div>
+                    <div class="field">
+                        <label>End Date</label>
+                        <input type="date" name="end" placeholder="End Date" required>
+                    </div>
+                </div>
+                <input type="hidden" name="complete" value="0">
+                <input type="hidden" name="action" value="add">
+                <input type="hidden" name="dependency" value="">
+                <input type="hidden" name="aType" value="">
+                <input type="hidden" name="health" value="21">
+                <input type="hidden" name="color" value="">
+                <input type="hidden" name="milestone" value="1">
+                <input type="hidden" name="deliverable" value="0">
+                <input type="hidden" name="reportable" value="1">
+                <input type="hidden" name="sortindex" value="1">
+                <input type="hidden" name="insertPos" value="set">
+                <input type="hidden" name="reference_id" value="-1">
+                <div class="two fields">
+                    <div class="field">
+                        <label>Status</label>
+                        <div class="ui fluid selection dropdown">
+                            <input type="hidden" name="status" required>
+                            <div class="default text">Status</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                <div class="item" data-value="108">Ready</div>
+                                <div class="item" data-value="109">Open</div>
+                                <div class="item" data-value="110">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Duration</label>
+                        <input type="number" min="0" name="duration" placeholder="Project Duration" required readonly>
+                    </div>
+                </div>
+                <button id="submitForm" class="ui blue submit parent button">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -13,7 +13,6 @@
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700|Open+Sans:300italic,400,300,700' rel='stylesheet' type='text/css'>
 	
 	<link rel="stylesheet" type="text/css" href="css/reset.css" />
-	<link rel="stylesheet" type="text/css" href="semantic/css/base.css">
 	<link rel="stylesheet" type="text/css" href="css/gantt.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui-1.10.4.custom.css" />
 	<link rel="stylesheet" type="text/css" href="css/jquery.contextMenu.css" />
@@ -45,86 +44,8 @@
 					</div>
 				</div>
 				
-				<!-- <img src="css/images/cat.png" class="ui medium image"> -->
 				<div class="item-selector"></div>
-				<div class="ui small modal add-new-task flip">
-					<i class="close icon"></i>
-					<div class="header">
-					</div>
-					<div class="content">
-						<form id="new-task-form" action="#!/save" method="post">
-							<div class="ui form segment">
-								<p>Let's go ahead and set a new goal.</p>
-								<div class="field">
-									<label>Task name</label>
-									<input type="text" name="name" placeholder="New task name" required>
-								</div>
-								<div class="field">
-									<label>Discription</label>
-									<textarea name="description" placeholder="The detailed description of your task"></textarea>
-								</div>
-								<div class="two fields">
-									<div class="field">
-										<label>Select parent</label>
-										<div class="ui fluid selection select-parent dropdown">
-											<input type="hidden" name="parentid">
-											<div class="default text">Choose parent</div>
-											<i class="dropdown icon"></i>
-											<div class="menu">
-											</div>
-										</div>
-									</div>
-									<div class="field resources">
-										<label>Assign Resources</label>
-									</div>
-								</div>
-								<div class="two fields">
-									<div class="field">
-										<label>Start Date</label>
-										<input type="date" name="start" placeholder="Start Date" required>
-									</div>
-									<div class="field">
-										<label>End Date</label>
-										<input type="date" name="end" placeholder="End Date" required>
-									</div>
-								</div>
-								<input type="hidden" name="complete" value="0">
-								<input type="hidden" name="action" value="add">
-								<input type="hidden" name="dependency" value="">
-								<input type="hidden" name="aType" value="">
-								<input type="hidden" name="health" value="21">
-								<input type="hidden" name="color" value="">
-								<input type="hidden" name="milestone" value="1">
-								<input type="hidden" name="deliverable" value="0">
-								<input type="hidden" name="reportable" value="1">
-								<input type="hidden" name="parentId" value="0">
-								<input type="hidden" name="sortindex" value="1">
-								<input type="hidden" name="insertPos" value="set">
-								<input type="hidden" name="reference_id" value="-1">
-								<div class="two fields">
-									<div class="field">
-										<label>Status</label>
-										<div class="ui fluid selection dropdown">
-											<input type="hidden" name="status" required>
-											<div class="default text">Status</div>
-											<i class="dropdown icon"></i>
-											<div class="menu">
-												<div class="item" data-value="108">Ready</div>
-												<div class="item" data-value="109">Open</div>
-												<div class="item" data-value="110">Completed</div>
-											</div>
-										</div>
-									</div>
-									<div class="field">
-										<label>Duration</label>
-										<input type="number" min="0" name="duration" placeholder="Project Duration" required readonly>
-									</div>
-								</div>
-								<button id="submitFrom" class="ui blue submit parent button">Submit</button>
-							</div>
-						</form>
-					</div>
-				</div>
+
 				<div class="ui small modal properties flip">
 					<i class="close icon"></i>
 					<div class="content">
@@ -186,19 +107,17 @@
 		<!--LIBS-->
 		<script type="text/javascript" src="js/lib/jquery.js"></script>
 		<script type="text/javascript" src="js/lib/jquery-ui-1.10.4.custom.js"></script>
+		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.0.1/semantic.css">
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.0.1/semantic.min.js"></script>
 		<script type="text/javascript" src="js/lib/jquery-sortable.js"></script>
 		<script type="text/javascript" src="js/lib/jquery.mousewheel.js"></script>
 		<script type="text/javascript" src="js/lib/jquery.ui.position.js"></script>
 		<script type="text/javascript" src="js/lib/jquery.contextMenu.js"></script>
-		<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
-		<script type="text/javascript" src="semantic/javascript/base.js"></script>
-
-
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
 		<script type="text/javascript" src="js/lib/underscore.js"></script>
 		<script type="text/javascript" src="js/lib/backbone.js"></script>
 		<script type="text/javascript" src="js/lib/kineticmax.js"></script>
 		<script type="text/javascript" src="js/lib/date.js"></script>
-
 
 		<!--APP-->
 		<script type="text/javascript" src="app.js"></script>

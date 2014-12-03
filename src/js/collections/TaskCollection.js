@@ -3,6 +3,9 @@ var TaskModel = require('../models/TaskModel');
 var TaskCollection = Backbone.Collection.extend({
 	url : 'api/tasks',
 	model: TaskModel,
+	initialize : function() {
+		this.subscribe();
+	},
 	comparator : function(model) {
 		return model.get('sortindex');
 	},
@@ -12,7 +15,13 @@ var TaskCollection = Backbone.Collection.extend({
 			if (!task.get('parentid')) {
 				return;
 			}
-			this.get(task.get('parentid')).children.add(task);
+			var parentTask = this.get(task.get('parentid'));
+			if (parentTask) {
+				parentTask.children.add(task);
+			} else {
+				console.error('task has parent with id ' + task.get('parentid') + ' - but there is no such task');
+			}
+			
 		}.bind(this));
 	},
 	checkSortedIndex : function() {
