@@ -18,7 +18,7 @@ $(function () {
 	app.tasks.fetch({
 		success : function() {
 			console.log('Success loading tasks.');
-			app.setting = new Settings({}, {app : app});
+			app.settings = new Settings({}, {app : app});
 			app.tasks.linkChildren();
 			new GanttView({
 				app : app,

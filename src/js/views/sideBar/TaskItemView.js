@@ -54,7 +54,7 @@ var TaskItemView=Backbone.View.extend({
 		var target = $(evt.target);
 		var width  = parseInt(target.css('width'), 10) - 5;
 		var field = target.attr('class').split('-')[1];
-		var form = this.app.setting.getFormElem(field,this.model,this.onEdit,this);
+		var form = this.app.settings.getFormElem(field,this.model,this.onEdit,this);
 		form.css({width:width+'px',height:'10px'});
 		target.html(form);
 		form.focus();

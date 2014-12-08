@@ -203,7 +203,7 @@ BarGroup.prototype={
 			}
 		},
 		calculateParentDates:function(){
-			var attrs=app.setting.getSetting('attr'),
+			var attrs=this.settings.getSetting('attr'),
 			boundaryMin=attrs.boundaryMin,
 			daysWidth=attrs.daysWidth;
 			var days1=Math.round(this.getX1(true)/daysWidth),days2=Math.round(this.getX2(true)/daysWidth);
@@ -236,8 +236,8 @@ BarGroup.prototype={
 			console.log('parent sync called');
 			//sync parent first
 			var pdates=this.calculateParentDates();
-			var parent=this.model.get('parent');
-			parent.set({start:pdates.start,end:pdates.end});
+// 			var parent=this.model.get('parent');
+			this.model.set({start:pdates.start,end:pdates.end});
 			
 			var children=this.children;
 			for(var i=0;i<children.length;i++){

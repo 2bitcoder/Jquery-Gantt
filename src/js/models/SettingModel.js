@@ -3,7 +3,7 @@ var util = require('../utils/util');
 var app = {};
 
 var hfunc = function(pos, evt) {
-	var dragInterval = app.setting.getSetting('attr', 'dragInterval');
+	var dragInterval = app.settings.getSetting('attr', 'dragInterval');
 	var n = Math.round((pos.x - evt.inipos.x) / dragInterval);
 	return {
 		x: evt.inipos.x + n * dragInterval,

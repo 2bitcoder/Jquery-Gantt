@@ -22,8 +22,8 @@ var KCanvasView = KineticView.extend({
 	initialize: function(params){
 		this.app = params.app;
 		this.groups=[];
-		this.settings = this.app.setting;
-		var setting =  this.app.setting.getSetting('display');
+		this.settings = this.app.settings;
+		var setting =  this.app.settings.getSetting('display');
 		
 		this.stage = new Kinetic.Stage({
 			container : 'gantt-container',
@@ -37,7 +37,7 @@ var KCanvasView = KineticView.extend({
 				};
 			}
 		});
-		
+
 		this.Flayer = new Kinetic.Layer({});
 		this.Blayer = new Kinetic.Layer({});
 		
@@ -52,7 +52,7 @@ var KCanvasView = KineticView.extend({
 				settings : this.settings
 			}));
 
-			var gsetting =  this.app.setting.getSetting('group');
+			var gsetting =  this.app.settings.getSetting('group');
 			gsetting.currentY = gsetting.iniY;
 
 			this.groups.forEach(function(groupi) {
@@ -99,7 +99,7 @@ var KCanvasView = KineticView.extend({
 	bindEvents:function(){
 		var calculating=false;
 		this.listenTo( this.collection, 'change:active', this.rendergroups);
-		this.listenTo( this.app.setting, 'change:interval change:dpi', this.renderBars);
+		this.listenTo( this.app.settings, 'change:interval change:dpi', this.renderBars);
 		$('#gantt-container').mousewheel(function(e){
 			if(calculating) {
 				return false;
@@ -112,11 +112,11 @@ var KCanvasView = KineticView.extend({
 				dpi = cdpi + 1;
 			}
 			if (dpi === 1){
-				if ( this.app.setting.get('interval') === 'auto') {
-					 this.app.setting.set({interval:'daily'});
+				if ( this.app.settings.get('interval') === 'auto') {
+					 this.app.settings.set({interval:'daily'});
 				}
 			} else {
-				 this.app.setting.set({interval: 'auto', dpi: dpi});
+				 this.app.settings.set({interval: 'auto', dpi: dpi});
 			}
 			calculating = false;
 			return false;
@@ -126,16 +126,16 @@ var KCanvasView = KineticView.extend({
 			return false;
 		}
 
-		var cdpi =  this.app.setting.get('dpi'), dpi=0;
+		var cdpi =  this.app.settings.get('dpi'), dpi=0;
 		calculating  =true;
 		dpi = Math.max(0, cdpi + 25);
 
 		if (dpi === 1) {
-			if( this.app.setting.get('interval')==='auto') {
-				 this.app.setting.set({interval:'daily'});
+			if( this.app.settings.get('interval')==='auto') {
+				 this.app.settings.set({interval:'daily'});
 			}
 		} else {
-			 this.app.setting.set({interval: 'auto', dpi: dpi});
+			 this.app.settings.set({interval: 'auto', dpi: dpi});
 		}
 
 		calculating = false;
@@ -143,16 +143,16 @@ var KCanvasView = KineticView.extend({
 			if(calculating) {
 				return false;
 			}
-			var cdpi =  this.app.setting.get('dpi'), dpi=0;
+			var cdpi =  this.app.settings.get('dpi'), dpi=0;
 			calculating = true;
 			dpi = cdpi + 1;
 
 			if(dpi===1){
-				if ( this.app.setting.get('interval') === 'auto') {
-					 this.app.setting.set({interval: 'daily'});
+				if ( this.app.settings.get('interval') === 'auto') {
+					 this.app.settings.set({interval: 'daily'});
 				}
 			} else {
-				 this.app.setting.set({interval:'auto',dpi:dpi});
+				 this.app.settings.set({interval:'auto',dpi:dpi});
 			}
 			calculating = false;
 			return false;
@@ -162,12 +162,12 @@ var KCanvasView = KineticView.extend({
 	addGroup: function(taskgroup) {
 		this.groups.push(new BarGroup({
 			model: taskgroup,
-			settings : this.app.setting
+			settings : this.app.settings
 		}));
 	},
 
 	render: function(){
-		var gsetting =  this.app.setting.getSetting('group');
+		var gsetting =  this.app.settings.getSetting('group');
 
 		gsetting.currentY = gsetting.iniY;
 		
@@ -215,7 +215,7 @@ var KCanvasView = KineticView.extend({
 	},
 
 	rendergroups:function(){
-		var gsetting =  this.app.setting.getSetting('group');
+		var gsetting =  this.app.settings.getSetting('group');
 		var sorted = _.sortBy(this.groups, function(itemview){
 			return itemview.model.get('sortindex');
 		});
@@ -231,32 +231,26 @@ var KCanvasView = KineticView.extend({
 		this.stage.setWidth(value);
 	},
 	getSceneFunc:function(){
-		var setting= this.app.setting, sdisplay = setting.sdisplay;
-		var borderWidth=sdisplay.borderWidth || 1;
-		var offset=borderWidth/2;
-		var rowHeight=20;
-		var interval =  this.app.setting.get('interval');
+		var setting = this.app.settings;
+		var sdisplay = setting.sdisplay;
+		var borderWidth = sdisplay.borderWidth || 1;
+		var offset = borderWidth/2;
+		var rowHeight = 20;
+
 		return function(context){
-			var lineWidth,sattr=setting.sattr;
+			var sattr = setting.sattr;
+			var i, s = 0, iLen = 0,	daysWidth = sattr.daysWidth, x,	length,	hData = sattr.hData;
 			
-			var i=0,
-			s=0,
-			iLen=0,
-			daysWidth=sattr.daysWidth,
-			x,
-			length,
-			hData=sattr.hData;
-			
-			lineWidth=Date.daysdiff(sattr.boundaryMin,sattr.boundaryMax)*sattr.daysWidth;
+			var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
 			context.beginPath();
 			//draw three lines
-			for(i=1;i<4;i++){
-				context.moveTo(offset, i*rowHeight-offset);
-				context.lineTo(lineWidth+offset, i*rowHeight-offset);
+			for(i = 1; i < 4 ; i++){
+				context.moveTo(offset, i * rowHeight - offset);
+				context.lineTo(lineWidth + offset, i * rowHeight - offset);
 			}
 
-			var yi=0,yf=rowHeight,xi=0;
-			for(s=1;s<3;s++){
+			var yi = 0, yf = rowHeight, xi = 0;
+			for (s = 1; s < 3; s++){
 				x=0,length=0;
 				for(i=0,iLen=hData[s].length;i<iLen;i++){
 					length=hData[s][i].duration*daysWidth;
@@ -301,17 +295,10 @@ var KCanvasView = KineticView.extend({
 
 			}
 			context.strokeShape(this);
-			
-			
-		}
-
+		};
 	},
 	renderBackLayer: function(){
-		
-
 	}
-
-
 });
 
 module.exports = KCanvasView;

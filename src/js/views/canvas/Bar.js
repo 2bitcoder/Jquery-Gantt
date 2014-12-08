@@ -29,7 +29,7 @@
 			name: 'anchor',
 			stroke:'black',
 			fill:'white',
-		})
+		});
 
 		var namerect=new Kinetic.Rect({
 			x:20,
@@ -541,7 +541,7 @@
 			}
 		},
 		calculateDates:function(){
-			var attrs=app.setting.getSetting('attr'),
+			var attrs=this.settings.getSetting('attr'),
 			boundaryMin=attrs.boundaryMin,
 			daysWidth=attrs.daysWidth;
 			var days1=Math.round(this.getX1(true)/daysWidth),days2=Math.round(this.getX2(true)/daysWidth);
