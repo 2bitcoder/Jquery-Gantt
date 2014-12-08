@@ -24,6 +24,7 @@ $(function () {
 				app : app,
 				collection : app.tasks
 			}).render();
+			$('#loader').fadeOut();
 		},
 		error : function(err) {
 			console.error('error loading');

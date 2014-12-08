@@ -50,7 +50,6 @@ var TaskCollection = Backbone.Collection.extend({
 				var childModel = self.get(childData.id);
 				var prevSortI = childModel.get('sortindex');
 				if (prevSortI !== ++sortIndex) {
-					console.log('was', prevSortI, 'new', sortIndex);
 					childModel.set('sortindex', sortIndex).save();
 				}
 				if (childModel.get('parentid') !== parentModel.id) {
