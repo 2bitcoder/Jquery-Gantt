@@ -43,8 +43,9 @@ var TaskCollection = Backbone.Collection.extend({
 			if (prevSort !== ++sortIndex) {
 				parentModel.set('sortindex', sortIndex).save();
 			}
-
-
+			if (parentModel.get('parentid')) {
+				parentModel.set('parentid', 0).save();
+			}
 			parentData.children.forEach(function(childData) {
 				var childModel = self.get(childData.id);
 				var prevSortI = childModel.get('sortindex');
@@ -53,7 +54,7 @@ var TaskCollection = Backbone.Collection.extend({
 					childModel.set('sortindex', sortIndex).save();
 				}
 				if (childModel.get('parentid') !== parentModel.id) {
-					childModel.set('parentid', parentModel.id);
+					childModel.set('parentid', parentModel.id).save();
 					var parent = self.find(function(m) {
 						return m.id === parentModel.id;
 					});
