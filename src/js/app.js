@@ -3,11 +3,17 @@ var TaskCollection = require('./collections/taskCollection');
 var Settings = require('./models/SettingModel');
 
 var GanttView = require('./views/GanttView');
+var util = require('./utils/util');
 
 $(function () {
-    'use strict';
-	var app = window.app || {};
+	var app = {};
 	app.tasks = new TaskCollection();
+
+	// detect API params from get
+	var params = util.getURLParams();
+	if (params.project && params.profile) {
+		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile;
+	}
 
 	app.tasks.fetch({
 		success : function() {
