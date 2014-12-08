@@ -7,8 +7,8 @@ var TaskItemView=Backbone.View.extend({
 	isParent: false,
 	initialize: function(params){
 		this.app = params.app;
-		this.listenTo(this.model,'editrow',this.edit);
-		this.listenTo(this.model,'change:name change:start change:end change:complete change:status',this.renderRow);
+		this.listenTo(this.model, 'editrow', this.edit);
+		this.listenTo(this.model, 'change:name change:start change:end change:complete change:status', this.renderRow);
 		this.$el.hover(function(e){
 			$(document).find('.item-selector').stop().css({
 				top: ($(e.currentTarget).offset().top)+'px'
@@ -42,33 +42,32 @@ var TaskItemView=Backbone.View.extend({
 	renderRow:function(){
 		var data = this.model.toJSON();
 		data.isParent = this.isParent;
-//		if (this.isParent) {
-//			this.$handle.html(this.template(data));
-//		} else {
 		data.app = this.app;
 		this.$el.html(this.template(data));
-//		}
 		return this;
 	},
 	edit:function(evt){
 		var target = $(evt.target);
 		var width  = parseInt(target.css('width'), 10) - 5;
 		var field = target.attr('class').split('-')[1];
-		var form = this.app.settings.getFormElem(field,this.model,this.onEdit,this);
-		form.css({width:width+'px',height:'10px'});
+		var form = this.app.settings.getFormElem(field, this.model, this.onEdit, this);
+		form.css({
+			width: width + 'px'
+		});
+
 		target.html(form);
 		form.focus();
 	},
-	onEdit:function(name,value){
-		if(name==='duration'){
-			var start=this.model.get('start');
-			var end=start.clone().addDays(parseInt(value, 10)-1);
-			this.model.set('end',end);
+	onEdit: function(name, value){
+		if (name === 'duration') {
+			var start = this.model.get('start');
+			var end = start.clone().addDays(parseInt(value, 10) - 1);
+//			this.model.set('end', end);
 		}
 		else{
-			this.model.set(name,value);
-			this.model.save();//1
-		//This has to be called in case no change takes place
+			console.error(name);
+			this.model.set(name, value);
+			this.model.save();
 		}
 		this.renderRow();
 	}
