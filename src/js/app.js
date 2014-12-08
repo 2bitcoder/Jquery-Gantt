@@ -9,7 +9,7 @@ $(function () {
 	var app = {};
 	app.tasks = new TaskCollection();
 
-	// detect API params from get
+	// detect API params from get, e.g. ?project=143&profile=17
 	var params = util.getURLParams();
 	if (params.project && params.profile) {
 		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile;
