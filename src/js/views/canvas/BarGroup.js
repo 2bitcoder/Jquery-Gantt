@@ -200,7 +200,7 @@ BarGroup.prototype={
 			return {
 				x1:(Date.daysdiff(boundaryMin,model.get('start'))-1)*daysWidth,
 				x2:Date.daysdiff(boundaryMin,model.get('end'))*daysWidth,
-			}
+			};
 		},
 		calculateParentDates:function(){
 			var attrs=this.settings.getSetting('attr'),
@@ -210,7 +210,7 @@ BarGroup.prototype={
 			return {
 				start: boundaryMin.clone().addDays(days1),
 				end:boundaryMin.clone().addDays(days2-1)
-			}
+			};
 			
 		},
 		getRectparams:function(){
@@ -231,20 +231,21 @@ BarGroup.prototype={
 			}
 		},
 		sync:function(){
-			this.syncing=true;
-
+			this.syncing = true;
 			console.log('parent sync called');
-			//sync parent first
 			var pdates=this.calculateParentDates();
-// 			var parent=this.model.get('parent');
-			this.model.set({start:pdates.start,end:pdates.end});
+			this.model.set({
+				start: pdates.start,
+				end:pdates.end
+			});
 			
-			var children=this.children;
-			for(var i=0;i<children.length;i++){
-				children[i].sync()
-			}
-			console.log('setting sync to false');
-			this.syncing=false;
+			var children = this.children;
+			children.forEach(function(child) {
+				child.sync();
+			});
+			console.error('setting sync to false');
+
+			this.syncing = false;
 		}
 	};
 

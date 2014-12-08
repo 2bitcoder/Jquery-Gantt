@@ -39,11 +39,19 @@ var TaskCollection = Backbone.Collection.extend({
 		var self = this;
 		data.forEach(function(parentData) {
 			var parentModel = this.get(parentData.id);
-			parentModel.set('sortindex', ++sortIndex).save();
+			var prevSort = parentModel.get('sortindex');
+			if (prevSort !== ++sortIndex) {
+				parentModel.set('sortindex', sortIndex).save();
+			}
+
 
 			parentData.children.forEach(function(childData) {
 				var childModel = self.get(childData.id);
-				childModel.set('sortindex', ++sortIndex).save();
+				var prevSortI = childModel.get('sortindex');
+				if (prevSortI !== ++sortIndex) {
+					console.log('was', prevSortI, 'new', sortIndex);
+					childModel.set('sortindex', sortIndex).save();
+				}
 				if (childModel.get('parentid') !== parentModel.id) {
 					childModel.set('parentid', parentModel.id);
 					var parent = self.find(function(m) {
@@ -60,7 +68,11 @@ var TaskCollection = Backbone.Collection.extend({
 				var parent = this.find(function(m) {
 					return m.id === model.get('parentid');
 				});
-				parent.children.add(model);
+				if (parent) {
+					parent.children.add(model);
+				} else {
+					console.error('can not find parent with id ' + model.get('parentid'));
+				}
 			}
 		});
 	}

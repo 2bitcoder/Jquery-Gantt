@@ -112,11 +112,12 @@
 		opt =  this.getRectparams();
 		opt.x = 2;
 		opt.width = width-4;
-		if(width > 0){
-			var completeBar= this.completeBar = new Kinetic.Rect(opt);
-			this.group.add(completeBar);
+		var completeBar= this.completeBar = new Kinetic.Rect(opt);
+		this.group.add(completeBar);
+		if (width === 0) {
+			completeBar.hide();
 		}
-		
+
 		//addEvents
 		this.bindEvents();
 		//this.on('resize move',this.renderConnectors,this);;
@@ -130,6 +131,7 @@
 
 			if(width > 0){
 				this.completeBar.width(width);
+				this.completeBar.show();
 				this.completeBar.getLayer().batchDraw();
 			}
 		},
@@ -249,24 +251,23 @@
 			});
 			
 			this.on('resize move',this.renderConnectors,this);
-			this.listenTo(this.model,'change',this.handleChange);
-			this.on('change', this.handleChange,this);
+			this.listenTo(this.model, 'change', function() {
+				this.draw();
+			});
+			this.on('change', this.handleChange, this);
 
 		},
 		destroy : function() {
 			this.group.destroy();
 			this.stopListening();
 		},
-		handleChange:function(model){
-			// console.log('handling change');
+		handleChange:function(){
+			var model = this.model;
 			if(this.parent.syncing){
-				// console.log('returning');
 				return;
 			}
-			
 			if(model.changed.start || model.changed.end){
 				var x=this.calculateX(model);
-				console.log(x);
 				if(model.changed.start){
 					this.setX1(x.x1,{osame:true,absolute:true});
 				}
@@ -277,8 +278,6 @@
 			}
 			console.log('drawing');
 			this.draw();
-			this.model.save();
-			
 		},
 		handleClickevents:function(evt){
 			var target,targetName,startBar;
@@ -359,8 +358,8 @@
 			
 			this.group.add(this.leftHandle);
 			this.group.add(this.rightHandle);
-			
-			
+
+
 		},
 		addSubgroup:function(){
 			this.hasSubGroup=true;
@@ -583,14 +582,15 @@
 
 		},
 		sync:function(){
-			console.log('syncing '+this.model.cid);
-			var dates=this.calculateDates();
-			this.model.set({start:dates.start,end:dates.end});
+			console.log('syncing ' + this.model.cid);
+			var dates = this.calculateDates();
+			this.model.set({
+				start: dates.start,
+				end: dates.end
+			});
 			console.log('syncing '+this.model.cid+' finished');
 			this.model.save();
 		}
-		
-
 	}
 	//It creates a relation between dependant and dependency
 	//Dependant is the task which needs to be done after dependency

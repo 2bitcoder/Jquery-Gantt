@@ -321,36 +321,43 @@ var SettingModel = Backbone.Model.extend({
 		this.calcminmax();
 		this.setAttributes();
 	},
-	createElem:function() {
-		var elems={}, obj, callback = false, context = false;
+	createElem: function() {
+		var elems = {}, obj, callback = false, context = false;
 		function bindTextEvents(element, obj, name) {
-			element.on('blur',function(e){
-				var $this=$(this);
-				var value=$this.val();
+			element.on('blur',function(){
+				var $this = $(this);
+				var value = $this.val();
 				$this.detach();
-				var callfunc=callback,ctx=context;
-				callback=false;
-				context=false;
-				if(obj['t2d']) value=obj['t2d'](value);
+				var callfunc = callback, ctx = context;
+				callback = false;
+				context = false;
+				if (obj.t2d) {
+					value=obj.t2d(value);
+				}
 				callfunc.call(ctx,name,value);
 			}).on('keypress',function(e){
 				if(event.which===13){
 					$(this).trigger('blur');
 				}
-			})
+			});
 		}
 		
 		function bindDateEvents(element,obj,name){
 			element.datepicker({ dateFormat: "dd/mm/yy",onClose:function(){
-				//console.log('on close called');
+				console.log('close it');
 				var $this=$(this);
 				var value=$this.val();
 				$this.detach();
 				var callfunc=callback,ctx=context;
 				callback=false;
 				context=false;
-				if(obj['t2d']) value=obj['t2d'](value);
-				callfunc.call(ctx,name,value);
+				if(obj['t2d']) {
+					value=obj['t2d'](value);
+				}
+				setTimeout(function() {
+					"use strict";
+					callfunc.call(ctx,name,value);
+				}, 10);
 			}});
 		}
 		
@@ -368,14 +375,15 @@ var SettingModel = Backbone.Model.extend({
 			}
 		
 		}
-		//console.log(elems);
-		obj=null;
-		return function(field,model,callfunc,ctx){
-			callback=callfunc;
-			context=ctx;
-			var element=elems[field],value=model.get(field);
-			if(this.sform[field].d2t)  value=this.sform[field].d2t(value,model);
-			//console.log(element);
+
+		obj = null;
+		return function(field, model, callfunc, ctx){
+			callback = callfunc;
+			context = ctx;
+			var element=elems[field], value = model.get(field);
+			if (this.sform[field].d2t) {
+				value = this.sform[field].d2t(value, model);
+			}
 			element.val(value);
 			return element;
 		};
