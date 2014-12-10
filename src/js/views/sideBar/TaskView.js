@@ -47,10 +47,10 @@ var TaskView = Backbone.View.extend({
 	},
 	collapseOrExpand: function(){
 		this.collapsed = !this.collapsed;
+		this.model.set('active', !this.collapsed);
 		this.toggleParent();
 	},
 	toggleParent: function() {
-		"use strict";
 		var str = this.collapsed ? '<i class="triangle up icon"></i> ' : '<i class="triangle down icon"></i>';
 		this.$childel.slideToggle();
 		this.$parentel.find('.expand-menu').html(str);

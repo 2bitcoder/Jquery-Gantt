@@ -8,8 +8,8 @@ var BarGroup = function(options){
 	this.attr = {
 		height: 0
 	};
-	this.syncing=false;
-	this.children=[];
+	this.syncing = false;
+	this.children = [];
 
 	this.group = new Kinetic.Group(this.getGroupParams());
 	this.topbar = new Kinetic.Rect(this.getRectparams());
@@ -69,9 +69,9 @@ BarGroup.prototype={
 				sorted[i].renderConnectors();
 				this.attr.height += this.setting.rowHeight;
 			}
-			if(!nodraw)
+			if(!nodraw) {
 				this.group.getLayer().draw();
-			
+			}
 		},
 		findById:function(id){
 			var children=this.children;
@@ -130,7 +130,11 @@ BarGroup.prototype={
 			return this.topbar.getWidth();
 		},
 		getHeight:function(){
-			return this.attr.height;
+			if(this.model.get('active'))
+				return this.attr.height;
+			else{
+				return this.settings.getSetting('group','rowHeight');
+			}
 		},
 		getCurrentHeight:function(){
 			if(this.model.get('active'))
@@ -178,9 +182,9 @@ BarGroup.prototype={
 				this.topbar.setWidth(maxX-minX);
 
 			});
-			this.listenTo(this.model,'change:active',this.toggleChildren);
-			this.listenTo(this.model,'onsort',this.renderSortedChildren);
-			this.listenTo(this.model,'change:start change:end', function(){
+			this.listenTo(this.model, 'change:active', this.toggleChildren);
+			this.listenTo(this.model, 'onsort', this.renderSortedChildren);
+			this.listenTo(this.model, 'change:start change:end', function(){
 				this.topbar.setAttrs(this.getRectparams());
 				this.topbar.getLayer().draw();
 			});
@@ -223,12 +227,11 @@ BarGroup.prototype={
 				y: setting.gap,
 			},setting.topBar);
 		},
-		toggleChildren:function(){
-			var show=this.model.get('active');
-			var children=this.children;
-			for(var i=0;i<children.length;i++){
-				children[i].toggle(show)
-			}
+		toggleChildren: function(){
+			var show = this.model.get('active');
+			this.children.forEach(function(child) {
+				child.toggle(show);
+			});
 		},
 		sync:function(){
 			this.syncing = true;

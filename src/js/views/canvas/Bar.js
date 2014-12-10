@@ -1,58 +1,58 @@
-	var dd=Kinetic.DD;
-	var barOptions=['draggable','dragBoundFunc','resizable','resizeBoundFunc','height','width','x','y'];
+var dd=Kinetic.DD;
+var calculating=false;
 
-	var calculating=false;
-	function createHandle(option){
-		option.draggable=true;
-		option.opacity=1;
-		option.strokeEnabled=false;
-		option.width=2;
-		option.fill='black';
-		return new Kinetic.Rect(option);
-	}
-	function createSubGroup(option){
-		var gr=new Kinetic.Group();
-		var imgrect=new Kinetic.Rect({
-			x:0,
-			y:0,
-			height: option.height,
-			width: 20,
-			strokeEnabled:false,
-			fill:'yellow',
-			opacity:0.5
-		});
-		var anchor=new Kinetic.Circle({
-			x:10,
-			y:5,
-			radius: 3,
-			strokeWidth:1,
-			name: 'anchor',
-			stroke:'black',
-			fill:'white',
-		});
+function createHandle(option){
+	option.draggable=true;
+	option.opacity=1;
+	option.strokeEnabled=false;
+	option.width=2;
+	option.fill='black';
+	return new Kinetic.Rect(option);
+}
 
-		var namerect=new Kinetic.Rect({
-			x:20,
-			y:0,
-			height: option.height,
-			width: 40,
-			strokeEnabled:false,
-			fill:'pink',
-		});
-		gr.add(imgrect);
-		gr.add(anchor);
-		gr.add(namerect);
-		return gr;
-	}
+function createSubGroup(option){
+	var gr = new Kinetic.Group();
+	var imgrect = new Kinetic.Rect({
+		x:0,
+		y:0,
+		height: option.height,
+		width: 20,
+		strokeEnabled: false,
+		fill: 'yellow',
+		opacity: 0.5
+	});
+	var anchor = new Kinetic.Circle({
+		x: 10,
+		y: 5,
+		radius: 3,
+		strokeWidth: 1,
+		name: 'anchor',
+		stroke:'black',
+		fill:'white'
+	});
 
-	var beforebind=function(func){
-		return function(){
-			if(calculating) return false;
-			calculating=true;
-			func.apply(this,arguments);
-			calculating=false;
-		}
+	var namerect = new Kinetic.Rect({
+		x: 20,
+		y: 0,
+		height: option.height,
+		width: 40,
+		strokeEnabled: false,
+		fill:'pink'
+	});
+	gr.add(imgrect);
+	gr.add(anchor);
+	gr.add(namerect);
+	return gr;
+}
+
+var beforebind=function(func){
+	return function(){
+		if(calculating) return false;
+		calculating=true;
+		func.apply(this,arguments);
+		calculating=false;
 	}
+}
 
 	function getDragDir(stage){
 		return (stage.getPointerPosition().x-dd.startPointerPos.x>0)?'right':'left';
@@ -567,15 +567,17 @@
 			var xs=this.calculateX(this.model);
 			return {
 				x: xs.x1,
-				y: 0,
-			}
+				y: 0
+			};
 		},
 		toggle:function(show){
-			var method=show?'show':'hide';
+			var method = show ? 'show' : 'hide';
+			console.log('method', method);
 			this.group[method]();
 			for(var i=0,iLen=this.dependencies.length;i<iLen;i++){
 				this.dependencies[i].connector[method]();
 			}
+//			this.group.getLayer().draw();
 		},
 		draw:function(){
 			this.group.getLayer().draw();

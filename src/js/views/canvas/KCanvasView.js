@@ -215,6 +215,7 @@ var KCanvasView = KineticView.extend({
 	},
 
 	rendergroups:function(){
+		console.log('render');
 		var gsetting =  this.app.settings.getSetting('group');
 		var sorted = _.sortBy(this.groups, function(itemview){
 			return itemview.model.get('sortindex');
