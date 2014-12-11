@@ -537,7 +537,7 @@ var beforebind=function(func){
 			return {
 				x1:(Date.daysdiff(boundaryMin,model.get('start')))*daysWidth,
 				x2:Date.daysdiff(boundaryMin,model.get('end'))*daysWidth,
-			}
+			};
 		},
 		calculateDates:function(){
 			var attrs=this.settings.getSetting('attr'),
@@ -584,16 +584,14 @@ var beforebind=function(func){
 
 		},
 		sync:function(){
-			console.log('syncing ' + this.model.cid);
 			var dates = this.calculateDates();
 			this.model.set({
 				start: dates.start,
 				end: dates.end
 			});
-			console.log('syncing '+this.model.cid+' finished');
 			this.model.save();
 		}
-	}
+	};
 	//It creates a relation between dependant and dependency
 	//Dependant is the task which needs to be done after dependency
 	//Suppose task B requires task A to be done beforehand. So, A is dependancy/requirement for B whereas B is dependant on A.

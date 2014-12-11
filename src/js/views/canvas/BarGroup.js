@@ -45,7 +45,7 @@ BarGroup.prototype={
 
 			this.listenTo(this.model.children, 'remove', function(child) {
 				var viewForDelete = _.find(this.children, function(m) {
-					return m.model === child
+					return m.model === child;
 				});
 				this.children = _.without(this.children, viewForDelete);
 				viewForDelete.destroy();
@@ -165,7 +165,6 @@ BarGroup.prototype={
 		renderTopBar:function(){
 			var parent=this.model;
 			var x=this.calculateX(parent);
-
 			this.topbar.setX(x.x1-this.group.getX());
 			this.topbar.setWidth(x.x2-x.x1);
 		},
@@ -184,7 +183,8 @@ BarGroup.prototype={
 			});
 			this.listenTo(this.model, 'change:active', this.toggleChildren);
 			this.listenTo(this.model, 'onsort', this.renderSortedChildren);
-			this.listenTo(this.model, 'change:start change:end', function(){
+			this.listenTo(this.model, 'change:start change:end', function() {
+
 				this.topbar.setAttrs(this.getRectparams());
 				this.topbar.getLayer().draw();
 			});
@@ -192,40 +192,38 @@ BarGroup.prototype={
 		},
 		getGroupParams: function(){
 			return _.extend({
-				x:0,
-				y:0,
+				x: 0,
+				y: 0
 			}, this.setting.topBar);
 			
 		},
-		calculateX:function(model){
-			var attrs= this.settings.getSetting('attr'),
-			boundaryMin=attrs.boundaryMin,
-			daysWidth=attrs.daysWidth;
+		calculateX:function(){
+			var attrs = this.settings.getSetting('attr'),
+			boundaryMin = attrs.boundaryMin,
+			daysWidth = attrs.daysWidth;
 			return {
-				x1:(Date.daysdiff(boundaryMin,model.get('start'))-1)*daysWidth,
-				x2:Date.daysdiff(boundaryMin,model.get('end'))*daysWidth,
+				x1: (Date.daysdiff(boundaryMin, this.model.get('start'))) * daysWidth - this.group.x(),
+				x2: Date.daysdiff(boundaryMin, this.model.get('end')) * daysWidth - this.group.x()
 			};
 		},
 		calculateParentDates:function(){
-			var attrs=this.settings.getSetting('attr'),
-			boundaryMin=attrs.boundaryMin,
-			daysWidth=attrs.daysWidth;
-			var days1=Math.round(this.getX1(true)/daysWidth),days2=Math.round(this.getX2(true)/daysWidth);
+			var attrs = this.settings.getSetting('attr'),
+				boundaryMin = attrs.boundaryMin,
+				daysWidth = attrs.daysWidth;
+			var days1 = Math.round(this.getX1(true)/daysWidth),days2=Math.round(this.getX2(true)/daysWidth);
 			return {
 				start: boundaryMin.clone().addDays(days1),
-				end:boundaryMin.clone().addDays(days2-1)
+				end: boundaryMin.clone().addDays(days2 - 1)
 			};
-			
 		},
 		getRectparams:function(){
-			var parent=this.model;
-			var xs=this.calculateX(parent);
-			var setting=this.setting;
+			var xs=this.calculateX(this.model);
+			var setting = this.setting;
 			return _.extend({
 				x: xs.x1,
-				width:xs.x2-xs.x1,
-				y: setting.gap,
-			},setting.topBar);
+				width: xs.x2 - xs.x1,
+				y: setting.gap
+			}, setting.topBar);
 		},
 		toggleChildren: function(){
 			var show = this.model.get('active');
@@ -235,18 +233,18 @@ BarGroup.prototype={
 		},
 		sync:function(){
 			this.syncing = true;
-			console.log('parent sync called');
-			var pdates=this.calculateParentDates();
+
+			var pdates = this.calculateParentDates();
 			this.model.set({
 				start: pdates.start,
 				end:pdates.end
 			});
-			
+
+
 			var children = this.children;
 			children.forEach(function(child) {
 				child.sync();
 			});
-			console.error('setting sync to false');
 
 			this.syncing = false;
 		}
