@@ -20,6 +20,7 @@ $(function () {
 			console.log('Success loading tasks.');
 			app.settings = new Settings({}, {app : app});
 			app.tasks.linkChildren();
+			app.tasks.checkSortedIndex();
 			new GanttView({
 				app : app,
 				collection : app.tasks

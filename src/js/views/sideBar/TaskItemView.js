@@ -59,15 +59,14 @@ var TaskItemView=Backbone.View.extend({
 		form.focus();
 	},
 	onEdit: function(name, value){
+		console.log(name, value);
 		if (name === 'duration') {
 			var start = this.model.get('start');
 			var end = start.clone().addDays(parseInt(value, 10) - 1);
-//			this.model.set('end', end);
+			this.model.set('end', end).save();
 		}
 		else{
-			console.error(name);
-			this.model.set(name, value);
-			this.model.save();
+			this.model.set(name, value).save();
 		}
 		this.renderRow();
 	}

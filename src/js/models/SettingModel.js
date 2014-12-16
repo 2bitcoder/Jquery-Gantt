@@ -56,10 +56,6 @@ var SettingModel = Backbone.Model.extend({
 
 		this.sbar = {
 			barheight: 12,
-			rectoption: {
-				strokeEnabled: false,
-				fill: 'grey'
-			},
 			gap: 20,
 			rowheight:  60,
 			draggable: true,

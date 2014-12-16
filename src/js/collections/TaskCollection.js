@@ -27,9 +27,9 @@ var TaskCollection = Backbone.Collection.extend({
 	checkSortedIndex : function() {
 		var sortIndex = 0;
 		this.each(function(model) {
-			model.set('sortindex', ++sortIndex);
+			model.set('sortindex', ++sortIndex).save();
 			model.children.each(function(child) {
-				child.set('sortindex', ++sortIndex);
+				child.set('sortindex', ++sortIndex).save();
 			});
 		});
 		this.trigger('resort');
@@ -71,7 +71,8 @@ var TaskCollection = Backbone.Collection.extend({
 				if (parent) {
 					parent.children.add(model);
 				} else {
-					console.error('can not find parent with id ' + model.get('parentid'));
+					console.warn('can not find parent with id ' + model.get('parentid'));
+					model.set('parentid', 0);
 				}
 			}
 		});
