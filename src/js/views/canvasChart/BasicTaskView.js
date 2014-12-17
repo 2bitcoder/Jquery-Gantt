@@ -17,8 +17,22 @@ var BasicTaskView = Backbone.KineticView.extend({
         this._initModelEvents();
         this._initSettingsEvents();
     },
+    events : {
+        'dragmove' : '_updateDates',
+        'dragend' : function() {
+            this.model.save();
+        }
+    },
     el : function() {
-        var group = new Kinetic.Group({});
+        var group = new Kinetic.Group({
+            dragBoundFunc : function(pos) {
+                return {
+                    x : pos.x,
+                    y : this._y
+                };
+            }.bind(this),
+            draggable : true
+        });
         var rect = new Kinetic.Rect({
             fill : this.model.get('lightcolor'),
             y : this.params.padding,
@@ -28,13 +42,31 @@ var BasicTaskView = Backbone.KineticView.extend({
         group.add(rect);
         return group;
     },
+    _updateDates : function() {
+        var attrs = this.settings.getSetting('attr'),
+            boundaryMin=attrs.boundaryMin,
+            daysWidth=attrs.daysWidth;
+        var x = this._calculateX();
+        var days1 = Math.round(this.el.x() / daysWidth), days2 = Math.round((this.el.x() + x.x2 - x.x1) / daysWidth);
+
+        this.model.set({
+            start: boundaryMin.clone().addDays(days1),
+            end: boundaryMin.clone().addDays(days2)
+        });
+    },
     _initSettingsEvents : function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this.render();
         });
     },
     _initModelEvents : function() {
-        this.listenTo(this.model, 'change', this.render);
+        // don't update element while dragging
+        this.listenTo(this.model, 'change', function() {
+            if (this.el.isDragging()) {
+                return;
+            }
+            this.render();
+        });
     },
     _calculateX : function() {
         var attrs= this.settings.getSetting('attr'),
@@ -58,6 +90,7 @@ var BasicTaskView = Backbone.KineticView.extend({
         return this;
     },
     setY : function(y) {
+        this._y = y;
         this.el.y(y);
     }
 });
