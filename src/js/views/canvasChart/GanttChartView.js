@@ -160,6 +160,9 @@ var GanttChartView = Backbone.View.extend({
         this.listenTo(this.collection, 'sort', function() {
             this._resortViews();
         });
+        this.listenTo(this.collection, 'change:hidden', function() {
+            this._resortViews();
+        });
     },
     _initTasksViews : function() {
         this.collection.each(function(task) {
@@ -188,6 +191,9 @@ var GanttChartView = Backbone.View.extend({
     _resortViews : function() {
         var lastY = this._topPadding;
         this.collection.each(function(task) {
+            if (task.get('hidden')) {
+                return;
+            }
             var view = _.find(this._taskViews, function(view) {
                 return view.model === task;
             });

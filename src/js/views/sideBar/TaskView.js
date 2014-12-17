@@ -47,7 +47,7 @@ var TaskView = Backbone.View.extend({
 	},
 	collapseOrExpand: function(){
 		this.collapsed = !this.collapsed;
-		this.model.set('active', !this.collapsed);
+		this.model.set('collapsed', this.collapsed);
 		this.toggleParent();
 	},
 	toggleParent: function() {

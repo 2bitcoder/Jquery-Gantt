@@ -67,6 +67,14 @@ var BasicTaskView = Backbone.KineticView.extend({
             }
             this.render();
         });
+
+        this.listenTo(this.model, 'change:hidden', function() {
+            if (this.model.get('hidden')) {
+                this.el.hide();
+            } else {
+                this.el.show();
+            }
+        });
     },
     _calculateX : function() {
         var attrs= this.settings.getSetting('attr'),
