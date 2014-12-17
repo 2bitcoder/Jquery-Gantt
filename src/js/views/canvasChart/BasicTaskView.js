@@ -1,9 +1,3 @@
-/**
- * Created by lavrton on 17.12.2014.
- */
-/**
- * Created by lavrton on 17.12.2014.
- */
 "use strict";
 
 var BasicTaskView = Backbone.KineticView.extend({
@@ -33,8 +27,9 @@ var BasicTaskView = Backbone.KineticView.extend({
             }.bind(this),
             draggable : true
         });
+        var fill = this.model.children.length ? this.model.get('color') : this.model.get('lightcolor');
         var rect = new Kinetic.Rect({
-            fill : this.model.get('lightcolor'),
+            fill : fill,
             y : this.params.padding,
             height : this.params.height - this.params.padding * 2,
             name : 'mainRect'
