@@ -149,6 +149,14 @@ var GanttChartView = Backbone.View.extend({
         this.listenTo(this.collection, 'add', function(task) {
             this._addTaskView(task);
         });
+        this.listenTo(this.collection, 'remove', function(task) {
+            var view = _.find(this._taskViews, function(view) {
+                return view.model === task;
+            });
+            view.remove();
+            this._taskViews = _.without(this._taskViews, view);
+            this._resortViews();
+        });
         this.listenTo(this.collection, 'sort', function() {
             this._resortViews();
         });
