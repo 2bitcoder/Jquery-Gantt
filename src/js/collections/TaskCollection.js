@@ -1,3 +1,5 @@
+"use strict";
+
 var TaskModel = require('../models/TaskModel');
 
 var TaskCollection = Backbone.Collection.extend({
@@ -10,7 +12,6 @@ var TaskCollection = Backbone.Collection.extend({
 		return model.get('sortindex');
 	},
 	linkChildren : function() {
-		"use strict";
 		this.each(function(task) {
 			if (!task.get('parentid')) {
 				return;
@@ -26,7 +27,6 @@ var TaskCollection = Backbone.Collection.extend({
 				task.set('parentid', 0);
 				console.error('task has parent with id ' + task.get('parentid') + ' - but there is no such task');
 			}
-			
 		}.bind(this));
 	},
 	_sortChildren : function (task, sortIndex) {
@@ -74,6 +74,8 @@ var TaskCollection = Backbone.Collection.extend({
 				}
 			});
 		}.bind(this));
+		this.sort();
+		this.checkSortedIndex();
 	},
 	subscribe : function() {
 		this.listenTo(this, 'add', function(model) {

@@ -8,11 +8,13 @@ var GanttChartView = Backbone.View.extend({
     _topPadding : 70,
     initialize: function (params) {
         this.settings = params.settings;
+        this._taskViews = [];
         this._initStage();
         this._initLayers();
         this._initBackground();
         this._initSettingsEvents();
         this._initTasksViews();
+        this._initCollectionEvents();
     },
     setLeftPadding : function(offset) {
         this._leftPadding = offset;
@@ -143,11 +145,19 @@ var GanttChartView = Backbone.View.extend({
             this._updateStageAttrs();
         });
     },
+    _initCollectionEvents : function() {
+        this.listenTo(this.collection, 'add', function(task) {
+            this._addTaskView(task);
+        });
+        this.listenTo(this.collection, 'sort', function() {
+            this._resortViews();
+        });
+    },
     _initTasksViews : function() {
-        this.lastY = this._topPadding;
         this.collection.each(function(task) {
             this._addTaskView(task);
         }.bind(this));
+        this._resortViews();
         this.Flayer.draw();
     },
     _addTaskView : function(task) {
@@ -163,10 +173,20 @@ var GanttChartView = Backbone.View.extend({
                 settings : this.settings
             });
         }
-        view.setY(this.lastY);
-        this.lastY += view.height;
         this.Flayer.add(view.el);
         view.render();
+        this._taskViews.push(view);
+    },
+    _resortViews : function() {
+        var lastY = this._topPadding;
+        this.collection.each(function(task) {
+            var view = _.find(this._taskViews, function(view) {
+                return view.model === task;
+            });
+            view.setY(lastY);
+            lastY += view.height;
+        }.bind(this));
+        this.Flayer.draw();
     }
 });
 
