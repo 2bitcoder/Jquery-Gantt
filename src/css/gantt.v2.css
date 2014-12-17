@@ -87,6 +87,10 @@ p a {
   position: relative;
 }
 
+.hdr-title {
+    padding-top: 16px;
+}
+
 .masthead.segment .information {
   /*margin: 3em 1em 1em 280px;*/
 }

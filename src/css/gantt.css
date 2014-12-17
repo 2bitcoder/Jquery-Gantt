@@ -82,6 +82,12 @@ div.head-bar{
 	overflow: auto;
 }
 
+.task-list-container li{
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+
 div.gantt-chart-container {
 	/* display: inline-block; */
 	float: right;

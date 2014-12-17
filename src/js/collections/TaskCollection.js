@@ -17,22 +17,35 @@ var TaskCollection = Backbone.Collection.extend({
 			}
 			var parentTask = this.get(task.get('parentid'));
 			if (parentTask) {
-				parentTask.children.add(task);
+				if (parentTask === task) {
+					task.set('parentid', 0);
+				} else {
+					parentTask.children.add(task);
+				}
 			} else {
+				task.set('parentid', 0);
 				console.error('task has parent with id ' + task.get('parentid') + ' - but there is no such task');
 			}
 			
 		}.bind(this));
 	},
+	_sortChildren : function (task, sortIndex) {
+		task.children.toArray().forEach(function(child) {
+			child.set('sortindex', ++sortIndex);
+			sortIndex = this._sortChildren(child, sortIndex);
+		}.bind(this));
+		return sortIndex;
+	},
 	checkSortedIndex : function() {
 		var sortIndex = 0;
-		this.each(function(model) {
-			model.set('sortindex', ++sortIndex).save();
-			model.children.each(function(child) {
-				child.set('sortindex', ++sortIndex).save();
-			});
-		});
-		this.trigger('resort');
+		this.toArray().forEach(function(task) {
+			if (task.get('parentid')) {
+				return;
+			}
+			task.set('sortindex', ++sortIndex);
+			sortIndex = this._sortChildren(task, sortIndex);
+		}.bind(this));
+		this.sort();
 	},
 	resort : function(data) {
 		var sortIndex = 0;
