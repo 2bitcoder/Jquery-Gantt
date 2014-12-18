@@ -11,11 +11,13 @@ var BasicTaskView = Backbone.KineticView.extend({
         this._initModelEvents();
         this._initSettingsEvents();
     },
-    events : {
-        'dragmove' : '_updateDates',
-        'dragend' : function() {
-            this.model.save();
-        }
+    events : function() {
+        return {
+            'dragmove' : '_updateDates',
+            'dragend' : function() {
+                this.model.save();
+            }
+        };
     },
     el : function() {
         var group = new Kinetic.Group({
@@ -46,8 +48,11 @@ var BasicTaskView = Backbone.KineticView.extend({
         var attrs = this.settings.getSetting('attr'),
             boundaryMin=attrs.boundaryMin,
             daysWidth=attrs.daysWidth;
-        var x = this._calculateX();
-        var days1 = Math.round(this.el.x() / daysWidth), days2 = Math.round((this.el.x() + x.x2 - x.x1) / daysWidth);
+
+        var rect = this.el.find('.mainRect')[0];
+        var length = rect.width();
+        var x = this.el.x() + rect.x();
+        var days1 = Math.round(x / daysWidth), days2 = Math.round((x + length) / daysWidth);
 
         this.model.set({
             start: boundaryMin.clone().addDays(days1),
@@ -62,7 +67,11 @@ var BasicTaskView = Backbone.KineticView.extend({
     _initModelEvents : function() {
         // don't update element while dragging
         this.listenTo(this.model, 'change', function() {
-            if (this.el.isDragging()) {
+            var dragging = this.el.isDragging();
+            this.el.getChildren().each(function(child) {
+                dragging = dragging || child.isDragging();
+            });
+            if (dragging) {
                 return;
             }
             this.render();
