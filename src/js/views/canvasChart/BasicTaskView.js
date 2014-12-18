@@ -3,8 +3,9 @@
 var BasicTaskView = Backbone.KineticView.extend({
     params : {
         height : 21,
-        padding : 2
+        padding : 3
     },
+    _completeColor : '#e88134',
     initialize : function(params) {
         this.height = this.params.height;
         this.settings = params.settings;
@@ -30,13 +31,13 @@ var BasicTaskView = Backbone.KineticView.extend({
             draggable : true
         });
         var rect = new Kinetic.Rect({
-            fill : this.model.get('lightcolor'),
+            fill : this._color,
             y : this.params.padding,
             height : this.params.height - this.params.padding * 2,
             name : 'mainRect'
         });
         var completeRect = new Kinetic.Rect({
-            fill : this.model.get('darkcolor'),
+            fill : this._completeColor,
             y : this.params.padding,
             height : this.params.height - this.params.padding * 2,
             name : 'completeRect'

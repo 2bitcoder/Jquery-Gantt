@@ -6,6 +6,7 @@ var BasicTaskView = require('./BasicTaskView');
 
 var AloneTaskView = BasicTaskView.extend({
     _borderWidth : 3,
+    _color : '#E6F0FF',
     events : function() {
         return _.extend(BasicTaskView.prototype.events(), {
             'dragmove .leftBorder' : '_changeSize',
