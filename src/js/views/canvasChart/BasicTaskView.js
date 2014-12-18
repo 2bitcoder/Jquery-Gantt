@@ -27,14 +27,19 @@ var BasicTaskView = Backbone.KineticView.extend({
             }.bind(this),
             draggable : true
         });
-        var fill = this.model.children.length ? this.model.get('color') : this.model.get('lightcolor');
         var rect = new Kinetic.Rect({
-            fill : fill,
+            fill : this.model.get('lightcolor'),
             y : this.params.padding,
             height : this.params.height - this.params.padding * 2,
             name : 'mainRect'
         });
-        group.add(rect);
+        var completeRect = new Kinetic.Rect({
+            fill : this.model.get('darkcolor'),
+            y : this.params.padding,
+            height : this.params.height - this.params.padding * 2,
+            name : 'completeRect'
+        });
+        group.add(rect, completeRect);
         return group;
     },
     _updateDates : function() {
@@ -80,6 +85,10 @@ var BasicTaskView = Backbone.KineticView.extend({
             x2: Date.daysdiff(boundaryMin, this.model.get('end')) * daysWidth
         };
     },
+    _calculateCompleteWidth : function() {
+        var x = this._calculateX();
+        return (x.x2 - x.x1) * this.model.get('complete') / 100;
+    },
     render : function() {
         var x = this._calculateX();
         // move group
@@ -89,6 +98,9 @@ var BasicTaskView = Backbone.KineticView.extend({
         var rect = this.el.find('.mainRect')[0];
         rect.x(0);
         rect.width(x.x2 - x.x1);
+
+        // update complete params
+        this.el.find('.completeRect')[0].width(this._calculateCompleteWidth());
         this.el.getLayer().draw();
         return this;
     },
