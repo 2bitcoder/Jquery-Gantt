@@ -68,8 +68,7 @@ var GanttChartView = Backbone.View.extend({
         var width = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
         var back = new Kinetic.Rect({
             height : this.stage.height(),
-            width : width,
-            fill : 'yellow'
+            width : width
         });
 
         this.Blayer.add(back).add(shape);
