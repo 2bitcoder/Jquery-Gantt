@@ -5,10 +5,14 @@
 var BasicTaskView = require('./BasicTaskView');
 
 var AloneTaskView = BasicTaskView.extend({
+    _borderWidth : 3,
     events : function() {
         return _.extend(BasicTaskView.prototype.events(), {
             'dragmove .leftBorder' : '_changeSize',
             'dragmove .rightBorder' : '_changeSize',
+
+            'dragend .leftBorder' : 'render',
+            'dragend .rightBorder' : 'render',
 
             'mouseover .leftBorder' : '_pointerMouse',
             'mouseout .leftBorder' : '_defaultMouse',
@@ -26,7 +30,7 @@ var AloneTaskView = BasicTaskView.extend({
                     y : this._y + this.params.padding
                 };
             }.bind(this),
-            width : 3,
+            width : this._borderWidth,
             fill : 'black',
             y : this.params.padding,
             height : this.params.height - this.params.padding * 2,
@@ -41,7 +45,7 @@ var AloneTaskView = BasicTaskView.extend({
                     y : this._y + this.params.padding
                 };
             }.bind(this),
-            width : 3,
+            width : this._borderWidth,
             fill : 'black',
             y : this.params.padding,
             height : this.params.height - this.params.padding * 2,
@@ -59,7 +63,7 @@ var AloneTaskView = BasicTaskView.extend({
     },
     _changeSize : function() {
         var leftX = this.el.find('.leftBorder')[0].x();
-        var rightX = this.el.find('.rightBorder')[0].x();
+        var rightX = this.el.find('.rightBorder')[0].x() + this._borderWidth;
 
         var rect = this.el.find('.mainRect')[0];
         rect.width(rightX - leftX);
@@ -69,7 +73,7 @@ var AloneTaskView = BasicTaskView.extend({
     render : function() {
         var x = this._calculateX();
         this.el.find('.leftBorder')[0].x(0);
-        this.el.find('.rightBorder')[0].x(x.x2 - x.x1);
+        this.el.find('.rightBorder')[0].x(x.x2 - x.x1 - this._borderWidth);
         BasicTaskView.prototype.render.call(this);
         return this;
     }

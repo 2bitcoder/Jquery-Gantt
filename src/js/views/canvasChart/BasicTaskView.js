@@ -52,11 +52,11 @@ var BasicTaskView = Backbone.KineticView.extend({
         var rect = this.el.find('.mainRect')[0];
         var length = rect.width();
         var x = this.el.x() + rect.x();
-        var days1 = Math.round(x / daysWidth), days2 = Math.round((x + length) / daysWidth);
+        var days1 = Math.floor(x / daysWidth), days2 = Math.floor((x + length) / daysWidth);
 
         this.model.set({
             start: boundaryMin.clone().addDays(days1),
-            end: boundaryMin.clone().addDays(days2)
+            end: boundaryMin.clone().addDays(days2 - 1)
         });
     },
     _initSettingsEvents : function() {

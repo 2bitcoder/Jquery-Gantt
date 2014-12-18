@@ -61,7 +61,7 @@ var GanttChartView = Backbone.View.extend({
     _initBackground : function() {
         var shape = new Kinetic.Shape({
             sceneFunc: this._getSceneFunction(),
-            stroke : 'black',
+            stroke: 'lightgray',
             strokeWidth : 0
         });
         var sattr = this.settings.sattr;
