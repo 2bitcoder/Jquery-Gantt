@@ -2,6 +2,7 @@
 
 var NestedTaskView = require('./NestedTaskView');
 var AloneTaskView = require('./AloneTaskView');
+var ConnectorView = require('./ConnectorView');
 
 var GanttChartView = Backbone.View.extend({
     el: '#gantt-container',
@@ -9,11 +10,12 @@ var GanttChartView = Backbone.View.extend({
     initialize: function (params) {
         this.settings = params.settings;
         this._taskViews = [];
+        this._connectorViews = [];
         this._initStage();
         this._initLayers();
         this._initBackground();
         this._initSettingsEvents();
-        this._initTasksViews();
+        this._initSubViews();
         this._initCollectionEvents();
     },
     setLeftPadding : function(offset) {
@@ -34,17 +36,17 @@ var GanttChartView = Backbone.View.extend({
     _updateStageAttrs : function() {
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
-
+        var self = this;
         this.stage.setAttrs({
-            offsetX : - this._leftPadding,
-            height: 580,
+            x : this._leftPadding,
+            height: $(".menu-container").innerHeight(),
             width: this.$el.innerWidth(),
             draggable: true,
             dragBoundFunc:  function(pos) {
                 var x;
                 var minX = - (lineWidth - this.width());
-                if (pos.x > 0) {
-                    x = 0;
+                if (pos.x > self._leftPadding) {
+                    x = self._leftPadding;
                 } else if (pos.x < minX) {
                     x = minX;
                 } else {
@@ -150,11 +152,11 @@ var GanttChartView = Backbone.View.extend({
             this._addTaskView(task);
         });
         this.listenTo(this.collection, 'remove', function(task) {
-            var view = _.find(this._taskViews, function(view) {
+            var taskView = _.find(this._taskViews, function(view) {
                 return view.model === task;
             });
-            view.remove();
-            this._taskViews = _.without(this._taskViews, view);
+            taskView.remove();
+            this._taskViews = _.without(this._taskViews, taskView);
             this._resortViews();
         });
         this.listenTo(this.collection, 'sort', function() {
@@ -163,10 +165,17 @@ var GanttChartView = Backbone.View.extend({
         this.listenTo(this.collection, 'change:hidden', function() {
             this._resortViews();
         });
+        this.listenTo(this.collection, 'change:depend', function(task) {
+            this._addConnectorView(task);
+            this._resortViews();
+        });
     },
-    _initTasksViews : function() {
+    _initSubViews : function() {
         this.collection.each(function(task) {
             this._addTaskView(task);
+        }.bind(this));
+        this.collection.each(function(task) {
+            this._addConnectorView(task);
         }.bind(this));
         this._resortViews();
         this.Flayer.draw();
@@ -188,6 +197,21 @@ var GanttChartView = Backbone.View.extend({
         view.render();
         this._taskViews.push(view);
     },
+    _addConnectorView : function(task) {
+        var dependId = task.get('depend');
+        if (!dependId) {
+            return;
+        }
+        var view = new ConnectorView({
+            beforeModel : this.collection.get(dependId),
+            afterModel : task,
+            settings : this.settings
+        });
+        this.Flayer.add(view.el);
+        view.el.moveToBottom();
+        view.render();
+        this._connectorViews.push(view);
+    },
     _resortViews : function() {
         var lastY = this._topPadding;
         this.collection.each(function(task) {
@@ -199,6 +223,24 @@ var GanttChartView = Backbone.View.extend({
             });
             view.setY(lastY);
             lastY += view.height;
+        }.bind(this));
+        this.collection.each(function(task) {
+            var dependId = task.get('depend');
+            if (task.get('hidden') || !dependId) {
+                return;
+            }
+            var beforeModel = this.collection.get(dependId);
+            var beforeView = _.find(this._taskViews, function(view) {
+                return view.model === beforeModel;
+            });
+            var afterView = _.find(this._taskViews, function(view) {
+                return view.model === task;
+            });
+            var connectorView = _.find(this._connectorViews, function(view) {
+                return view.beforeModel === beforeModel;
+            });
+            connectorView.setY1(beforeView.getY() + beforeView.params.height / 2);
+            connectorView.setY2(afterView.getY()  + afterView.params.height / 2);
         }.bind(this));
         this.Flayer.draw();
     }

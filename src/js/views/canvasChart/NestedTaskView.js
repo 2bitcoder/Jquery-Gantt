@@ -39,7 +39,7 @@ var NestedTaskView = BasicTaskView.extend({
 //            start: boundaryMin.clone().addDays(days1),
 //            end: boundaryMin.clone().addDays(days2 - 1)
 //        });
-    },
+    }
 });
 
 module.exports = NestedTaskView;

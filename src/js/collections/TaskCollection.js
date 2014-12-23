@@ -91,6 +91,9 @@ var TaskCollection = Backbone.Collection.extend({
 				}
 			}
 		});
+	},
+	createDependency : function (beforeModel, afterModel) {
+		afterModel.set('depend', beforeModel.id);
 	}
 });
 
