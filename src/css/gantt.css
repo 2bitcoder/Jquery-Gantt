@@ -58,7 +58,7 @@ div.head-bar{
 .menu-container ul li{
 	float:left;
 	line-height: 1.5;
-	padding: 0 2px;
+	padding: 0px 2px 0px 2px;
 }
 .sub-task-list ul{
 	padding-left: 30px;
@@ -105,7 +105,8 @@ div.gantt-chart-container {
 	width:100px;
 }
 .col-complete{
-	width:20px;
+	text-align: center;
+	width: 40px;
 }
 .col-status{
 	width:80px;
