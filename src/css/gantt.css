@@ -60,17 +60,7 @@ div.head-bar{
 	line-height: 1.5;
 	padding: 0px 2px 0px 2px;
 }
-/* .sub-task-list ul{
-	//padding-left: 30px;
-}
- */
-.sub-task{
-	padding-left: 30px;
-}
 
-.sub-task .col-name{
-	width: 297px;
-}
 .expand-menu{
 	cursor: pointer;
 }
@@ -79,7 +69,6 @@ div.head-bar{
 	width: 750px;
 }
 .task{
-	font-weight:bold;
 	white-space: nowrap;
 }
 
@@ -92,6 +81,10 @@ div.head-bar{
 	white-space: nowrap;
 }
 
+.task-list-container div {
+	font-weight:bold;
+}
+
 
 div.gantt-chart-container {
 	/* display: inline-block; */
@@ -100,29 +93,29 @@ div.gantt-chart-container {
 	
 }
 
-.col-name{
-	width:305px;
+.task .col-name{
+	width:328px;
 }
-.col-start{
-	width:100px;
+.task .col-start{
+	padding-left: 10px;
 }
-.col-end{
-	width:100px;
+.task  .col-end{
+	padding-left: 10px;
 }
-.col-complete{
+.task .col-complete{
 	text-align: center;
 	width: 40px;
 }
-.col-status{
-	width:80px;
+.task .col-status{
+	padding-left: 10px;
 }
-.col-interval{
-	width:30px;
+.task .col-interval{
+	padding-left: 10px;
 }
-.col-duration{
-	width: 45px;
+.task .col-duration{
+	padding-left: 10px;
 }
-.remove-item{
+.task .remove-item{
 	padding-left: 3px;
 }
 i.icon{
