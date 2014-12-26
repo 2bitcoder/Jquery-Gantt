@@ -7,13 +7,12 @@ function ContextMenuView(params) {
 ContextMenuView.prototype.render = function() {
     var self = this;
     $('.task-container').contextMenu({
-        selector: 'div',
+        selector: 'ul',
         callback: function(key) {
-            var id = $(this.parent()).attr('id');
+            var id = $(this).attr('id') || $(this).data('id');
             var model = self.collection.get(id);
             if(key === 'delete'){
                 model.destroy();
-                model.save();
                 $(this).fadeOut(function(){
                     $(this).remove();
                 });
@@ -101,7 +100,7 @@ ContextMenuView.prototype.addTask = function(data, insertPos) {
     }
     data.sortindex = sortindex;
     data.parentid = ref_model.get('parentid');
-    var task = this.app.tasks.add(data, {parse : true});
+    var task = this.collection.add(data, {parse : true});
     task.save();
 };
 

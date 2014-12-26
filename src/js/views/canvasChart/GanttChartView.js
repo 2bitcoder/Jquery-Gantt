@@ -233,6 +233,9 @@ var GanttChartView = Backbone.View.extend({
             var view = _.find(this._taskViews, function(view) {
                 return view.model === task;
             });
+            if (!view) {
+                return;
+            }
             view.setY(lastY);
             lastY += view.height;
         }.bind(this));
