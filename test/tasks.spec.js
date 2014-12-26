@@ -1,6 +1,7 @@
 "use strict";
 var expect = require("chai").expect;
 var Backbone = require('backbone');
+require('../src/js/lib/date');
 Backbone.sync = function() {};
 global.Backbone = Backbone;
 
@@ -103,5 +104,76 @@ describe("Tasks", function(){
         expect(stateChangeCount).to.equal(1);
         tasks.get(3).set('parentid', 1);
         expect(stateChangeCount).to.equal(2);
+    });
+
+    it('update parent time on child time change', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1}, {id : 2}, {id : 3, parentid : 2}]);
+
+        var parent = tasks.get(2);
+        var child = tasks.get(3);
+
+        expect(parent.children.at(0)).to.equal(child);
+        child.set({
+            start : new Date('2014-12-10'),
+            end : new Date('2014-12-12')
+        });
+
+        expect(parent.get('start').toDateString()).to.equal(child.get('start').toDateString());
+        expect(parent.get('end').toDateString()).to.equal(child.get('end').toDateString());
+    });
+
+    it('update parent time on several children time change', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1}, {id : 2,parentid : 1}, {id : 3, parentid : 1}]);
+
+        var parent = tasks.get(1);
+        var child1 = tasks.get(2);
+        var child2 = tasks.get(3);
+
+        expect(parent.children.length).to.equal(2);
+        child1.set({
+            start : new Date('2014-12-10'),
+            end : new Date('2014-12-12')
+        });
+
+        child2.set({
+            start : new Date('2014-12-13'),
+            end : new Date('2014-12-14')
+        });
+
+        expect(parent.get('start').toDateString()).to.equal(child1.get('start').toDateString());
+        expect(parent.get('end').toDateString()).to.equal(child2.get('end').toDateString());
+    });
+
+    it('update parent time on grand child time change', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1, parentid: 3}, {id : 2}, {id : 3, parentid : 2}]);
+
+        var parent = tasks.get(2);
+        var child = tasks.get(3);
+        var grandChild = tasks.get(1);
+
+        grandChild.set({
+            start : new Date('2014-12-10'),
+            end : new Date('2014-12-12')
+        });
+
+        expect(parent.get('start').toDateString()).to.equal(child.get('start').toDateString());
+        expect(parent.get('end').toDateString()).to.equal(child.get('end').toDateString());
+    });
+
+    it('task moving should move all sub children', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1, parentid: 3}, {id : 2}, {id : 3, parentid : 2}]);
+
+        var parent = tasks.get(2);
+        var child = tasks.get(3);
+        var grandChild = tasks.get(1);
+
+        parent.moveToStart(new Date('2014-12-12'));
+
+        expect(child.get('start').toDateString()).to.equal(parent.get('start').toDateString());
+        expect(grandChild.get('start').toDateString()).to.equal(parent.get('start').toDateString());
     });
 });

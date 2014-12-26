@@ -24,10 +24,9 @@ function getData(container) {
 var SidePanel = React.createClass({
     displayName: 'SidePanel',
     componentDidMount  : function() {
-        var self = this;
         this.props.collection.on('add remove', function() {
-            self.forceUpdate();
-        });
+            this.forceUpdate();
+        }, this);
         this._makeSortable();
     },
     _makeSortable : function() {
@@ -80,8 +79,9 @@ var SidePanel = React.createClass({
         }.bind(this));
     },
     componentWillUnmount  : function() {
-        $('.task-container').sortable("disable");
+//        $('.task-container').sortable("disable");
         $('.task-container').sortable("destroy");
+        this.props.collection.off(null, null, this);
         this.hightlighter.remove();
     },
     render: function() {
