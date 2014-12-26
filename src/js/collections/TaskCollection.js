@@ -47,35 +47,56 @@ var TaskCollection = Backbone.Collection.extend({
 		}.bind(this));
 		this.sort();
 	},
-	resort : function(data) {
-		var sortIndex = 0;
-		var self = this;
-		data.forEach(function(parentData) {
-			var parentModel = this.get(parentData.id);
-			var prevSort = parentModel.get('sortindex');
-			if (prevSort !== ++sortIndex) {
-				parentModel.set('sortindex', sortIndex).save();
-			}
-			if (parentModel.get('parentid')) {
-				parentModel.set('parentid', 0).save();
-			}
-			parentData.children.forEach(function(childData) {
-				var childModel = self.get(childData.id);
-				var prevSortI = childModel.get('sortindex');
-				if (prevSortI !== ++sortIndex) {
-					childModel.set('sortindex', sortIndex).save();
+	_resortChildren : function(data, startIndex, parentID) {
+		var sortIndex = startIndex;
+		data.forEach(function(taskData) {
+			var task = this.get(taskData.id);
+			if (task.get('parentid') !== parentID) {
+				var newParent = this.get(parentID);
+				if (newParent) {
+					newParent.children.add(task);
 				}
-				if (childModel.get('parentid') !== parentModel.id) {
-					childModel.set('parentid', parentModel.id).save();
-					var parent = self.find(function(m) {
-						return m.id === parentModel.id;
-					});
-					parent.children.add(childModel);
-				}
+			}
+			task.save({
+				sortindex: ++sortIndex,
+				parentid: parentID
 			});
+			if (taskData.children && taskData.children.length) {
+				sortIndex = this._resortChildren(taskData.children, sortIndex, task.id);
+			}
 		}.bind(this));
+		return sortIndex;
+	},
+	resort : function(data) {
+//		var sortIndex = 0;
+		this._resortChildren(data, -1, 0);
 		this.sort();
-		this.checkSortedIndex();
+//		var self = this;
+//		data.forEach(function(parentData) {
+//			var parentModel = this.get(parentData.id);
+//			var prevSort = parentModel.get('sortindex');
+//			if (prevSort !== ++sortIndex) {
+//				parentModel.set('sortindex', sortIndex).save();
+//			}
+//			if (parentModel.get('parentid')) {
+//				parentModel.set('parentid', 0).save();
+//			}
+//			parentData.children.forEach(function(childData) {
+//				var childModel = self.get(childData.id);
+//				var prevSortI = childModel.get('sortindex');
+//				if (prevSortI !== ++sortIndex) {
+//					childModel.set('sortindex', sortIndex).save();
+//				}
+//				if (childModel.get('parentid') !== parentModel.id) {
+//					childModel.set('parentid', parentModel.id).save();
+//					var parent = self.find(function(m) {
+//						return m.id === parentModel.id;
+//					});
+//					parent.children.add(childModel);
+//				}
+//			});
+//		}.bind(this));
+//		this.checkSortedIndex();
 	},
 	subscribe : function() {
 		this.listenTo(this, 'add', function(model) {
@@ -89,6 +110,15 @@ var TaskCollection = Backbone.Collection.extend({
 					console.warn('can not find parent with id ' + model.get('parentid'));
 					model.set('parentid', 0);
 				}
+			}
+		});
+		this.listenTo(this, 'reset', function() {
+			this.linkChildren();
+		});
+		this.listenTo(this, 'change:parentid', function(model) {
+			var parent = this.get(model.get('parentid'));
+			if (parent) {
+				parent.children.add(model);
 			}
 		});
 	},

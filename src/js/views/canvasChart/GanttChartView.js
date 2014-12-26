@@ -6,7 +6,7 @@ var ConnectorView = require('./ConnectorView');
 
 var GanttChartView = Backbone.View.extend({
     el: '#gantt-container',
-    _topPadding : 70,
+    _topPadding : 73,
     initialize: function (params) {
         this.settings = params.settings;
         this._taskViews = [];
@@ -150,13 +150,10 @@ var GanttChartView = Backbone.View.extend({
     _initCollectionEvents : function() {
         this.listenTo(this.collection, 'add', function(task) {
             this._addTaskView(task);
+            this._resortViews();
         });
         this.listenTo(this.collection, 'remove', function(task) {
-            var taskView = _.find(this._taskViews, function(view) {
-                return view.model === task;
-            });
-            taskView.remove();
-            this._taskViews = _.without(this._taskViews, taskView);
+            this._removeViewForModel(task);
             this._resortViews();
         });
         this.listenTo(this.collection, 'sort', function() {
@@ -169,6 +166,21 @@ var GanttChartView = Backbone.View.extend({
             this._addConnectorView(task);
             this._resortViews();
         });
+        this.listenTo(this.collection, 'nestedStateChange', function(task) {
+            this._removeViewForModel(task);
+            this._addTaskView(task);
+            this._resortViews();
+        });
+    },
+    _removeViewForModel : function(model) {
+        var taskView = _.find(this._taskViews, function(view) {
+            return view.model === model;
+        });
+        this._removeView(taskView);
+    },
+    _removeView : function(taskView) {
+        taskView.remove();
+        this._taskViews = _.without(this._taskViews, taskView);
     },
     _initSubViews : function() {
         this.collection.each(function(task) {
@@ -182,7 +194,7 @@ var GanttChartView = Backbone.View.extend({
     },
     _addTaskView : function(task) {
         var view;
-        if (task.children.length) {
+        if (task.isNested()) {
             view = new NestedTaskView({
                 model : task,
                 settings : this.settings

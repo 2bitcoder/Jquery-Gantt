@@ -32,6 +32,9 @@ function transformToAssocArray(prmstr) {
 }
 
 module.exports.getURLParams = function() {
+	if (typeof window === "undefined") {
+		return {};
+	}
 	var prmstr = window.location.search.substr(1);
 	return prmstr !== null && prmstr !== '' ? transformToAssocArray(prmstr) : {};
 };

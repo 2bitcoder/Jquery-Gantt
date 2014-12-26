@@ -60,9 +60,14 @@ div.head-bar{
 	line-height: 1.5;
 	padding: 0px 2px 0px 2px;
 }
-.sub-task-list ul{
+/* .sub-task-list ul{
+	//padding-left: 30px;
+}
+ */
+.sub-task{
 	padding-left: 30px;
 }
+
 .sub-task .col-name{
 	width: 297px;
 }

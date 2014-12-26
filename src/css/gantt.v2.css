@@ -66,10 +66,7 @@ p a {
 }
 
 .ui.page.grid.segment {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  padding-left: 0;
-  padding-right: 0;
+    padding: 0.5rem 0;
 }
 
 .masthead.segment {
@@ -88,7 +85,7 @@ p a {
 }
 
 .hdr-title {
-    padding-top: 16px;
+    padding-top: 13px;
 }
 
 .masthead.segment .information {
