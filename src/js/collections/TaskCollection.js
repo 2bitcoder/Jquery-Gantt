@@ -37,7 +37,7 @@ var TaskCollection = Backbone.Collection.extend({
 		return sortIndex;
 	},
 	checkSortedIndex : function() {
-		var sortIndex = 0;
+		var sortIndex = -1;
 		this.toArray().forEach(function(task) {
 			if (task.get('parentid')) {
 				return;
@@ -68,35 +68,10 @@ var TaskCollection = Backbone.Collection.extend({
 		return sortIndex;
 	},
 	resort : function(data) {
-//		var sortIndex = 0;
+		this._sorting = true;
 		this._resortChildren(data, -1, 0);
+		this._sorting = false;
 		this.sort();
-//		var self = this;
-//		data.forEach(function(parentData) {
-//			var parentModel = this.get(parentData.id);
-//			var prevSort = parentModel.get('sortindex');
-//			if (prevSort !== ++sortIndex) {
-//				parentModel.set('sortindex', sortIndex).save();
-//			}
-//			if (parentModel.get('parentid')) {
-//				parentModel.set('parentid', 0).save();
-//			}
-//			parentData.children.forEach(function(childData) {
-//				var childModel = self.get(childData.id);
-//				var prevSortI = childModel.get('sortindex');
-//				if (prevSortI !== ++sortIndex) {
-//					childModel.set('sortindex', sortIndex).save();
-//				}
-//				if (childModel.get('parentid') !== parentModel.id) {
-//					childModel.set('parentid', parentModel.id).save();
-//					var parent = self.find(function(m) {
-//						return m.id === parentModel.id;
-//					});
-//					parent.children.add(childModel);
-//				}
-//			});
-//		}.bind(this));
-//		this.checkSortedIndex();
 	},
 	subscribe : function() {
 		this.listenTo(this, 'add', function(model) {
@@ -114,16 +89,45 @@ var TaskCollection = Backbone.Collection.extend({
 		});
 		this.listenTo(this, 'reset', function() {
 			this.linkChildren();
+			this.checkSortedIndex();
 		});
-		this.listenTo(this, 'change:parentid', function(model) {
-			var parent = this.get(model.get('parentid'));
-			if (parent) {
-				parent.children.add(model);
+		this.listenTo(this, 'change:parentid', function(task) {
+			if (task.parent) {
+				task.parent.children.remove(task);
+				task.parent = undefined;
+			}
+
+			var newParent = this.get(task.get('parentid'));
+			if (newParent) {
+				newParent.children.add(task);
+			}
+			if (!this._sorting) {
+				this.checkSortedIndex();
 			}
 		});
 	},
 	createDependency : function (beforeModel, afterModel) {
 		afterModel.set('depend', beforeModel.id);
+	},
+	outdent : function(task) {
+		if (task.parent && task.parent.parent) {
+			task.save('parentid', task.parent.parent.id);
+		} else {
+			task.save('parentid', 0);
+		}
+	},
+	indent : function(task) {
+		var prevTask, i;
+		for (i = this.length - 1; i >=0; i--) {
+			var m = this.at(i);
+			if ((m.get('sortindex') < task.get('sortindex')) && (task.parent === m.parent)) {
+				prevTask = m;
+				break;
+			}
+		}
+		if (prevTask) {
+			task.save('parentid', prevTask.id);
+		}
 	}
 });
 

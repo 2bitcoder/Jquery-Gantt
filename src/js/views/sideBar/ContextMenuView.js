@@ -13,9 +13,6 @@ ContextMenuView.prototype.render = function() {
             var model = self.collection.get(id);
             if(key === 'delete'){
                 model.destroy();
-                $(this).fadeOut(function(){
-                    $(this).remove();
-                });
             }
             if(key === 'properties'){
 //                var $property = '.property-';
@@ -62,19 +59,10 @@ ContextMenuView.prototype.render = function() {
                 }, 'below');
             }
             if (key === 'indent') {
-                var prevTask = model.collection.find(function(task) {
-                    return task.get('sortindex') === model.get('sortindex') - 1;
-                });
-                if (prevTask) {
-                    model.save('parentid', prevTask.id);
-                }
+                self.collection.indent(model);
             }
             if (key === 'outdent'){
-                if (model.parent && model.parent.parent) {
-                    model.save('parentid', model.parent.parent.id);
-                } else {
-                    model.save('parentid', 0);
-                }
+                self.collection.outdent(model);
             }
         },
         items: {

@@ -13,6 +13,18 @@ describe("Tasks", function(){
         expect(tasks.length).to.equal(1);
     });
 
+    it('resort on reset', function(){
+        var tasks = new Tasks();
+        var count = 0;
+        tasks.on('sort', function() {
+            count += 1;
+        });
+        tasks.reset([{id : 2}, {id : 1}]);
+        expect(tasks.get(2).get('sortindex')).to.equal(0);
+        expect(tasks.get(1).get('sortindex')).to.equal(1);
+        expect(count).to.equal(1);
+    });
+
     it('simple resort', function(){
         var tasks = new Tasks([{id : 1}, {id : 2}]);
         tasks.resort([{id : 2}, {id : 1}]);
@@ -175,5 +187,62 @@ describe("Tasks", function(){
 
         expect(child.get('start').toDateString()).to.equal(parent.get('start').toDateString());
         expect(grandChild.get('start').toDateString()).to.equal(parent.get('start').toDateString());
+    });
+
+    it('resort tasks on parentid change', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1, parentid: 3}, {id : 2}, {id : 3, parentid : 2}]);
+        var count = 0;
+        tasks.once('sort', function() {
+            count++;
+        });
+
+        tasks.get(1).set('parentid', 2);
+        expect(count).to.equal(1);
+    });
+
+    it('outdent to root', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1}, {id : 2, parentid : 1}, {id : 3, parentid : 2}]);
+        var count = 0;
+        tasks.on('sort', function() {
+            count++;
+            expect(tasks.get(2).get('parentid')).to.equal(0);
+            expect(tasks.get(1).children.length).to.equal(0);
+        });
+
+        // do nothing if task already on root
+        tasks.outdent(tasks.get(1));
+        expect(count).to.equal(0);
+
+        tasks.outdent(tasks.get(2));
+        expect(count).to.equal(1);
+
+    });
+
+    it('outdent to grand parent', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1, parentid: 3}, {id : 2}, {id : 3, parentid : 2}]);
+
+
+        tasks.outdent(tasks.get(1));
+        expect(tasks.get(1).get('parentid')).to.equal(2);
+    });
+
+    it('indent task', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1}, {id : 2, parentid : 1}, {id : 3}]);
+        var count = 0;
+        tasks.once('sort', function() {
+            count++;
+        });
+
+        tasks.indent(tasks.get(3));
+        expect(tasks.get(3).get('parentid')).to.equal(1);
+        expect(count).to.equal(1);
+
+        expect(tasks.get(1).get('sortindex')).to.equal(0);
+        expect(tasks.get(2).get('sortindex')).to.equal(1);
+        expect(tasks.get(3).get('sortindex')).to.equal(2);
     });
 });

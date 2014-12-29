@@ -78,7 +78,6 @@ div.head-bar{
 
 .task-list-container li{
 	overflow: hidden;
-	white-space: nowrap;
 }
 
 .task-list-container div {
@@ -95,6 +94,8 @@ div.gantt-chart-container {
 
 .task .col-name{
 	width:328px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 .task .col-start{
 	padding-left: 10px;
