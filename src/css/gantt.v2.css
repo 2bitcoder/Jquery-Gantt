@@ -166,11 +166,10 @@ div.menu-container,#gantt-container{
 }
 
 .menu-header{
-  margin: 3.3% auto;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
-.menu-header-opened{
-  margin: 1.4% auto;
-}
+
 .content-edit{
   outline: 1px solid #0090d3;
   box-shadow: 0 0 3px 2px rgba(124,252,14,0.4);
