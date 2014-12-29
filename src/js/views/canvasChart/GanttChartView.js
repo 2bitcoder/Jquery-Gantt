@@ -39,7 +39,7 @@ var GanttChartView = Backbone.View.extend({
         var self = this;
         this.stage.setAttrs({
             x : this._leftPadding,
-            height: $(".menu-container").innerHeight(),
+            height: Math.max($(".menu-container").innerHeight(), window.innerHeight - $(this.stage.getContainer()).offset().top),
             width: this.$el.innerWidth(),
             draggable: true,
             dragBoundFunc:  function(pos) {

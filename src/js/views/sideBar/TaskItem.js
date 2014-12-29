@@ -30,6 +30,9 @@ var TaskItem = React.createClass({
         if (this.state.editRow === col) {
             return this._createEditField(col);
         }
+//        if (col === 'name' && this.props.model.get('name') === 'New task') {
+//            return this._createEditField(col);
+//        }
         return this._createReadFiled(col);
     },
     _createReadFiled : function(col) {
