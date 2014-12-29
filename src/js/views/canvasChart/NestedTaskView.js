@@ -6,6 +6,27 @@ var BasicTaskView = require('./BasicTaskView');
 
 var NestedTaskView = BasicTaskView.extend({
     _color : '#b3d1fc',
+    _borderSize : 5,
+    el : function() {
+        var group = BasicTaskView.prototype.el.call(this);
+        var leftBorder = new Kinetic.Line({
+            fill : this._color,
+            y : this.params.height - this.params.padding,
+            points : [0, 0, this._borderSize, 0, 0, this._borderSize],
+            closed : true,
+            name : 'leftBorder'
+        });
+        group.add(leftBorder);
+        var rightBorder = new Kinetic.Line({
+            fill : this._color,
+            y : this.params.height - this.params.padding,
+            points : [-this._borderSize, 0, 0, 0, 0, this._borderSize],
+            closed : true,
+            name : 'rightBorder'
+        });
+        group.add(rightBorder);
+        return group;
+    },
     _updateDates : function() {
         // group is moved
         // so we need to detect interval
@@ -18,6 +39,25 @@ var NestedTaskView = BasicTaskView.extend({
         var days1 = Math.floor(x / daysWidth);
         var newStart = boundaryMin.clone().addDays(days1);
         this.model.moveToStart(newStart);
+    },
+    render : function() {
+        var x = this._calculateX();
+        this.el.find('.leftBorder')[0].x(0);
+        this.el.find('.rightBorder')[0].x(x.x2 - x.x1);
+        var completeWidth = (x.x2 - x.x1) * this.model.get('complete') / 100;
+        if (completeWidth > this._borderSize / 2) {
+            this.el.find('.leftBorder')[0].fill(this._completeColor);
+        } else {
+            this.el.find('.leftBorder')[0].fill(this._color);
+        }
+        if ((x.x2 - x.x1) - completeWidth < this._borderSize / 2) {
+            this.el.find('.rightBorder')[0].fill(this._completeColor);
+        } else {
+            this.el.find('.rightBorder')[0].fill(this._color);
+        }
+
+        BasicTaskView.prototype.render.call(this);
+        return this;
     }
 });
 
