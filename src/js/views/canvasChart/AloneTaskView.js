@@ -26,8 +26,10 @@ var AloneTaskView = BasicTaskView.extend({
         var group = BasicTaskView.prototype.el.call(this);
         var leftBorder = new Kinetic.Rect({
             dragBoundFunc : function(pos) {
+                var offset = this.el.getStage().x() + this.el.x();
+                var localX = pos.x - offset;
                 return {
-                    x : pos.x,
+                    x : Math.min(localX, this.el.find('.rightBorder')[0].x()) + offset,
                     y : this._y + this.params.padding
                 };
             }.bind(this),
@@ -41,8 +43,10 @@ var AloneTaskView = BasicTaskView.extend({
         group.add(leftBorder);
         var rightBorder = new Kinetic.Rect({
             dragBoundFunc : function(pos) {
+                var offset = this.el.getStage().x() + this.el.x();
+                var localX = pos.x - offset;
                 return {
-                    x : pos.x,
+                    x : Math.max(localX, this.el.find('.leftBorder')[0].x()) + offset,
                     y : this._y + this.params.padding
                 };
             }.bind(this),
