@@ -62,24 +62,26 @@ var SidePanel = React.createClass({
             position : 'absolute',
             background : 'grey',
             opacity : '0.5',
-            lift : '0'
+            lift : '0',
+            top : '0'
         });
+        container.mouseenter(function() {
+            this.hightlighter.appendTo(document.body);
+        }.bind(this));
         container.mouseover(function(e) {
             var $el = $(e.target);
             var pos = $el.offset();
-            this.hightlighter.appendTo(document.body);
             this.hightlighter.css({
-                top : pos.top,
+                transform : 'translateZ(0) translateY(' + pos.top + 'px)',
                 height : $el.height(),
                 width : window.innerWidth
             });
         }.bind(this));
-        container.mouseout(function() {
+        container.mouseleave(function() {
             this.hightlighter.remove();
         }.bind(this));
     },
     componentWillUnmount  : function() {
-//        $('.task-container').sortable("disable");
         $('.task-container').sortable("destroy");
         this.props.collection.off(null, null, this);
         this.hightlighter.remove();
