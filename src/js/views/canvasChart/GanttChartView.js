@@ -163,7 +163,11 @@ var GanttChartView = Backbone.View.extend({
             this._resortViews();
         });
         this.listenTo(this.collection, 'change:depend', function(task) {
-            this._addConnectorView(task);
+            if (task.get('depend')) {
+                this._addConnectorView(task);
+            } else {
+                this._removeConnector(task);
+            }
             this._resortViews();
         });
         this.listenTo(this.collection, 'nestedStateChange', function(task) {
@@ -181,6 +185,13 @@ var GanttChartView = Backbone.View.extend({
     _removeView : function(taskView) {
         taskView.remove();
         this._taskViews = _.without(this._taskViews, taskView);
+    },
+    _removeConnector : function(task) {
+        var connectorView = _.find(this._connectorViews, function(view) {
+            return view.afterModel === task;
+        });
+        connectorView.remove();
+        this._connectorViews = _.without(this._connectorViews, connectorView);
     },
     _initSubViews : function() {
         this.collection.each(function(task) {

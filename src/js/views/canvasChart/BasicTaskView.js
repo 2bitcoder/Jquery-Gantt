@@ -14,7 +14,12 @@ var BasicTaskView = Backbone.KineticView.extend({
     },
     events : function() {
         return {
-            'dragmove' : '_updateDates',
+            'dragmove' : function(e) {
+                if (e.target.nodeType !== 'Group') {
+                    return;
+                }
+                this._updateDates();
+            },
             'dragend' : function() {
                 this.model.saveWithChildren();
                 this.render();
@@ -120,15 +125,19 @@ var BasicTaskView = Backbone.KineticView.extend({
         this.render();
         var stage = this.el.getStage();
         var el = stage.getIntersection(stage.getPointerPosition());
-        var group = el.getParent();
-        var taskId = group.id();
+        var group = el && el.getParent();
+        var taskId = group && group.id();
         var beforeModel = this.model;
         var afterModel = this.model.collection.get(taskId);
-        console.log(afterModel);
         if (afterModel) {
             this.model.collection.createDependency(beforeModel, afterModel);
         } else {
-            this.model.collection.removeDependency(beforeModel);
+            var removeFor = this.model.collection.find(function(task) {
+                return task.get('depend') === beforeModel.id;
+            });
+            if (removeFor) {
+                this.model.collection.removeDependency(removeFor);
+            }
         }
     },
     _initSettingsEvents : function() {

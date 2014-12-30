@@ -56,9 +56,14 @@ app.put('/api/tasks/:id', function(req, res) {
     });
 
     if (task) {
-      _(req.body).each(function(val, key) {
-        task[key] = val;
-      });
+        _(req.body).each(function(val, key) {
+            task[key] = val;
+        });
+        _(task).each(function(val, key) {
+            if (!req.body[key]) {
+                task[key] = undefined;
+            }
+        });
     } else {
         console.error('no such task');
     }
