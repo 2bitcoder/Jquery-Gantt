@@ -1,6 +1,8 @@
 "use strict";
 
 var ConnectorView = Backbone.KineticView.extend({
+    _color : 'grey',
+    _wrongColor : 'red',
     initialize : function (params) {
         this.settings = params.settings;
         this.beforeModel = params.beforeModel;
@@ -28,7 +30,20 @@ var ConnectorView = Backbone.KineticView.extend({
     },
     render : function() {
         var x = this._calculateX();
-        this.el.points([x.x1, this._y1, x.x2, this._y2]);
+        if (x.x2 >= x.x1) {
+            this.el.stroke(this._color);
+            this.el.points([x.x1, this._y1, x.x1 + 10, this._y1, x.x1 + 10, this._y2, x.x2, this._y2]);
+        } else {
+            this.el.stroke(this._wrongColor);
+            this.el.points([
+                x.x1, this._y1,
+                x.x1 + 10, this._y1,
+                x.x1 + 10, this._y1 + (this._y2 - this._y1) / 2,
+                x.x2 - 10, this._y1 + (this._y2 - this._y1) / 2,
+                x.x2 - 10, this._y2,
+                x.x2, this._y2
+            ]);
+        }
         this.el.getLayer().batchDraw();
         return this;
     },

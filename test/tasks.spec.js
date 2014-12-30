@@ -245,4 +245,140 @@ describe("Tasks", function(){
         expect(tasks.get(2).get('sortindex')).to.equal(1);
         expect(tasks.get(3).get('sortindex')).to.equal(2);
     });
+
+    describe('Tasks dependencies', function() {
+        it('create dependence from JSON', function() {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1}, {id : 2, depend : 1}, {id : 3}]);
+            expect(tasks.get(2).get('depend')).to.equal(1);
+            expect(tasks.get(2).beforeModel.id).to.equal(tasks.get(1).id);
+        });
+
+        it('remove invalid dependence from JSON', function() {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1}, {id : 2, depend : 4}, {id : 3}]);
+            expect(tasks.get(2).get('depend')).to.equal(undefined);
+        });
+
+        it('create dependence', function() {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1}, {id : 2}, {id : 3}]);
+            tasks.createDependency(tasks.get(1), tasks.get(2));
+            expect(tasks.get(2).get('depend')).to.equal(1);
+
+            // delete dependency on before model destroy
+            tasks.get(1).destroy();
+            expect(tasks.get(2).get('depend')).to.equal(undefined);
+        });
+
+        it('move task on deps creating', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }, {id : 2}, {id : 3}]);
+
+            tasks.createDependency(tasks.get(1), tasks.get(2));
+            expect(tasks.get(2).get('depend')).to.equal(1);
+            expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-12').toDateString());
+        });
+
+        it('move task on deps creating via JSON', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }, {id : 2, depend : 1}, {id : 3}]);
+
+            expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-12').toDateString());
+        });
+
+        it('move task on before model forward move', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }, {id : 2, depend : 1}, {id : 3}]);
+
+            tasks.get(1).move(10);
+            expect(tasks.get(2).get('start').toDateString()).to.equal(tasks.get(1).get('end').toDateString());
+        });
+
+        it('son`t move task on before model back move', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }, {id : 2, depend : 1}, {id : 3}]);
+
+            var previousDate = tasks.get(2).get('start').toDateString();
+            tasks.get(1).move(-10);
+            expect(tasks.get(2).get('start').toDateString()).to.equal(previousDate);
+        });
+
+        describe('stop listening', function() {
+            var tasks;
+            var previousDate, bef, task;
+
+            beforeEach(function() {
+                tasks = new Tasks();
+                tasks.reset([{
+                    id : 1,
+                    start : new Date('2014-12-10'),
+                    end : new Date('2014-12-12')
+                }, {id : 2, depend : 1}, {id : 3}]);
+                previousDate = tasks.get(2).get('start').toDateString();
+                bef = tasks.get(1);
+                task = tasks.get(2);
+            });
+
+            it('on before model destroy', function() {
+                bef.destroy();
+                bef.move(10);
+                expect(task.get('start').toDateString()).to.equal(previousDate);
+            });
+
+            it('on removing dependence', function() {
+                tasks.removeDependency(task);
+                bef.move(10);
+                expect(task.get('start').toDateString()).to.equal(previousDate);
+            });
+
+            it('on self destroy', function() {
+                task.destroy();
+                bef.move(10);
+                expect(task.get('start').toDateString()).to.equal(previousDate);
+            });
+        });
+
+        it('don`t create dependence between parent and children', function() {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1}, {id : 2, parentid : 1}, {id : 3, parentid: 2}]);
+
+            tasks.createDependency(tasks.get(1), tasks.get(2));
+            expect(tasks.get(2).get('depend')).to.equal(undefined);
+
+            tasks.createDependency(tasks.get(2), tasks.get(1));
+            expect(tasks.get(1).get('depend')).to.equal(undefined);
+
+            tasks.createDependency(tasks.get(1), tasks.get(3));
+            expect(tasks.get(3).get('depend')).to.equal(undefined);
+
+            tasks.createDependency(tasks.get(3), tasks.get(1));
+            expect(tasks.get(2).get('depend')).to.equal(undefined);
+        });
+
+        it('don`t create dependence between already dependend tasks', function() {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1}, {id : 2}, {id : 3, depend: 2}]);
+
+            tasks.createDependency(tasks.get(3), tasks.get(2));
+            expect(tasks.get(2).get('depend')).to.equal(undefined);
+        });
+
+    });
 });

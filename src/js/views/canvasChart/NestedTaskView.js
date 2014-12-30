@@ -6,13 +6,13 @@ var BasicTaskView = require('./BasicTaskView');
 
 var NestedTaskView = BasicTaskView.extend({
     _color : '#b3d1fc',
-    _borderSize : 5,
+    _borderSize : 6,
     el : function() {
         var group = BasicTaskView.prototype.el.call(this);
         var leftBorder = new Kinetic.Line({
             fill : this._color,
             y : this.params.height - this.params.padding,
-            points : [0, 0, this._borderSize, 0, 0, this._borderSize],
+            points : [0, 0, this._borderSize * 1.5, 0, 0, this._borderSize],
             closed : true,
             name : 'leftBorder'
         });
@@ -20,7 +20,7 @@ var NestedTaskView = BasicTaskView.extend({
         var rightBorder = new Kinetic.Line({
             fill : this._color,
             y : this.params.height - this.params.padding,
-            points : [-this._borderSize, 0, 0, 0, 0, this._borderSize],
+            points : [-this._borderSize * 1.5, 0, 0, 0, 0, this._borderSize],
             closed : true,
             name : 'rightBorder'
         });

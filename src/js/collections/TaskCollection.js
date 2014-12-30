@@ -90,6 +90,7 @@ var TaskCollection = Backbone.Collection.extend({
 		this.listenTo(this, 'reset', function() {
 			this.linkChildren();
 			this.checkSortedIndex();
+			this._checkDependencies();
 		});
 		this.listenTo(this, 'change:parentid', function(task) {
 			if (task.parent) {
@@ -107,7 +108,36 @@ var TaskCollection = Backbone.Collection.extend({
 		});
 	},
 	createDependency : function (beforeModel, afterModel) {
-		afterModel.set('depend', beforeModel.id);
+		if (this._canCreateDependence(beforeModel, afterModel)) {
+			afterModel.dependOn(beforeModel);
+		}
+	},
+
+	_canCreateDependence : function(beforeModel, afterModel) {
+		if (beforeModel.hasParent(afterModel) || afterModel.hasParent(beforeModel)) {
+			return false;
+		}
+		if ((beforeModel.get('depend') === afterModel.id) ||
+			(afterModel.get('depend') === beforeModel.id)) {
+			return false;
+		}
+		return true;
+	},
+	removeDependency : function(afterModel) {
+		afterModel.clearDependence();
+	},
+	_checkDependencies : function() {
+		this.each(function(task) {
+			if (!task.get('depend')) {
+				return;
+			}
+			var beforeModel = this.get(task.get('depend'));
+			if (!beforeModel) {
+				task.unset('depend').save();
+			} else {
+				task.dependOn(beforeModel);
+			}
+		}.bind(this));
 	},
 	outdent : function(task) {
 		if (task.parent && task.parent.parent) {

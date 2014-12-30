@@ -30,6 +30,8 @@ $(function () {
 		error : function(err) {
 			console.error('error loading');
 			console.error(err);
-		}
-	}, {parse: true});
+		},
+		parse: true,
+		reset : true
+	});
 });

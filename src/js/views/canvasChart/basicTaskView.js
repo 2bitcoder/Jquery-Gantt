@@ -16,7 +16,7 @@ var BasicTaskView = Backbone.KineticView.extend({
         return {
             'dragmove' : '_updateDates',
             'dragend' : function() {
-                this.model.save();
+                this.model.saveWithChildren();
                 this.render();
             },
             'mouseover' : '_showDependencyTool',
@@ -124,7 +124,12 @@ var BasicTaskView = Backbone.KineticView.extend({
         var taskId = group.id();
         var beforeModel = this.model;
         var afterModel = this.model.collection.get(taskId);
-        this.model.collection.createDependency(beforeModel, afterModel);
+        console.log(afterModel);
+        if (afterModel) {
+            this.model.collection.createDependency(beforeModel, afterModel);
+        } else {
+            this.model.collection.removeDependency(beforeModel);
+        }
     },
     _initSettingsEvents : function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
