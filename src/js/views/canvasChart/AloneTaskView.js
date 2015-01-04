@@ -30,13 +30,13 @@ var AloneTaskView = BasicTaskView.extend({
                 var localX = pos.x - offset;
                 return {
                     x : Math.min(localX, this.el.find('.rightBorder')[0].x()) + offset,
-                    y : this._y + this.params.padding
+                    y : this._y + this._topPadding
                 };
             }.bind(this),
             width : this._borderWidth,
             fill : 'black',
-            y : this.params.padding,
-            height : this.params.height - this.params.padding * 2,
+            y : this._topPadding,
+            height : this._barHeight,
             draggable : true,
             name : 'leftBorder'
         });
@@ -47,13 +47,13 @@ var AloneTaskView = BasicTaskView.extend({
                 var localX = pos.x - offset;
                 return {
                     x : Math.max(localX, this.el.find('.leftBorder')[0].x()) + offset,
-                    y : this._y + this.params.padding
+                    y : this._y + this._topPadding
                 };
             }.bind(this),
             width : this._borderWidth,
             fill : 'black',
-            y : this.params.padding,
-            height : this.params.height - this.params.padding * 2,
+            y : this._topPadding,
+            height : this._barHeight,
             draggable : true,
             name : 'rightBorder'
         });

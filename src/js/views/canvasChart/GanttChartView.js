@@ -265,8 +265,8 @@ var GanttChartView = Backbone.View.extend({
             var connectorView = _.find(this._connectorViews, function(view) {
                 return view.beforeModel === beforeModel;
             });
-            connectorView.setY1(beforeView.getY() + beforeView.params.height / 2);
-            connectorView.setY2(afterView.getY()  + afterView.params.height / 2);
+            connectorView.setY1(beforeView.getY() + beforeView._fullHeight / 2);
+            connectorView.setY2(afterView.getY()  + afterView._fullHeight / 2);
         }.bind(this));
         this.Flayer.draw();
     }

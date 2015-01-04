@@ -1,13 +1,12 @@
 "use strict";
 
 var BasicTaskView = Backbone.KineticView.extend({
-    params : {
-        height : 21,
-        padding : 3
-    },
+    _fullHeight : 21,
+    _topPadding : 3,
+    _barHeight : 15,
     _completeColor : '#e88134',
     initialize : function(params) {
-        this.height = this.params.height;
+        this.height = this._fullHeight;
         this.settings = params.settings;
         this._initModelEvents();
         this._initSettingsEvents();
@@ -44,26 +43,25 @@ var BasicTaskView = Backbone.KineticView.extend({
         });
         var rect = new Kinetic.Rect({
             fill : this._color,
-            y : this.params.padding,
-            height : this.params.height - this.params.padding * 2,
+            y : this._topPadding,
+            height : this._barHeight,
             name : 'mainRect'
         });
         var completeRect = new Kinetic.Rect({
             fill : this._completeColor,
-            y : this.params.padding,
-            height : this.params.height - this.params.padding * 2,
+            y : this._topPadding,
+            height : this._barHeight,
             name : 'completeRect'
         });
         var self = this;
         var arc = new Kinetic.Shape({
-            y: this.params.padding,
+            y: this._topPadding,
             fill : 'green',
             drawFunc: function(context) {
-                var height = self.params.height - self.params.padding * 2;
                 context.beginPath();
-                context.arc(0, height / 2, height / 2, - Math.PI / 2, Math.PI / 2);
+                context.arc(0, self._barHeight / 2, self._barHeight / 2, - Math.PI / 2, Math.PI / 2);
                 context.moveTo(0, 0);
-                context.lineTo(0, height);
+                context.lineTo(0, self._barHeight);
                 context.fillStrokeShape(this);
             },
             name : 'dependencyTool',
@@ -195,7 +193,7 @@ var BasicTaskView = Backbone.KineticView.extend({
         // move tool position
         var tool = this.el.find('.dependencyTool')[0];
         tool.x(x.x2 - x.x1);
-        tool.y(this.params.padding);
+        tool.y(this._topPadding);
 
         this.el.getLayer().draw();
         return this;
