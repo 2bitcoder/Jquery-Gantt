@@ -10061,7 +10061,10 @@ var Kinetic = {};
                 // TODO: check { 0; 0 } point before loop, and remove it from INTERSECTION_OFFSETS.
                 var spiralSearchDistance = 1;
                 var continueSearch = false;
+                var maxSteps = 5;
+                var currentStep = 0;
                 while (true) {
+                    currentStep += 1;
                     for (i=0; i<INTERSECTION_OFFSETS_LEN; i++) {
                         intersectionOffset = INTERSECTION_OFFSETS[i];
                         obj = this._getIntersection({
@@ -10079,7 +10082,7 @@ var Kinetic = {};
                         }
                     }
                     // if no shape, and no antialiased pixel, we should end searching 
-                    if (!continueSearch) {
+                    if (!continueSearch || currentStep > maxSteps) {
                         return;
                     } else {
                         spiralSearchDistance += 1;
