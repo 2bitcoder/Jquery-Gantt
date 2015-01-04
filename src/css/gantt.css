@@ -19,7 +19,7 @@ div.menu-container {
 	border-right: 3px solid rgba(0, 0, 0, 0.2);
 	overflow: hidden;
 	/* display: inline-block; */
-	min-height: 588px;
+	min-height: 100%;
 	left: 0%;
 	padding: 0 10px;
 	position: absolute;
