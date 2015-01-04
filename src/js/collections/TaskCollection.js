@@ -81,6 +81,7 @@ var TaskCollection = Backbone.Collection.extend({
 				});
 				if (parent) {
 					parent.children.add(model);
+					model.parent = parent;
 				} else {
 					console.warn('can not find parent with id ' + model.get('parentid'));
 					model.set('parentid', 0);
@@ -140,16 +141,29 @@ var TaskCollection = Backbone.Collection.extend({
 		}.bind(this));
 	},
 	outdent : function(task) {
+		var underSublings = [];
+		if (task.parent) {
+			task.parent.children.each(function(child) {
+				if (child.get('sortindex') <= task.get('sortindex')) {
+					return;
+				}
+				underSublings.push(child);
+			});
+		}
+		underSublings.forEach(function(child) {
+			child.save('parentid', task.id);
+		});
 		if (task.parent && task.parent.parent) {
 			task.save('parentid', task.parent.parent.id);
 		} else {
 			task.save('parentid', 0);
 		}
+
 	},
 	indent : function(task) {
-		var prevTask, i;
+		var prevTask, i, m;
 		for (i = this.length - 1; i >=0; i--) {
-			var m = this.at(i);
+			m = this.at(i);
 			if ((m.get('sortindex') < task.get('sortindex')) && (task.parent === m.parent)) {
 				prevTask = m;
 				break;

@@ -229,6 +229,20 @@ describe("Tasks", function(){
         expect(tasks.get(1).get('parentid')).to.equal(2);
     });
 
+    it('outdent child should add all siblings below as children', function() {
+        var tasks = new Tasks();
+        tasks.reset([{id : 1}, {id : 2, parentid: 1}, {id : 3, parentid : 1}, {id : 4, parentid: 1}]);
+        tasks.outdent(tasks.get(2));
+        expect(tasks.get(1).children.length).to.equal(0);
+        expect(tasks.get(2).children.length).to.equal(2);
+
+        expect(tasks.get(2).children.at(0).id).to.equal(3);
+        expect(tasks.get(2).children.at(1).id).to.equal(4);
+
+        expect(tasks.get(3).parent.id).to.equal(2);
+        expect(tasks.get(4).parent.id).to.equal(2);
+    });
+
     it('indent task', function() {
         var tasks = new Tasks();
         tasks.reset([{id : 1}, {id : 2, parentid : 1}, {id : 3}]);
