@@ -1,4 +1,5 @@
 "use strict";
+var DatePicker = require('./DatePicker');
 
 var TaskItem = React.createClass({
     displayName : 'TaskItem',
@@ -14,19 +15,6 @@ var TaskItem = React.createClass({
     },
     componentWillUnmount  : function() {
         this.props.model.off(null, null, this);
-    },
-    componentDidUpdate : function() {
-//        var el = this.getDOMNode();
-//        var dateInput = $(el).find('.date').get(0);
-//        if (dateInput) {
-//            datepickr(dateInput, {
-//                dateFormat : 'd-m-Y'
-//            });
-//            $(dateInput).on('change input', function(e) {
-//                var newVal =  new Date(e.target.value);
-//                this.props.model.set(this.state.editRow, newVal);
-//            }.bind(this));
-//        }
     },
     _findNestedLevel : function() {
         var level = 0;
@@ -56,16 +44,26 @@ var TaskItem = React.createClass({
     },
     _createEditField : function(col) {
         var val = this.props.model.get(col);
-        return React.createElement('input', {
-            value : (col === 'start' || col === 'end') ? val.toString('yyyy-MM-dd') : val,
-            type : (col === 'start' || col === 'end') ? 'date' : 'text',
-//            className : (col === 'start' || col === 'end') ? 'date' : undefined,
+        var el;
+        if (col === 'start' || col === 'end') {
+            el = DatePicker;
+        } else {
+            el = 'input';
+        }
+        return React.createElement(el, {
+            value : val,
+            key : col,
             onChange : function(e) {
                 var newVal = e.target.value;
                 if (col === 'start' || col === 'end') {
-                    newVal = new Date(newVal);
+                    var state = this.state;
+                    state.editRow = undefined;
+                    this.setState(state);
+                    this.props.model.set(col, newVal);
+                    this.props.model.save();
+                } else {
+                    this.props.model.set(col, newVal);
                 }
-                this.props.model.set(col, newVal);
             }.bind(this),
             onKeyDown : function(e) {
                 if (e.keyCode === 13) {
