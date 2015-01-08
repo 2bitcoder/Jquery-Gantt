@@ -53,7 +53,7 @@ div.head-bar{
 .menu-container ul{
 	list-style-type: none;
 	display:block;
-	overflow: auto;
+	overflow: hidden;
 }
 .menu-container ul li{
 	float:left;
@@ -115,6 +115,7 @@ div.gantt-chart-container {
 }
 .task .col-duration{
 	padding-left: 10px;
+	width: 50px;
 }
 .task .remove-item{
 	padding-left: 3px;
