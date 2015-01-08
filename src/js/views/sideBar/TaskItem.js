@@ -114,23 +114,7 @@ var TaskItem = React.createClass({
                 React.createElement('li', {
                     key : 'duration',
                     className : 'col-duration'
-                }, Date.daysdiff(model.get('start'),model.get('end'))+' d'),
-                React.createElement('li', {
-                        key : 'remove',
-                        className : 'remove-item'
-                    },
-                    React.createElement('button', {
-                            className : 'mini red ui button',
-                            onClick : function() {
-                                model.destroy();
-                            }
-                        },
-                        React.createElement('i', {
-                                className : 'small trash icon'
-                            }
-                        )
-                    )
-                )
+                }, Date.daysdiff(model.get('start'),model.get('end'))+' d')
             );
     }
 });
