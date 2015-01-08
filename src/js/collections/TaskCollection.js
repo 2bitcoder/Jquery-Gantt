@@ -6,6 +6,7 @@ var TaskCollection = Backbone.Collection.extend({
 	url : 'api/tasks',
 	model: TaskModel,
 	initialize : function() {
+		this._preventSorting = false;
 		this.subscribe();
 	},
 	comparator : function(model) {
@@ -68,9 +69,9 @@ var TaskCollection = Backbone.Collection.extend({
 		return sortIndex;
 	},
 	resort : function(data) {
-		this._sorting = true;
+		this._preventSorting = true;
 		this._resortChildren(data, -1, 0);
-		this._sorting = false;
+		this._preventSorting = false;
 		this.sort();
 	},
 	subscribe : function() {
@@ -103,7 +104,7 @@ var TaskCollection = Backbone.Collection.extend({
 			if (newParent) {
 				newParent.children.add(task);
 			}
-			if (!this._sorting) {
+			if (!this._preventSorting) {
 				this.checkSortedIndex();
 			}
 		});
@@ -150,15 +151,17 @@ var TaskCollection = Backbone.Collection.extend({
 				underSublings.push(child);
 			});
 		}
+
+		this._preventSorting = true;
 		underSublings.forEach(function(child) {
 			child.save('parentid', task.id);
 		});
+		this._preventSorting = false;
 		if (task.parent && task.parent.parent) {
 			task.save('parentid', task.parent.parent.id);
 		} else {
 			task.save('parentid', 0);
 		}
-
 	},
 	indent : function(task) {
 		var prevTask, i, m;

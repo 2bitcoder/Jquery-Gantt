@@ -232,7 +232,16 @@ describe("Tasks", function(){
     it('outdent child should add all siblings below as children', function() {
         var tasks = new Tasks();
         tasks.reset([{id : 1}, {id : 2, parentid: 1}, {id : 3, parentid : 1}, {id : 4, parentid: 1}]);
+
+        var count = 0;
+        tasks.on('sort', function() {
+            count++;
+        });
+
         tasks.outdent(tasks.get(2));
+        // only one sort
+        expect(count).to.equal(1);
+
         expect(tasks.get(1).children.length).to.equal(0);
         expect(tasks.get(2).children.length).to.equal(2);
 
@@ -247,7 +256,7 @@ describe("Tasks", function(){
         var tasks = new Tasks();
         tasks.reset([{id : 1}, {id : 2, parentid : 1}, {id : 3}]);
         var count = 0;
-        tasks.once('sort', function() {
+        tasks.on('sort', function() {
             count++;
         });
 
