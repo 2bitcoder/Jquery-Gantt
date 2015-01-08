@@ -194,10 +194,10 @@ $(function () {
 	var app = {};
 	app.tasks = new TaskCollection();
 
-	// detect API params from get, e.g. ?project=143&profile=17
+	// detect API params from get, e.g. ?project=143&profile=17&sitekey=2b00da46b57c0395
 	var params = util.getURLParams();
-	if (params.project && params.profile) {
-		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile;
+	if (params.project && params.profile && params.sitekey) {
+	    app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile + '/' + params.sitekey;
 	}
 
 	app.tasks.fetch({
@@ -639,7 +639,232 @@ var SettingModel = Backbone.Model.extend({
 module.exports = SettingModel;
 
 },{"../utils/util":5}],4:[function(require,module,exports){
-"use strict";var util = require('../utils/util');var params = util.getURLParams();var SubTasks = Backbone.Collection.extend({    comparator : function(model) {        return model.get('sortindex');    }});var TaskModel = Backbone.Model.extend({    defaults: {        name: 'New task',        description: '',        complete: 0,  // in percents        action: '',        active : true,        sortindex: 0,        depend: undefined,  // id of task        resources: {},        status: 110,        health: 21,        start: new Date(),        end: new Date(),        ProjectRef : params.project,        WBS_ID : params.profile,        color: '#0090d3',   // user color        aType: '',        reportable: '',        parentid: 0,        // app params        hidden : false,        collapsed : false    },    initialize : function() {        this.children = new SubTasks();        this.listenTo(this.children, 'change:parentid', function(child) {            if (child.get('parentid') === this.id) {                return;            }            this.children.remove(child);        });        this.listenTo(this.children, 'add', function(child) {            child.parent = this;        });        this.listenTo(this.children, 'change:sortindex', function() {            this.children.sort();        });        this.listenTo(this.children, 'add remove change:start change:end', function() {            this._checkTime();        });        this.listenTo(this, 'change:collapsed', function() {            this.children.each(function(child) {                if (this.get('collapsed')) {                    child.hide();                } else {                    child.show();                }            }.bind(this));        });        this.listenTo(this, 'destroy', function() {            this.children.each(function(child) {                child.destroy();            });            this.stopListening();        });        // checking nested state        this.listenTo(this.children, 'add remove', this._checkNested);        // time checking        this.listenTo(this.children, 'add remove change:complete', this._checkComplete);    },    isNested : function() {        return !!this.children.length;    },    show : function() {        this.set('hidden', false);    },    hide : function() {        this.set('hidden', true);    },    dependOn : function(beforeModel) {        this.set('depend', beforeModel.id);        this.beforeModel = beforeModel;        this.moveToStart(beforeModel.get('end'));        this.save();        this._listenBeforeModel();    },    clearDependence : function() {        if (this.beforeModel) {            this.stopListening(this.beforeModel);            this.unset('depend').save();            this.beforeModel = undefined;        }    },    hasParent : function(parentForCheck) {        var parent = this.parent;        while(true) {            if (!parent) {                return false;            }            if (parent === parentForCheck) {                return true;            }            parent = parent.parent;        }    },    _listenBeforeModel : function() {        this.listenTo(this.beforeModel, 'destroy', function() {            this.clearDependence();        });        this.listenTo(this.beforeModel, 'change:end', function() {            if (this.get('start') < this.beforeModel.get('end')) {                this.moveToStart(this.beforeModel.get('end'));            }        });    },    _checkNested : function() {        this.trigger('nestedStateChange', this);    },    parse: function(response) {        var start, end;        if(_.isString(response.start)){            start = Date.parseExact(util.correctdate(response.start),'dd/MM/yyyy') ||                             new Date(response.start);        } else {            start = new Date();        }                if(_.isString(response.end)){            end = Date.parseExact(util.correctdate(response.end),'dd/MM/yyyy') ||                           new Date(response.end);        } else {            end = new Date();        }        response.start = start < end ? start : end;        response.end = start < end ? end : start;        response.parentid = parseInt(response.parentid || '0', 10);        // remove null params        _.each(response, function(val, key) {            if (val === null) {                delete response[key];            }        });        return response;    },    _checkTime : function() {        if (this.children.length === 0) {            return;        }        var startTime = this.children.at(0).get('start');        var endTime = this.children.at(0).get('end');        this.children.each(function(child) {            var childStartTime = child.get('start');            var childEndTime = child.get('end');            if(childStartTime < startTime) {                startTime = childStartTime;            }            if(childEndTime > endTime){                endTime = childEndTime;            }        }.bind(this));        this.set('start', startTime);        this.set('end', endTime);    },    _checkComplete : function() {        var complete = 0;        var length = this.children.length;        if (length) {            this.children.each(function(child) {                complete += child.get('complete') / length;            });        }        this.set('complete', Math.round(complete));    },    moveToStart : function(newStart) {        // do nothing if new start is the same as current        if (newStart.toDateString() === this.get('start').toDateString()) {            return;        }        // calculate offset//        var daysDiff = Math.floor((newStart.time() - this.get('start').time()) / 1000 / 60 / 60 / 24)        var daysDiff = Date.daysdiff(newStart, this.get('start')) - 1;        if (newStart < this.get('start')) {            daysDiff *= -1;        }        // change dates        this.set({            start : newStart.clone(),            end : this.get('end').clone().addDays(daysDiff)        });        // changes dates in all children        this._moveChildren(daysDiff);    },    _moveChildren : function(days) {        this.children.each(function(child) {            child.move(days);        });    },    saveWithChildren : function() {        this.save();        this.children.each(function(task) {            task.saveWithChildren();        });    },    move : function(days) {        this.set({            start: this.get('start').clone().addDays(days),            end: this.get('end').clone().addDays(days)        });        this._moveChildren(days);    }});module.exports = TaskModel;
+"use strict";
+
+var util = require('../utils/util');
+var params = util.getURLParams();
+
+var SubTasks = Backbone.Collection.extend({
+    comparator : function(model) {
+        return model.get('sortindex');
+    }
+});
+
+var TaskModel = Backbone.Model.extend({
+    defaults: {
+        name: 'New task',
+        description: '',
+        complete: 0,  // in percents
+        action: '',
+        active : true,
+        sortindex: 0,
+        depend: undefined,  // id of task
+        resources: {},
+        status: 110,
+        health: 21,
+        start: new Date(),
+        end: new Date(),
+        ProjectRef : params.project,
+        WBS_ID : params.profile,
+        color: '#0090d3',   // user color
+        aType: '',
+        reportable: '',
+        parentid: 0,
+        sitekey: params.sitekey,
+
+        // app params
+        hidden : false,
+        collapsed : false
+    },
+    initialize : function() {
+        this.children = new SubTasks();
+        this.listenTo(this.children, 'change:parentid', function(child) {
+            if (child.get('parentid') === this.id) {
+                return;
+            }
+            this.children.remove(child);
+        });
+        this.listenTo(this.children, 'add', function(child) {
+            child.parent = this;
+        });
+        this.listenTo(this.children, 'change:sortindex', function() {
+            this.children.sort();
+        });
+        this.listenTo(this.children, 'add remove change:start change:end', function() {
+            this._checkTime();
+        });
+
+        this.listenTo(this, 'change:collapsed', function() {
+            this.children.each(function(child) {
+                if (this.get('collapsed')) {
+                    child.hide();
+                } else {
+                    child.show();
+                }
+            }.bind(this));
+        });
+        this.listenTo(this, 'destroy', function() {
+            this.children.each(function(child) {
+                child.destroy();
+            });
+            this.stopListening();
+        });
+
+        // checking nested state
+        this.listenTo(this.children, 'add remove', this._checkNested);
+
+        // time checking
+        this.listenTo(this.children, 'add remove change:complete', this._checkComplete);
+    },
+    isNested : function() {
+        return !!this.children.length;
+    },
+    show : function() {
+        this.set('hidden', false);
+    },
+    hide : function() {
+        this.set('hidden', true);
+    },
+    dependOn : function(beforeModel) {
+        this.set('depend', beforeModel.id);
+        this.beforeModel = beforeModel;
+        this.moveToStart(beforeModel.get('end'));
+        this.save();
+        this._listenBeforeModel();
+    },
+    clearDependence : function() {
+        if (this.beforeModel) {
+            this.stopListening(this.beforeModel);
+            this.unset('depend').save();
+            this.beforeModel = undefined;
+        }
+    },
+    hasParent : function(parentForCheck) {
+        var parent = this.parent;
+        while(true) {
+            if (!parent) {
+                return false;
+            }
+            if (parent === parentForCheck) {
+                return true;
+            }
+            parent = parent.parent;
+        }
+    },
+    _listenBeforeModel : function() {
+        this.listenTo(this.beforeModel, 'destroy', function() {
+            this.clearDependence();
+        });
+        this.listenTo(this.beforeModel, 'change:end', function() {
+            if (this.get('start') < this.beforeModel.get('end')) {
+                this.moveToStart(this.beforeModel.get('end'));
+            }
+        });
+    },
+    _checkNested : function() {
+        this.trigger('nestedStateChange', this);
+    },
+    parse: function(response) {
+        var start, end;
+        if(_.isString(response.start)){
+            start = Date.parseExact(util.correctdate(response.start),'dd/MM/yyyy') ||
+                             new Date(response.start);
+        } else {
+            start = new Date();
+        }
+        
+        if(_.isString(response.end)){
+            end = Date.parseExact(util.correctdate(response.end),'dd/MM/yyyy') ||
+                           new Date(response.end);
+        } else {
+            end = new Date();
+        }
+
+        response.start = start < end ? start : end;
+        response.end = start < end ? end : start;
+
+        response.parentid = parseInt(response.parentid || '0', 10);
+
+        // remove null params
+        _.each(response, function(val, key) {
+            if (val === null) {
+                delete response[key];
+            }
+        });
+        return response;
+    },
+    _checkTime : function() {
+        if (this.children.length === 0) {
+            return;
+        }
+        var startTime = this.children.at(0).get('start');
+        var endTime = this.children.at(0).get('end');
+        this.children.each(function(child) {
+            var childStartTime = child.get('start');
+            var childEndTime = child.get('end');
+            if(childStartTime < startTime) {
+                startTime = childStartTime;
+            }
+            if(childEndTime > endTime){
+                endTime = childEndTime;
+            }
+        }.bind(this));
+        this.set('start', startTime);
+        this.set('end', endTime);
+    },
+    _checkComplete : function() {
+        var complete = 0;
+        var length = this.children.length;
+        if (length) {
+            this.children.each(function(child) {
+                complete += child.get('complete') / length;
+            });
+        }
+        this.set('complete', Math.round(complete));
+    },
+    moveToStart : function(newStart) {
+        // do nothing if new start is the same as current
+        if (newStart.toDateString() === this.get('start').toDateString()) {
+            return;
+        }
+
+        // calculate offset
+//        var daysDiff = Math.floor((newStart.time() - this.get('start').time()) / 1000 / 60 / 60 / 24)
+        var daysDiff = Date.daysdiff(newStart, this.get('start')) - 1;
+        if (newStart < this.get('start')) {
+            daysDiff *= -1;
+        }
+
+        // change dates
+        this.set({
+            start : newStart.clone(),
+            end : this.get('end').clone().addDays(daysDiff)
+        });
+
+        // changes dates in all children
+        this._moveChildren(daysDiff);
+    },
+    _moveChildren : function(days) {
+        this.children.each(function(child) {
+            child.move(days);
+        });
+    },
+    saveWithChildren : function() {
+        this.save();
+        this.children.each(function(task) {
+            task.saveWithChildren();
+        });
+    },
+    move : function(days) {
+        this.set({
+            start: this.get('start').clone().addDays(days),
+            end: this.get('end').clone().addDays(days)
+        });
+        this._moveChildren(days);
+    }
+});
+
+module.exports = TaskModel;
 },{"../utils/util":5}],5:[function(require,module,exports){
 var monthsCode=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
@@ -829,7 +1054,108 @@ var AddFormView = Backbone.View.extend({
 
 module.exports = AddFormView;
 },{}],7:[function(require,module,exports){
-"use strict";var ContextMenuView = require('./sideBar/ContextMenuView');var SidePanel = require('./sideBar/SidePanel');var GanttChartView = require('./canvasChart/GanttChartView');var AddFormView = require('./AddFormView');var TopMenuView = require('./TopMenuView');var GanttView = Backbone.View.extend({    el: '.Gantt',    initialize: function(params) {        this.app = params.app;        this.$el.find('input[name="end"],input[name="start"]').on('change', this.calculateDuration);        this.$menuContainer = this.$el.find('.menu-container');        new ContextMenuView({            collection : this.collection        }).render();        new AddFormView({            collection : this.collection        }).render();        new TopMenuView({            settings : this.app.settings        }).render();        this.canvasView = new GanttChartView({            app : this.app,            collection : this.collection,            settings: this.app.settings        });        this.canvasView.render();        this._moveCanvasView();        setTimeout(function() {            this.canvasView._updateStageAttrs();        }.bind(this), 500);        var tasksContainer = $('.tasks').get(0);        React.render(            React.createElement(SidePanel, {                collection : this.collection            }),            tasksContainer        );        this.listenTo(this.collection, 'sort', function() {            console.log('recompile');            React.unmountComponentAtNode(tasksContainer);            React.render(                React.createElement(SidePanel, {                    collection : this.collection                }),                tasksContainer            );        });    },    events: {        'click #tHandle': 'expand'//        'dblclick .sub-task': 'handlerowclick',//        'dblclick .task': 'handlerowclick',//        'hover .sub-task': 'showMask'    },    calculateDuration: function(){        // Calculating the duration from start and end date        var startdate = new Date($(document).find('input[name="start"]').val());        var enddate = new Date($(document).find('input[name="end"]').val());        var _MS_PER_DAY = 1000 * 60 * 60 * 24;        if(startdate !== "" && enddate !== ""){            var utc1 = Date.UTC(startdate.getFullYear(), startdate.getMonth(), startdate.getDate());            var utc2 = Date.UTC(enddate.getFullYear(), enddate.getMonth(), enddate.getDate());            $(document).find('input[name="duration"]').val(Math.floor((utc2 - utc1) / _MS_PER_DAY));        }else{            $(document).find('input[name="duration"]').val(Math.floor(0));        }    },    expand: function(evt) {        var button = $(evt.target);        if (button.hasClass('contract')) {            this.$menuContainer.addClass('panel-collapsed');            this.$menuContainer.removeClass('panel-expanded');        }        else {            this.$menuContainer.addClass('panel-expanded');            this.$menuContainer.removeClass('panel-collapsed');        }        setTimeout(function() {            this._moveCanvasView();        }.bind(this), 600);        button.toggleClass('contract');    },    _moveCanvasView : function() {        var sideBarWidth = $('.menu-container').width();        this.canvasView.setLeftPadding(sideBarWidth);    }});module.exports = GanttView;
+"use strict";
+var ContextMenuView = require('./sideBar/ContextMenuView');
+var SidePanel = require('./sideBar/SidePanel');
+
+
+var GanttChartView = require('./canvasChart/GanttChartView');
+var AddFormView = require('./AddFormView');
+var TopMenuView = require('./TopMenuView');
+
+
+var GanttView = Backbone.View.extend({
+    el: '.Gantt',
+    initialize: function(params) {
+        this.app = params.app;
+        this.$el.find('input[name="end"],input[name="start"]').on('change', this.calculateDuration);
+        this.$menuContainer = this.$el.find('.menu-container');
+
+        new ContextMenuView({
+            collection : this.collection
+        }).render();
+
+        new AddFormView({
+            collection : this.collection
+        }).render();
+
+        new TopMenuView({
+            settings : this.app.settings
+        }).render();
+
+        this.canvasView = new GanttChartView({
+            app : this.app,
+            collection : this.collection,
+            settings: this.app.settings
+        });
+        this.canvasView.render();
+        this._moveCanvasView();
+        setTimeout(function() {
+            this.canvasView._updateStageAttrs();
+        }.bind(this), 500);
+
+
+        var tasksContainer = $('.tasks').get(0);
+        React.render(
+            React.createElement(SidePanel, {
+                collection : this.collection
+            }),
+            tasksContainer
+        );
+
+        this.listenTo(this.collection, 'sort', function() {
+            console.log('recompile');
+            React.unmountComponentAtNode(tasksContainer);
+            React.render(
+                React.createElement(SidePanel, {
+                    collection : this.collection
+                }),
+                tasksContainer
+            );
+        });
+    },
+    events: {
+        'click #tHandle': 'expand'
+//        'dblclick .sub-task': 'handlerowclick',
+//        'dblclick .task': 'handlerowclick',
+//        'hover .sub-task': 'showMask'
+    },
+    calculateDuration: function(){
+
+        // Calculating the duration from start and end date
+        var startdate = new Date($(document).find('input[name="start"]').val());
+        var enddate = new Date($(document).find('input[name="end"]').val());
+        var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+        if(startdate !== "" && enddate !== ""){
+            var utc1 = Date.UTC(startdate.getFullYear(), startdate.getMonth(), startdate.getDate());
+            var utc2 = Date.UTC(enddate.getFullYear(), enddate.getMonth(), enddate.getDate());
+            $(document).find('input[name="duration"]').val(Math.floor((utc2 - utc1) / _MS_PER_DAY));
+        }else{
+            $(document).find('input[name="duration"]').val(Math.floor(0));
+        }
+    },
+    expand: function(evt) {
+        var button = $(evt.target);
+        if (button.hasClass('contract')) {
+            this.$menuContainer.addClass('panel-collapsed');
+            this.$menuContainer.removeClass('panel-expanded');
+        }
+        else {
+            this.$menuContainer.addClass('panel-expanded');
+            this.$menuContainer.removeClass('panel-collapsed');
+        }
+        setTimeout(function() {
+            this._moveCanvasView();
+        }.bind(this), 600);
+        button.toggleClass('contract');
+    },
+    _moveCanvasView : function() {
+        var sideBarWidth = $('.menu-container').width();
+        this.canvasView.setLeftPadding(sideBarWidth);
+    }
+});
+
+module.exports = GanttView;
 },{"./AddFormView":6,"./TopMenuView":8,"./canvasChart/GanttChartView":12,"./sideBar/ContextMenuView":14,"./sideBar/SidePanel":17}],8:[function(require,module,exports){
 "use strict";
 
@@ -865,7 +1191,7 @@ var BasicTaskView = require('./BasicTaskView');
 
 var AloneTaskView = BasicTaskView.extend({
     _borderWidth : 3,
-    _color : '#E6F0FF',
+    _color : '#5C85D6',
     events : function() {
         return _.extend(BasicTaskView.prototype.events(), {
             'dragmove .leftBorder' : '_changeSize',
@@ -1534,7 +1860,7 @@ var NestedTaskView = BasicTaskView.extend({
     _color : '#b3d1fc',
     _borderSize : 6,
     _barHeight : 10,
-    _completeColor : '#C95F10',
+    _completeColor : '#24478F',
     el : function() {
         var group = BasicTaskView.prototype.el.call(this);
         var leftBorder = new Kinetic.Line({
