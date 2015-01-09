@@ -120,7 +120,6 @@ var GanttChartView = Backbone.View.extend({
             if( dragInt === 14 || dragInt === 30){
                 hideDate = true;
             }
-            debugger;
             for (i = 0, iLen = hData[s].length; i < iLen; i++) {
 
                 length = hData[s][i].duration * daysWidth;

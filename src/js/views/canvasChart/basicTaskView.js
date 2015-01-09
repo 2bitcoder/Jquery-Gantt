@@ -84,7 +84,7 @@ var BasicTaskView = Backbone.KineticView.extend({
 
         this.model.set({
             start: boundaryMin.clone().addDays(days1),
-            end: boundaryMin.clone().addDays(days2)
+            end: boundaryMin.clone().addDays(days2 - 1)
         });
     },
     _showDependencyTool : function() {
@@ -189,6 +189,7 @@ var BasicTaskView = Backbone.KineticView.extend({
 
         // update complete params
         this.el.find('.completeRect')[0].width(this._calculateCompleteWidth());
+        this.el.find('.completeRect')[0].x(0);
 
         // move tool position
         var tool = this.el.find('.dependencyTool')[0];

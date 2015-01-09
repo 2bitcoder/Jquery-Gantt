@@ -92,6 +92,9 @@ var SidePanel = React.createClass({
             if (task.parent) {
                 return;
             }
+            if (task.get('hidden')) {
+                return
+            }
             if (task.children.length) {
                 tasks.push(React.createElement(NestedTask, {
                     model: task,

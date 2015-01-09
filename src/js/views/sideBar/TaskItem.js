@@ -9,7 +9,7 @@ var TaskItem = React.createClass({
         };
     },
     componentDidMount  : function() {
-        this.props.model.on('change:name change:complete change:start change:end change:status', function() {
+        this.props.model.on('change', function() {
             this.forceUpdate();
         }, this);
     },
@@ -137,12 +137,22 @@ var TaskItem = React.createClass({
                     }.bind(this)
                 },
                 React.createElement('li', {
-                    key : 'name',
-                    className : 'col-name',
-                    style : {
-                        paddingLeft : (this._findNestedLevel() * 10) + 'px'
-                    }
-                }, this._createField('name')),
+                        key : 'name',
+                        className : 'col-name'
+                    },
+                    this.props.model.isNested() ? React.createElement('i', {
+                        className : 'triangle icon ' + (this.props.model.get('collapsed') ? 'right' : 'down'),
+                        onClick : function() {
+                            this.props.model.set('collapsed', !this.props.model.get('collapsed'));
+                        }.bind(this)
+                    }) : undefined,
+                    React.createElement('div', {
+                            style : {
+                                paddingLeft : (this._findNestedLevel() * 10) + 'px'
+                            }
+                        },
+                        this._createField('name'))
+                ),
                 React.createElement('li', {
                     key : 'complete',
                     className : 'col-complete'

@@ -52,7 +52,7 @@ div.head-bar{
 }
 .menu-container ul{
 	list-style-type: none;
-	display:block;
+	display: block;
 	overflow: hidden;
 }
 .menu-container ul li{
@@ -75,18 +75,16 @@ div.head-bar{
 .task-list-container{
 	overflow: auto;
 }
-
 .task-list-container li{
 	overflow: hidden;
 }
 
-.task-list-container div {
-	font-weight:bold;
+.task-list-container > :first-child {
+	font-weight: bold;
 }
 
 
 div.gantt-chart-container {
-	/* display: inline-block; */
 	float: right;
 	width: 100%;
 	
@@ -97,6 +95,11 @@ div.gantt-chart-container {
 	white-space: nowrap;
 	overflow: hidden;
 }
+
+.task .col-name div{
+	display: inline-block;
+}
+
 .task .col-start{
 	padding-left: 10px;
 }
