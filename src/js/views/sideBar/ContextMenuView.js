@@ -66,14 +66,14 @@ ContextMenuView.prototype.render = function() {
             }
         },
         items: {
-            "rowAbove": {name: "New Row Above", icon: ""},
-            "rowBelow": {name: "New Row Below", icon: ""},
-            "indent": {name: "Indent Row", icon: ""},
-            "outdent": {name: "Outdent Row", icon: ""},
+            "rowAbove": { name: "&nbsp;New Row Above", icon: "above" },
+            "rowBelow": { name: "&nbsp;New Row Below", icon: "below" },
+            "indent": { name: "&nbsp;Indent Row", icon: "indent" },
+            "outdent": { name: "&nbsp;Outdent Row", icon: "outdent" },
             "sep1": "---------",
-            "properties": {name: "Properties", icon: ""},
+            "properties": { name: "&nbsp;Properties", icon: "properties" },
             "sep2": "---------",
-            "delete": {name: "Delete Row", icon: ""}
+            "delete": { name: "&nbsp;Delete Row", icon: "delete" }
         }
     });
 };

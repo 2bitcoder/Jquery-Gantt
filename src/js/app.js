@@ -9,10 +9,10 @@ $(function () {
 	var app = {};
 	app.tasks = new TaskCollection();
 
-	// detect API params from get, e.g. ?project=143&profile=17
+	// detect API params from get, e.g. ?project=143&profile=17&sitekey=2b00da46b57c0395
 	var params = util.getURLParams();
-	if (params.project && params.profile) {
-		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile;
+	if (params.project && params.profile && params.sitekey) {
+		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile + '/' + params.sitekey;
 	}
 
 	app.tasks.fetch({
