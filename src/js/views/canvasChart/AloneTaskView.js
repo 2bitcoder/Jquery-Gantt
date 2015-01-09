@@ -73,6 +73,15 @@ var AloneTaskView = BasicTaskView.extend({
         var rect = this.el.find('.mainRect')[0];
         rect.width(rightX - leftX);
         rect.x(leftX);
+
+        // update complete params
+        var completeRect = this.el.find('.completeRect')[0];
+        completeRect.x(leftX);
+        completeRect.width(this._calculateCompleteWidth());
+
+        // move tool position
+        var tool = this.el.find('.dependencyTool')[0];
+        tool.x(rightX);
         this._updateDates();
     },
     render : function() {
