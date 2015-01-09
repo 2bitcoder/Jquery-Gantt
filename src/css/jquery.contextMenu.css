@@ -96,6 +96,11 @@
 .context-menu-item.icon-delete { background-image: url(images/page_white_delete.png); }
 .context-menu-item.icon-add { background-image: url(images/page_white_add.png); }
 .context-menu-item.icon-quit { background-image: url(images/door.png); }
+.context-menu-item.icon-outdent { background-image: url(images/arrow_left.png); }
+.context-menu-item.icon-indent { background-image: url(images/arrow_right.png); }
+.context-menu-item.icon-above { background-image: url(images/top.png); }
+.context-menu-item.icon-below { background-image: url(images/bottom.png); }
+.context-menu-item.icon-properties { background-image: url(images/properties.png); }
 
 /* vertically align inside labels */
 .context-menu-input > label > * { vertical-align: top; }
