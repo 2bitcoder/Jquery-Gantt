@@ -72,6 +72,7 @@
 	<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css">
 	<link rel="stylesheet" type="text/css" href="css/gantt.v2.css" />
 	<link rel="stylesheet" type="text/css" href="css/sortable.css" />
+	<link rel="stylesheet" type="text/css" href="css/TopMenu.css" />
 </head>
 <body id="home">
 	<div id="loader">
@@ -83,24 +84,8 @@
 	<div id="ganttChart" class="Gantt">
 		<div class="ui page grid masthead segment">
 			<div class="column">
-				<div class="secondary pointing ui menu">
+				<div class="secondary pointing ui menu" id="top-menu">
 					<div class="header item">Gantt chart</div>
-					<div class="right menu">
-						<div class="head-bar">
-							<div class="ui small buttons">
-								<button data-action="view-daily" class="ui green button small">D</button>
-								<div class="or"></div>
-								<button data-action="view-weekly" class="ui blue button small">W</button>
-								<div class="or"></div>
-								<button data-action="view-monthly" class="ui purple button small">M</button>
-								<div class="or"></div>
-								<button data-action="view-quarterly" class="ui orange button small">Q</button>
-								<div class="or"></div>
-								<button data-action="view-fix" class="ui button red small">A</button>
-								<a href="/#!/generate/" class="ui small green pdf button">Generate PDF</a>
-							</div>
-						</div>
-					</div>
 				</div>
 				
 				<div class="item-selector"></div>

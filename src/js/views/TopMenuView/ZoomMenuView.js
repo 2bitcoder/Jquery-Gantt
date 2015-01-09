@@ -1,7 +1,8 @@
 "use strict";
+var fs = require('fs');
+var template = fs.readFileSync(__dirname + '/ZoomMenuTemplate.html', 'utf8');
 
-var TopMenuView = Backbone.View.extend({
-    el : '.head-bar',
+var ZoomMenuView = Backbone.View.extend({
     initialize : function(params) {
         this.settings = params.settings;
     },
@@ -18,7 +19,11 @@ var TopMenuView = Backbone.View.extend({
     generatePDF : function(evt) {
         window.print();
         evt.preventDefault();
+    },
+    render : function() {
+        var el = $('#top-menu').append(template);
+        this.setElement(el);
     }
 });
 
-module.exports = TopMenuView;
+module.exports = ZoomMenuView;

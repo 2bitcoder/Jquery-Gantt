@@ -15,6 +15,8 @@ body {
 	height: 99%;
 }
 
+
+
 div.menu-container {
 	border-right: 3px solid rgba(0, 0, 0, 0.2);
 	overflow: hidden;
@@ -27,8 +29,8 @@ div.menu-container {
 	background: rgb(255, 255, 255);
 }
 div.head-bar{
-	/*height:36px;*/
-	/*border-bottom: 1px solid #000;*/
+	/* height:36px; */
+	/* border-bottom: 1px solid #000; */
 }
 .menu-header{
 	position:relative;

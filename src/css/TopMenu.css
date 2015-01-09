@@ -1,0 +1,11 @@
+#top-menu {
+    font-size: 1em;
+}
+
+#top-menu .header {
+    font-weight: bold;
+}
+
+#top-menu .action {
+    cursor : pointer;
+}
