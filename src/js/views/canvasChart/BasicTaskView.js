@@ -74,13 +74,13 @@ var BasicTaskView = Backbone.KineticView.extend({
     },
     _updateDates : function() {
         var attrs = this.settings.getSetting('attr'),
-            boundaryMin=attrs.boundaryMin,
-            daysWidth=attrs.daysWidth;
+            boundaryMin = attrs.boundaryMin,
+            daysWidth = attrs.daysWidth;
 
         var rect = this.el.find('.mainRect')[0];
         var length = rect.width();
         var x = this.el.x() + rect.x();
-        var days1 = Math.floor(x / daysWidth), days2 = Math.floor((x + length) / daysWidth);
+        var days1 = Math.round(x / daysWidth), days2 = Math.round((x + length) / daysWidth);
 
         this.model.set({
             start: boundaryMin.clone().addDays(days1),
@@ -169,8 +169,8 @@ var BasicTaskView = Backbone.KineticView.extend({
             boundaryMin = attrs.boundaryMin,
             daysWidth = attrs.daysWidth;
         return {
-            x1: Date.daysdiff(boundaryMin, this.model.get('start')) * daysWidth,
-            x2: Date.daysdiff(boundaryMin, this.model.get('end')) * daysWidth
+            x1: (Date.daysdiff(boundaryMin, this.model.get('start')) - 1) * daysWidth,
+            x2: (Date.daysdiff(boundaryMin, this.model.get('end'))) * daysWidth
         };
     },
     _calculateCompleteWidth : function() {

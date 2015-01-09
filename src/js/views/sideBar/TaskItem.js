@@ -63,7 +63,6 @@ var TaskItem = React.createClass({
     },
     _durationChange : function(value) {
         var number = parseInt(value.replace( /^\D+/g, ''), 10);
-        console.log(value.replace( /^\D+/g, ''), number);
         if (!number) {
             return;
         }

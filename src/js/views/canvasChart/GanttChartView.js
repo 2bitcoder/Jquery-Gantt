@@ -120,8 +120,10 @@ var GanttChartView = Backbone.View.extend({
             if( dragInt === 14 || dragInt === 30){
                 hideDate = true;
             }
+            debugger;
             for (i = 0, iLen = hData[s].length; i < iLen; i++) {
-                length=hData[s][i].duration * daysWidth;
+
+                length = hData[s][i].duration * daysWidth;
                 x = x + length;
                 xi = x - borderWidth + offset;
                 context.moveTo(xi, yi);
@@ -129,13 +131,12 @@ var GanttChartView = Backbone.View.extend({
 
                 context._context.save();
                 context._context.font = '6pt Arial,Helvetica,sans-serif';
-                context._context.textAlign = 'left';
+                context._context.textAlign = 'center';
                 context._context.textBaseline = 'middle';
-                // date hide on specific views
                 if (hideDate) {
                     context._context.font = '1pt Arial,Helvetica,sans-serif';
                 }
-                context._context.fillText(hData[s][i].text, x-length+40,yi+rowHeight/2);
+                context._context.fillText(hData[s][i].text, x - length / 2, yi + rowHeight / 2);
                 context._context.restore();
 
             }
