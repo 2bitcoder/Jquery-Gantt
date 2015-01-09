@@ -23,8 +23,14 @@ var BasicTaskView = Backbone.KineticView.extend({
                 this.model.saveWithChildren();
                 this.render();
             },
-            'mouseover' : '_showDependencyTool',
-            'mouseout' : '_hideDependencyTool',
+            'mouseover' : function(e) {
+                this._showDependencyTool();
+                this._grabPointer(e);
+            },
+            'mouseout' : function() {
+                this._hideDependencyTool();
+                this._defaultMouse();
+            },
             'dragstart .dependencyTool' : '_startConnecting',
             'dragmove .dependencyTool' : '_moveConnect',
             'dragend .dependencyTool' : '_createDependency'
@@ -90,6 +96,16 @@ var BasicTaskView = Backbone.KineticView.extend({
     _showDependencyTool : function() {
         this.el.find('.dependencyTool')[0].show();
         this.el.getLayer().draw();
+    },
+    _grabPointer : function(e) {
+        var name = e.target.name();
+        if ((name !== 'mainRect') && (name !== 'dependencyTool') && (name !== 'completeRect')) {
+            return;
+        }
+        document.body.style.cursor = 'pointer';
+    },
+    _defaultMouse : function() {
+        document.body.style.cursor = 'default';
     },
     _hideDependencyTool : function() {
         this.el.find('.dependencyTool')[0].hide();

@@ -137,6 +137,9 @@ border-bottom: 0.5em solid #528c98;
     cursor: -moz-grab;
     cursor: url(openhand.cur), move;
 }
+
+
+
 .task:active,.sub-task:active{
     cursor: -webkit-grabbing;
     cursor: -moz-grabbing;

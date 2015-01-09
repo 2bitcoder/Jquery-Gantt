@@ -15,10 +15,10 @@ var AloneTaskView = BasicTaskView.extend({
             'dragend .leftBorder' : 'render',
             'dragend .rightBorder' : 'render',
 
-            'mouseover .leftBorder' : '_pointerMouse',
+            'mouseover .leftBorder' : '_resizePointer',
             'mouseout .leftBorder' : '_defaultMouse',
 
-            'mouseover .rightBorder' : '_pointerMouse',
+            'mouseover .rightBorder' : '_resizePointer',
             'mouseout .rightBorder' : '_defaultMouse'
         });
     },
@@ -60,11 +60,8 @@ var AloneTaskView = BasicTaskView.extend({
         group.add(rightBorder);
         return group;
     },
-    _pointerMouse : function() {
-        document.body.style.cursor = 'pointer';
-    },
-    _defaultMouse : function() {
-        document.body.style.cursor = 'default';
+    _resizePointer : function() {
+        document.body.style.cursor = 'ew-resize';
     },
     _changeSize : function() {
         var leftX = this.el.find('.leftBorder')[0].x();
