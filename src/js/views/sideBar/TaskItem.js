@@ -134,7 +134,10 @@ var TaskItem = React.createClass({
                         var state = this.state;
                         state.editRow = col;
                         this.setState(state);
-                    }.bind(this)
+                    }.bind(this),
+                    style : {
+                        'backgroundColor' : this.props.model.get('hightlight')
+                    }
                 },
                 React.createElement('li', {
                         key : 'name',

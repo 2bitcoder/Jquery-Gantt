@@ -1,6 +1,6 @@
-var util = require('../utils/util');
+"use strict";
 
-var app = {};
+var util = require('../utils/util');
 
 //var hfunc = function(pos, evt) {
 //	var dragInterval = app.settings.getSetting('attr', 'dragInterval');
@@ -19,7 +19,6 @@ var SettingModel = Backbone.Model.extend({
 	},
 	initialize: function(attrs, params) {
 		this.app = params.app;
-		app = this.app;
 		this.sattr = {
 			hData: {},
 			dragInterval: 1,

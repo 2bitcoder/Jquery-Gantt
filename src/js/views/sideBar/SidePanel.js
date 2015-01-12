@@ -27,6 +27,9 @@ var SidePanel = React.createClass({
         this.props.collection.on('add remove', function() {
             this.forceUpdate();
         }, this);
+        this.props.collection.on('change:hidden', function() {
+            this.requestUpdate();
+        }, this);
         this._makeSortable();
     },
     _makeSortable : function() {
@@ -81,6 +84,18 @@ var SidePanel = React.createClass({
             this.hightlighter.remove();
         }.bind(this));
     },
+    requestUpdate : (function() {
+        var waiting = false;
+        return function () {
+            if (waiting) {
+                return;
+            }
+            setTimeout(function() {
+                this.forceUpdate();
+                waiting = false;
+            }.bind(this), 5);
+        };
+    }()),
     componentWillUnmount  : function() {
         $('.task-container').sortable("destroy");
         this.props.collection.off(null, null, this);

@@ -33,7 +33,8 @@ var TaskModel = Backbone.Model.extend({
 
         // app params
         hidden : false,
-        collapsed : false
+        collapsed : false,
+        hightlight : ''
     },
     initialize : function() {
         this.children = new SubTasks();
