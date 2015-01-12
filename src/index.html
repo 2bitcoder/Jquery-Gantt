@@ -75,21 +75,130 @@
 	<link rel="stylesheet" type="text/css" href="css/TopMenu.css" />
 </head>
 <body id="home">
+
+	<!--LOADER-->
 	<div id="loader">
 		<div class="spinner">
 			<div class="double-bounce1"></div>
 			<div class="double-bounce2"></div>
 		</div>
 	</div>
+
 	<div id="ganttChart" class="Gantt">
-		<div class="ui page grid masthead segment">
+		<div class="ui page grid segment">
 			<div class="column">
-				<div class="secondary pointing ui menu" id="top-menu">
-					<div class="header item">Gantt chart</div>
+
+				<!--HEADER-->
+				<div class="ui seven column grid" id="top-menu">
+					<div class="column">Gantt chart</div>
+
+					<!--GROUPING MENU-->
+					<div class="column"  id="grouping-menu">
+						<div class="header">
+							Grouping:
+							<div class="ui fitted divider"></div>
+						</div>
+						<div id="top-expand-all"  class="action">
+							Expand all
+						</div>
+						<div id="top-collapse-all"  class="action">
+							Collapse All
+						</div>
+					</div>
+
+					<!--PROJECT MENU-->
+					<div class="column"  id="project-menu">
+						<div class="header">
+							MS Project:
+							<div class="ui fitted divider"></div>
+						</div>
+						<div id="upload-project"  class="action">
+							Upload new project
+						</div>
+						<div id="download-project"  class="action">
+							Download new project
+						</div>
+					</div>
+
+					<!--REPORTS MENU-->
+					<div class="column"  id="reports-menu">
+						<div class="header">
+							Report:
+							<div class="ui fitted divider"></div>
+						</div>
+						<div id="print"  class="action">
+							Print
+						</div>
+					</div>
+
+					<!--FILTER MENU-->
+					<div class="column"  id="filter-menu">
+						<div class="header">
+							Filters:
+							<div class="ui fitted divider"></div>
+						</div>
+						<div>
+							Hightlights:
+							<select>
+								<option>...</option>
+								<option>Status - Backlog</option>
+								<option>Status - Ready</option>
+								<option>Status - In Progress</option>
+								<option>Status - Complete</option>
+								<option>Late Tasks</option>
+								<option>Due Tasks</option>
+								<option>Milestones</option>
+								<option>Deliverables</option>
+								<option>Financial Markers</option>
+								<option>Timesheets Tasks</option>
+								<option>Reportable Tasks</option>
+								<option>Health</option>
+							</select>
+						</div>
+						<div>
+							Filters:
+							<select>
+								<option>...</option>
+								<option>Status - Backlog</option>
+								<option>Status - Ready</option>
+								<option>Status - In Progress</option>
+								<option>Status - Complete</option>
+								<option>Late Tasks</option>
+								<option>Due Tasks</option>
+								<option>Milestones</option>
+								<option>Deliverables</option>
+								<option>Financial Markers</option>
+								<option>Timesheets Tasks</option>
+								<option>Reportable Tasks</option>
+								<option>Health</option>
+							</select>
+						</div>
+					</div>
+
+					<!--ZOOM MENU-->
+					<div class="column" id="zoom-menu">
+						<div class="header">
+							Zooming:
+							<div class="ui fitted divider"></div>
+						</div>
+						<div data-action="view-daily" class="action">
+							Day
+						</div>
+						<div data-action="view-weekly" class="action">
+							Week
+						</div>
+						<div data-action="view-monthly" class="action">
+							Month
+						</div>
+						<div data-action="view-quarterly" class="action">
+							Quarter
+						</div>
+					</div>
 				</div>
 				
 				<div class="item-selector"></div>
 
+				<!--ADD VIEW-->
 				<div class="ui small modal properties flip">
 					<i class="close icon"></i>
 					<div class="content">
@@ -127,46 +236,51 @@
 							</table>
 						</div>
 					</div>
-					<div class="ui">
-						<div class="menu-container panel-collapsed">
-							<div class="menu-header">
-								<div class="ui small green button btnW" id="tHandle" data-variation="inverted" data-content="Add a new task group from here"></div>
-								<div class="ui small green button new-task" data-variation="inverted" data-content="Add a new task group from here">+</div>
-								<div class="hdr-title">
-								</div>
 
+				<!--MAIN VIEW-->
+				<div class="ui">
+
+					<!--SIDE BAR-->
+					<div class="menu-container panel-collapsed">
+
+						<!--SIDE BAR HEADER-->
+						<div class="menu-header">
+							<div class="ui small green button btnW" id="tHandle" data-variation="inverted" data-content="Add a new task group from here"></div>
+							<div class="ui small green button new-task" data-variation="inverted" data-content="Add a new task group from here">+</div>
+							<div class="hdr-title">
 							</div>
-
-							<div class="tasks">
-							</div>
-
 						</div>
-						<div id="gantt-container" class="gantt-chart-container">
+
+						<div class="tasks">
 						</div>
+					</div>
+
+					<!--CHART VIEW-->
+					<div id="gantt-container" class="gantt-chart-container">
 					</div>
 				</div>
 			</div>
 		</div>
+	</div>
 
-		<!--LIBS-->
-		<script type="text/javascript" src="js/lib/jquery.js"></script>
-		<script type="text/javascript" src="js/lib/jquery-ui-1.10.4.custom.js"></script>
-		<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.0.1/semantic.css">
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.0.1/semantic.min.js"></script>
-		<script type="text/javascript" src="js/lib/jquery-sortable.js"></script>
-		<script type="text/javascript" src="js/lib/jquery.mousewheel.js"></script>
-		<script type="text/javascript" src="js/lib/jquery.ui.position.js"></script>
-		<script type="text/javascript" src="js/lib/jquery.contextMenu.js"></script>
-		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
-		<script type="text/javascript" src="js/lib/underscore.js"></script>
-		<script type="text/javascript" src="js/lib/backbone.js"></script>
-		<script type="text/javascript" src="js/lib/kineticmax.js"></script>
-		<script type="text/javascript" src="js/lib/backbone.KineticView.js"></script>
-		<script type="text/javascript" src="js/lib/date.js"></script>
-		<script type="text/javascript" src="js/lib/react.js"></script>
+	<!--LIBS-->
+	<script type="text/javascript" src="js/lib/jquery.js"></script>
+	<script type="text/javascript" src="js/lib/jquery-ui-1.10.4.custom.js"></script>
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.0.1/semantic.css">
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.0.1/semantic.min.js"></script>
+	<script type="text/javascript" src="js/lib/jquery-sortable.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.mousewheel.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.ui.position.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.contextMenu.js"></script>
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+	<script type="text/javascript" src="js/lib/underscore.js"></script>
+	<script type="text/javascript" src="js/lib/backbone.js"></script>
+	<script type="text/javascript" src="js/lib/kineticmax.js"></script>
+	<script type="text/javascript" src="js/lib/backbone.KineticView.js"></script>
+	<script type="text/javascript" src="js/lib/date.js"></script>
+	<script type="text/javascript" src="js/lib/react.js"></script>
 
-		<!--APP-->
-		<script type="text/javascript" src="app.js"></script>
-	</body>
-
-	</html>
+	<!--APP-->
+	<script type="text/javascript" src="app.js"></script>
+</body>
+</html>

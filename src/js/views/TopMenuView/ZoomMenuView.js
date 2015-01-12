@@ -1,13 +1,12 @@
 "use strict";
-var fs = require('fs');
-var template = fs.readFileSync(__dirname + '/ZoomMenuTemplate.html', 'utf8');
 
 var ZoomMenuView = Backbone.View.extend({
+    el : '#zoom-menu',
     initialize : function(params) {
         this.settings = params.settings;
     },
     events : {
-        'click button': 'onIntervalButtonClicked',
+        'click .action': 'onIntervalButtonClicked',
         'click a[href="/#!/generate/"]': 'generatePDF'
     },
     onIntervalButtonClicked : function(evt) {
@@ -19,10 +18,6 @@ var ZoomMenuView = Backbone.View.extend({
     generatePDF : function(evt) {
         window.print();
         evt.preventDefault();
-    },
-    render : function() {
-        var el = $('#top-menu').append(template);
-        this.setElement(el);
     }
 });
 

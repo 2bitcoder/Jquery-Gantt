@@ -1,7 +1,7 @@
 "use strict";
 
-var GroupingMenuView = Backbone.View.extend({
-    el : '#grouping-menu',
+var FilterView = Backbone.View.extend({
+    el : '#filter-menu',
     initialize : function(params) {
         this.settings = params.settings;
     },
@@ -23,4 +23,4 @@ var GroupingMenuView = Backbone.View.extend({
     }
 });
 
-module.exports = GroupingMenuView;
+module.exports = FilterView;

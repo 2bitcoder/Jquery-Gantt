@@ -1,14 +1,13 @@
 "use strict";
 var ZoomMenuView = require('./ZoomMenuView');
 var GroupingMenuView = require('./GroupingMenuView');
+var FilterMenuView = require('./FilterMenuView');
 
 var TopMenuView = Backbone.View.extend({
     initialize : function(params) {
         new ZoomMenuView(params).render();
         new GroupingMenuView(params).render();
-    },
-    render : function() {
-
+        new FilterMenuView(params).render();
     }
 });
 

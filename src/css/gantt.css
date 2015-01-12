@@ -10,9 +10,9 @@ body {
 }
 
 .Gantt {
-	border: 1px solid #000;
-	overflow-y: scroll;
-	height: 99%;
+	height: 100%;
+	width: 98%;
+	margin-left: 1%;
 }
 
 
@@ -24,8 +24,8 @@ div.menu-container {
 	min-height: 100%;
 	left: 0%;
 	padding: 0 10px;
-	position: absolute;
 	z-index: 1;
+	position: absolute;
 	background: rgb(255, 255, 255);
 }
 div.head-bar{
@@ -90,6 +90,7 @@ div.gantt-chart-container {
 	float: right;
 	width: 100%;
 	
+	display: initial;
 }
 
 .task .col-name{
