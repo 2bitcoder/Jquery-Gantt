@@ -6,19 +6,11 @@ var FilterView = Backbone.View.extend({
         this.settings = params.settings;
     },
     events : {
-        'click #top-expand-all' : function() {
-            this.collection.each(function(task) {
-                if (task.isNested()) {
-                    task.set('collapsed', false);
-                }
-            });
+        'change #hightlights-select' : function(e) {
+            console.log(e.target.value);
         },
-        'click #top-collapse-all' : function() {
-            this.collection.each(function(task) {
-                if (task.isNested()) {
-                    task.set('collapsed', true);
-                }
-            });
+        'change #filters-select' : function(e) {
+            console.log(e.target.value);
         }
     }
 });

@@ -14,7 +14,7 @@ ContextMenuView.prototype.render = function() {
             if(key === 'delete'){
                 model.destroy();
             }
-            if(key === 'properties'){
+//            if(key === 'properties'){
 //                var $property = '.property-';
 //                var status = {
 //                    '108': 'Ready',
@@ -46,8 +46,8 @@ ContextMenuView.prototype.render = function() {
 //                    var d = new Date(inputFormat);
 //                    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
 //                }
-            }
-            if(key === 'rowAbove'){
+//            }
+            if (key === 'rowAbove'){
                 var data = {
                     reference_id : id
                 };
@@ -82,7 +82,7 @@ ContextMenuView.prototype.addTask = function(data, insertPos) {
     var sortindex = 0;
     var ref_model = this.collection.get(data.reference_id);
     if (ref_model) {
-        sortindex = ref_model.get('sortindex') + (insertPos === 'above' ? -0.5 : 0.5)
+        sortindex = ref_model.get('sortindex') + (insertPos === 'above' ? -0.5 : 0.5);
     } else {
         sortindex = (this.app.tasks.last().get('sortindex') + 1);
     }

@@ -1,7 +1,7 @@
 "use strict";
 var expect = require("chai").expect;
 var Backbone = require('backbone');
-require('../src/js/lib/date');
+require('../src/libs/date');
 Backbone.sync = function() {};
 global.Backbone = Backbone;
 

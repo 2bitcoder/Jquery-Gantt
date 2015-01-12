@@ -93,7 +93,7 @@ var SidePanel = React.createClass({
                 return;
             }
             if (task.get('hidden')) {
-                return
+                return;
             }
             if (task.children.length) {
                 tasks.push(React.createElement(NestedTask, {

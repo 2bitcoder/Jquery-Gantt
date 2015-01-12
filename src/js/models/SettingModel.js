@@ -2,14 +2,14 @@ var util = require('../utils/util');
 
 var app = {};
 
-var hfunc = function(pos, evt) {
-	var dragInterval = app.settings.getSetting('attr', 'dragInterval');
-	var n = Math.round((pos.x - evt.inipos.x) / dragInterval);
-	return {
-		x: evt.inipos.x + n * dragInterval,
-		y: this.getAbsolutePosition().y
-	};
-};
+//var hfunc = function(pos, evt) {
+//	var dragInterval = app.settings.getSetting('attr', 'dragInterval');
+//	var n = Math.round((pos.x - evt.inipos.x) / dragInterval);
+//	return {
+//		x: evt.inipos.x + n * dragInterval,
+//		y: this.getAbsolutePosition().y
+//	};
+//};
 
 var SettingModel = Backbone.Model.extend({
 	defaults: {
@@ -39,79 +39,6 @@ var SettingModel = Backbone.Model.extend({
 			tableWidth: 710
 		};
 
-		this.sgroup = {
-			currentY: 0,
-			iniY: 60,
-			active: false,
-			topBar: {
-				fill: '#666',
-				height: 12,
-				strokeEnabled: false
-			},
-			gap: 3,
-			rowHeight: 22,
-			draggable: true,
-			dragBoundFunc: hfunc
-		};
-
-		this.sbar = {
-			barheight: 12,
-			gap: 20,
-			rowheight:  60,
-			draggable: true,
-			resizable: true,
-			dragBoundFunc: hfunc,
-			resizeBoundFunc: hfunc,
-			subgroup: true
-		};
-		this.sform={
-			'name': {
-				editable: true,
-				type: 'text'
-			},
-			'start': {
-				editable: true,
-				type: 'date',
-				d2t: function(d){
-					return d.toString('dd/MM/yyyy');
-				},
-				t2d: function(t){
-					return Date.parseExact( util.correctdate(t), 'dd/MM/yyyy');
-				}
-			},
-			'end': {
-				editable: true,
-				type: 'date',
-				d2t: function(d){
-					return d.toString('dd/MM/yyyy');
-				},
-				t2d: function(t){
-					return Date.parseExact( util.correctdate(t), 'dd/MM/yyyy');
-				}
-			},
-			'status': {
-				editable: true,
-				type: 'select',
-				options: {
-					'110': 'complete',
-					'109': 'open',
-					'108' : 'ready'
-				}
-			},
-			'complete': {
-				editable: true,
-				type: 'text'
-			},
-			'duration': {
-				editable: true,
-				type: 'text',
-				d2t: function(t,model){
-					return Date.daysdiff(model.get('start'),model.get('end'));
-				}
-			}
-		
-		};
-		this.getFormElem = this.createElem();
 		this.collection = this.app.tasks;
 		this.calculateIntervals();
 		this.on('change:interval change:dpi', this.calculateIntervals);
@@ -317,81 +244,13 @@ var SettingModel = Backbone.Model.extend({
 		this.calcminmax();
 		this.setAttributes();
 	},
-	createElem: function() {
-		var elems = {}, obj, callback = false, context = false;
-		function bindTextEvents(element, obj, name) {
-			element.on('blur',function(){
-				var $this = $(this);
-				var value = $this.val();
-				$this.detach();
-				var callfunc = callback, ctx = context;
-				callback = false;
-				context = false;
-				if (obj.t2d) {
-					value=obj.t2d(value);
-				}
-				callfunc.call(ctx,name,value);
-			}).on('keypress',function(e){
-				if(event.which===13){
-					$(this).trigger('blur');
-				}
-			});
-		}
-		
-		function bindDateEvents(element,obj,name){
-			element.datepicker({ dateFormat: "dd/mm/yy",onClose:function(){
-				console.log('close it');
-				var $this=$(this);
-				var value=$this.val();
-				$this.detach();
-				var callfunc=callback,ctx=context;
-				callback=false;
-				context=false;
-				if(obj['t2d']) {
-					value=obj['t2d'](value);
-				}
-				setTimeout(function() {
-					"use strict";
-					callfunc.call(ctx,name,value);
-				}, 10);
-			}});
-		}
-		
-		for(var i in this.sform){
-			obj=this.sform[i];
-			if(obj.editable){
-				if(obj.type==='text'){
-					elems[i]=$('<input type="text" class="content-edit">');
-					bindTextEvents(elems[i],obj,i);
-				}
-				else if(obj.type==='date'){
-					elems[i]=$('<input type="text" class="content-edit">');
-					bindDateEvents(elems[i],obj,i);
-				}
-			}
-		
-		}
-
-		obj = null;
-		return function(field, model, callfunc, ctx){
-			callback = callfunc;
-			context = ctx;
-			var element=elems[field], value = model.get(field);
-			if (this.sform[field].d2t) {
-				value = this.sform[field].d2t(value, model);
-			}
-			element.val(value);
-			return element;
-		};
-	
-	},
 	conDToT:(function(){
 		var dToText={
 			'start':function(value){
-				return value.toString('dd/MM/yyyy')
+				return value.toString('dd/MM/yyyy');
 			},
 			'end':function(value){
-				return value.toString('dd/MM/yyyy')
+				return value.toString('dd/MM/yyyy');
 			},
 			'duration':function(value,model){
 				return Date.daysdiff(model.start,model.end)+' d';

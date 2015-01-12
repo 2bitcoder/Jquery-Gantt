@@ -38,7 +38,7 @@ var NestedTask = React.createClass({
         return React.createElement('li', {
                     className : 'task-list-container drag-item' + (this.props.isSubTask ? ' sub-task' : ''),
                     id : this.props.model.cid,
-                    'data-id' : this.props.model.cid,
+                    'data-id' : this.props.model.cid
                 },
                 React.createElement('div', {
                         id : this.props.model.cid,
