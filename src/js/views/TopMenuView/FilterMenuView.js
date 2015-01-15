@@ -47,35 +47,24 @@ var FilterView = Backbone.View.extend({
         'status-complete' : '#99C299',
         'late' : '#FFB2B2',
         'due' : ' #FFC299',
-        'milestones' : '#D6C2FF',
-        'deliverables' : '#E0D1C2',
+        'milestone' : '#D6C2FF',
+        'deliverable' : '#E0D1C2',
         'financial' : '#F0E0B2',
         'timesheets' : '#C2C2B2',
         'reportable' : ' #E0C2C2',
-        'health' : 'red'
+        'health-red' : 'red',
+        'health-amber' : '#FFBF00',
+        'health-green' : 'green'
     },
     _getModelsForCriteria : function(creteria) {
         if (creteria === 'resets') {
             return [];
         }
-        if (creteria === 'status-backlog') {
+        if (creteria.indexOf('status') !== -1) {
+            var status = creteria.slice(creteria.indexOf('-') + 1);
+            var id = this.settings.findStatusId(status);
             return this.collection.filter(function(task) {
-                return task.get('status') === 'backlog';
-            });
-        }
-        if (creteria === 'status-ready') {
-            return this.collection.filter(function(task) {
-                return task.get('status') === 'ready';
-            });
-        }
-        if (creteria === 'status-progress') {
-            return this.collection.filter(function(task) {
-                return task.get('status') === 'progress';
-            });
-        }
-        if (creteria === 'status-complete') {
-            return this.collection.filter(function(task) {
-                return task.get('status') === 'complete';
+                return task.get('status') === id;
             });
         }
         if (creteria === 'late') {
@@ -90,8 +79,17 @@ var FilterView = Backbone.View.extend({
                 return task.get('end') > new Date() && task.get('end') < lastDate;
             });
         }
-        if (creteria === 'milestones') {
-            return [];
+        if (['milestone', 'deliverable', 'financial', 'timesheets', 'reportable'].indexOf(creteria) !== -1) {
+            return this.collection.filter(function(task) {
+                return task.get(creteria);
+            });
+        }
+        if (creteria.indexOf('health') !== -1) {
+            var health = creteria.slice(creteria.indexOf('-') + 1);
+            var healthId = this.settings.findHealthId(health);
+            return this.collection.filter(function(task) {
+                return task.get('health') === healthId;
+            });
         }
         return [];
     }

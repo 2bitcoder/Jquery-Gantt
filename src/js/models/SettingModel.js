@@ -1,6 +1,7 @@
 "use strict";
 
 var util = require('../utils/util');
+var testStatuses = require('../../../data/statuses');
 
 //var hfunc = function(pos, evt) {
 //	var dragInterval = app.settings.getSetting('attr', 'dragInterval');
@@ -19,6 +20,7 @@ var SettingModel = Backbone.Model.extend({
 	},
 	initialize: function(attrs, params) {
 		this.app = params.app;
+		this.statuses = testStatuses;
 		this.sattr = {
 			hData: {},
 			dragInterval: 1,
@@ -47,6 +49,32 @@ var SettingModel = Backbone.Model.extend({
 			return this['s' + from][attr];
 		}
 		return this['s' + from];
+	},
+	findStatusId : function(status) {
+		for(var category in this.statuses.cdata) {
+			var data = this.statuses.cdata[category];
+			if (data.Category === 'Milestone Status') {
+				for (var i in data.data) {
+					var statusItem = data.data[i];
+					if (statusItem.cfg_item.toLowerCase() === status) {
+						return statusItem.ID;
+					}
+				}
+			}
+		}
+	},
+	findHealthId : function(health) {
+		for(var category in this.statuses.cdata) {
+			var data = this.statuses.cdata[category];
+			if (data.Category === 'Milestone Health') {
+				for (var i in data.data) {
+					var statusItem = data.data[i];
+					if (statusItem.cfg_item.toLowerCase() === health) {
+						return statusItem.ID;
+					}
+				}
+			}
+		}
 	},
 	calcminmax: function() {
 		var minDate = new Date(2020,1,1), maxDate = new Date(0,0,0);

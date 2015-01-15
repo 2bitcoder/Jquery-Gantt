@@ -1,0 +1,61 @@
+module.exports = {
+    "cdata":[
+        {
+            "Category":"Milestone Health",
+            "data":[
+                {
+                    "ID":14752,
+                    "cfg_item":"Green",
+                    "SortOrder":0
+                },
+                {
+                    "ID":14753,
+                    "cfg_item":"Amber",
+                    "SortOrder":1
+                },
+                {
+                    "ID":14754,
+                    "cfg_item":"Red",
+                    "SortOrder":3
+                }
+            ]
+        },
+        {
+            "Category":"Milestone Status",
+            "data":[
+                {
+                    "ID":218,
+                    "cfg_item":"Backlog",
+                    "SortOrder":0
+                },
+                {
+                    "ID":218,
+                    "cfg_item":"Ready",
+                    "SortOrder":1
+                },
+                {
+                    "ID":23,
+                    "cfg_item":"In Progress",
+                    "SortOrder":2
+                },
+                {
+                    "ID":24,
+                    "cfg_item":"Complete",
+                    "SortOrder":3
+                }
+            ]
+        }
+    ],
+    "wdata":[
+        {
+            "WONumber":"WO10018",
+            "data":[
+                {
+                    "ID":43,
+                    "WONumber":"WO10018",
+                    "SortOrder":43
+                }
+            ]
+        }
+    ]
+};

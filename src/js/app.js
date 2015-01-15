@@ -1,9 +1,42 @@
+"use strict";
 
 var TaskCollection = require('./collections/taskCollection');
 var Settings = require('./models/SettingModel');
 
 var GanttView = require('./views/GanttView');
 var util = require('./utils/util');
+
+function fetchCollection(app) {
+	app.tasks.fetch({
+		success : function() {
+			console.log('Success loading tasks.');
+			app.tasks.linkChildren();
+			app.tasks.checkSortedIndex();
+
+			app.settings = new Settings({}, {app : app});
+			if (window.location.hostname.indexOf('localhost') === -1) {
+				$.getJSON('/api/GanttConfig/wbs/43/2b00da46b57c0395', function(statuses) {
+					app.settings = statuses;
+					fetchCollection(app);
+				});
+			}
+
+			new GanttView({
+				app : app,
+				collection : app.tasks
+			}).render();
+
+			$('#loader').fadeOut();
+		},
+		error : function(err) {
+			console.error('error loading');
+			console.error(err);
+		},
+		parse: true,
+		reset : true
+	});
+}
+
 
 $(function () {
 	var app = {};
@@ -14,24 +47,5 @@ $(function () {
 	if (params.project && params.profile && params.sitekey) {
 		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile + '/' + params.sitekey;
 	}
-
-	app.tasks.fetch({
-		success : function() {
-			console.log('Success loading tasks.');
-			app.settings = new Settings({}, {app : app});
-			app.tasks.linkChildren();
-			app.tasks.checkSortedIndex();
-			new GanttView({
-				app : app,
-				collection : app.tasks
-			}).render();
-			$('#loader').fadeOut();
-		},
-		error : function(err) {
-			console.error('error loading');
-			console.error(err);
-		},
-		parse: true,
-		reset : true
-	});
+	fetchCollection(app);
 });

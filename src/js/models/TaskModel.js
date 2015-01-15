@@ -11,27 +11,38 @@ var SubTasks = Backbone.Collection.extend({
 
 var TaskModel = Backbone.Model.extend({
     defaults: {
+        // MAIN PARAMS
         name: 'New task',
         description: '',
-        complete: 0,  // in percents
-        action: '',
-        active : true,
-        sortindex: 0,
+        complete: 0,  // 0% - 100% percents
+        sortindex: 0,   // place on side menu, starts from 0
         depend: undefined,  // id of task
-        resources: {},
-        status: 110,
-        health: 21,
+        status: '110',      // 110 - complete, 109  - open, 108 - ready
         start: new Date(),
         end: new Date(),
+        parentid: 0,
+
+        color: '#0090d3',   // user color, not used for now
+
+        // some additional properties
+        health: 21,
+        reportable: false,
+        wo: 2,                  //Select List in properties modal   (configdata)
+        milestone: false,       //Check box in properties modal (true/false)
+        deliverable: false,     //Check box in properties modal (true/false)
+        financial: false,       //Check box in properties modal (true/false)
+        timesheets: false,      //Check box in properties modal (true/false)
+        acttimesheets: false,   //Check box in properties modal (true/false)
+
+        // server specific params
+        // don't use them on client side
         ProjectRef : params.project,
         WBS_ID : params.profile,
-        color: '#0090d3',   // user color
-        aType: '',
-        reportable: '',
-        parentid: 0,
         sitekey: params.sitekey,
 
-        // app params
+
+        // params for application views
+        // should be removed from JSON
         hidden : false,
         collapsed : false,
         hightlight : ''
