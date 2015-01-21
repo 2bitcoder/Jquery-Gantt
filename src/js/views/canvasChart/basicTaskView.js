@@ -184,6 +184,7 @@ var BasicTaskView = Backbone.KineticView.extend({
         var attrs= this.settings.getSetting('attr'),
             boundaryMin = attrs.boundaryMin,
             daysWidth = attrs.daysWidth;
+
         return {
             x1: (Date.daysdiff(boundaryMin, this.model.get('start')) - 1) * daysWidth,
             x2: (Date.daysdiff(boundaryMin, this.model.get('end'))) * daysWidth

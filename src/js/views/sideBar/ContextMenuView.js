@@ -1,7 +1,10 @@
 "use strict";
 
+var ModalEdit = require('../ModalTaskEditView');
+
 function ContextMenuView(params) {
     this.collection = params.collection;
+    this.settings = params.settings;
 }
 
 ContextMenuView.prototype.render = function() {
@@ -14,39 +17,13 @@ ContextMenuView.prototype.render = function() {
             if(key === 'delete'){
                 model.destroy();
             }
-//            if(key === 'properties'){
-//                var $property = '.property-';
-//                var status = {
-//                    '108': 'Ready',
-//                    '109': 'Open',
-//                    '110': 'Complete'
-//                };
-//                var $el = $(document);
-//                $el.find($property+'name').html(model.get('name'));
-//                $el.find($property+'description').html(model.get('description'));
-//                $el.find($property+'start').html(convertDate(model.get('start')));
-//                $el.find($property+'end').html(convertDate(model.get('end')));
-//                $el.find($property+'status').html(status[model.get('status')]);
-//                var startdate = new Date(model.get('start'));
-//                var enddate = new Date(model.get('end'));
-//                var _MS_PER_DAY = 1000 * 60 * 60 * 24;
-//                if(startdate != "" && enddate != ""){
-//                    var utc1 = Date.UTC(startdate.getFullYear(), startdate.getMonth(), startdate.getDate());
-//                    var utc2 = Date.UTC(enddate.getFullYear(), enddate.getMonth(), enddate.getDate());
-//                    $el.find($property+'duration').html(Math.floor((utc2 - utc1) / _MS_PER_DAY));
-//                }else{
-//                    $el.find($property+'duration').html(Math.floor(0));
-//                }
-//                $('.ui.properties').modal('setting', 'transition', 'vertical flip')
-//                    .modal('show')
-//                ;
-//
-//                function convertDate(inputFormat) {
-//                    function pad(s) { return (s < 10) ? '0' + s : s; }
-//                    var d = new Date(inputFormat);
-//                    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join('/');
-//                }
-//            }
+            if(key === 'properties'){
+                var view = new ModalEdit({
+                    model : model,
+                    settings : self.settings
+                });
+                view.render();
+            }
             if (key === 'rowAbove'){
                 var data = {
                     reference_id : id

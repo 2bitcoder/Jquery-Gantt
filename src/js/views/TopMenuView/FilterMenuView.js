@@ -62,9 +62,9 @@ var FilterView = Backbone.View.extend({
         }
         if (creteria.indexOf('status') !== -1) {
             var status = creteria.slice(creteria.indexOf('-') + 1);
-            var id = this.settings.findStatusId(status);
+            var id = this.settings.findStatusId(status).toString();
             return this.collection.filter(function(task) {
-                return task.get('status') === id;
+                return task.get('status').toString() === id;
             });
         }
         if (creteria === 'late') {
@@ -86,9 +86,9 @@ var FilterView = Backbone.View.extend({
         }
         if (creteria.indexOf('health') !== -1) {
             var health = creteria.slice(creteria.indexOf('-') + 1);
-            var healthId = this.settings.findHealthId(health);
+            var healthId = this.settings.findHealthId(health).toString();
             return this.collection.filter(function(task) {
-                return task.get('health') === healthId;
+                return task.get('health').toString() === healthId;
             });
         }
         return [];

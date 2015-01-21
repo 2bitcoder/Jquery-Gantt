@@ -66,18 +66,19 @@ var SidePanel = React.createClass({
             background : 'grey',
             opacity : '0.5',
             lift : '0',
-            top : '0'
+            top : '0',
+            width : '100%'
         });
         container.mouseenter(function() {
             this.hightlighter.appendTo(document.body);
         }.bind(this));
+
         container.mouseover(function(e) {
             var $el = $(e.target);
             var pos = $el.offset();
             this.hightlighter.css({
-                transform : 'translateZ(0) translateY(' + pos.top + 'px)',
-                height : $el.height(),
-                width : window.innerWidth
+                top : pos.top + 'px',
+                height : $el.height()
             });
         }.bind(this));
         container.mouseleave(function() {

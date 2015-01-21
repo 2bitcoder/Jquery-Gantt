@@ -156,3 +156,9 @@ i.icon{
 		width: 488px !important;
 		}*/
 	}
+
+#modalEditContainer {
+	position: absolute;
+	top : 50px;
+	left: 50%;
+}

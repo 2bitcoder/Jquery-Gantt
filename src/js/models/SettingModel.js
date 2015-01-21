@@ -56,7 +56,7 @@ var SettingModel = Backbone.Model.extend({
 			if (data.Category === 'Milestone Status') {
 				for (var i in data.data) {
 					var statusItem = data.data[i];
-					if (statusItem.cfg_item.toLowerCase() === status) {
+					if (statusItem.cfg_item.toLowerCase() === status.toLowerCase()) {
 						return statusItem.ID;
 					}
 				}
@@ -69,7 +69,20 @@ var SettingModel = Backbone.Model.extend({
 			if (data.Category === 'Milestone Health') {
 				for (var i in data.data) {
 					var statusItem = data.data[i];
-					if (statusItem.cfg_item.toLowerCase() === health) {
+					if (statusItem.cfg_item.toLowerCase() === health.toLowerCase()) {
+						return statusItem.ID;
+					}
+				}
+			}
+		}
+	},
+	findWOId : function(wo) {
+		for(var category in this.statuses.wdata) {
+			var data = this.statuses.cdata[category];
+			if (data.Category === 'Milestone Health') {
+				for (var i in data.data) {
+					var statusItem = data.data[i];
+					if (statusItem.cfg_item.toLowerCase() === health.toLowerCase()) {
 						return statusItem.ID;
 					}
 				}

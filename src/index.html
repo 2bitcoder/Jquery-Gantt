@@ -263,6 +263,124 @@
 					<div id="gantt-container" class="gantt-chart-container">
 					</div>
 				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!--MODAL EDIT VIEW-->
+	<div class="ui modal" id="editTask">
+		<i class="close icon"></i>
+		<div class="header">
+			Edit task
+		</div>
+		<div class="content">
+			<div class="description">
+				<div class="ui form">
+					<div class="inline field">
+						<label>Issue id</label>
+						<input type="text" name="id" readonly="readonly">
+					</div>
+					<div class="inline field">
+						<label>Name</label>
+						<input type="text"  name="name">
+					</div>
+					<div class="inline field">
+						<label>Start date</label>
+						<input type="text" name="start">
+					</div>
+					<div class="inline field">
+						<label>End date</label>
+						<input type="text" name="end">
+					</div>
+					<div class="tabs">
+						<div class="ui top attached tabular menu">
+							<a class="active item" data-tab="first">Details</a>
+							<a class="item" data-tab="second">Timesheets Control</a>
+						</div>
+						<div class="ui bottom attached active tab segment" data-tab="first">
+							<div class="inline field">
+								<label>Description</label>
+								<textarea name="description"></textarea>
+							</div>
+							<div class="inline field">
+								<label>Type</label>
+								<div class="ui checkbox">
+									<input type="checkbox"  name="milestone">
+									<label>Milestone</label>
+								</div>
+								<div class="ui checkbox">
+									<input type="checkbox" name="deliverable">
+									<label>Deliverable</label>
+								</div>
+								<div class="ui checkbox">
+									<input type="checkbox"  name="reportable">
+									<label>Reportable</label>
+								</div>
+								<div class="ui checkbox">
+									<input type="checkbox" name="financial">
+									<label>Financial Marker</label>
+								</div>
+							</div>
+							<div class="inline field">
+								<label>Status</label>
+								<select class="ui" name="status">
+									<option value="0">Backlog</option>
+									<option value="1">Ready</option>
+									<option value="2">In Progress</option>
+									<option value="3">Complete</option>
+								</select>
+							</div>
+							<div class="inline field">
+								<label>Health</label>
+								<select class="ui" name="health">
+									<option value="0">Red</option>
+									<option value="1">Green</option>
+									<option value="2">Amber</option>
+								</select>
+							</div>
+							<div class="inline field">
+								<label>Order</label>
+								<input type="text">
+							</div>
+							<div class="inline field">
+								<label>% Complete</label>
+								<input type="text"  name="complete">
+							</div>
+						</div>
+						<div class="ui bottom attached tab segment" data-tab="second">
+							<div class="field">
+								<label>Allow timesheets</label>
+								<div class="ui checkbox">
+									<input type="checkbox"  name="timesheets">
+									<label>Allow (This section is used for timesheet control of this WBS Item, select "Allow" to mark this item to timesheet)</label>
+								</div>
+							</div>
+							<div class="field">
+								<label>Activate timesheets</label>
+								<div class="ui checkbox">
+									<input type="checkbox" name="acttimesheets">
+									<label>Allow (Activating will make this WBS item immediately available to resources for activate timesheeting. Deselect to remove the ability to timesheet against this item)</label>
+								</div>
+							</div>
+							<div class="inline field">
+								<label>Work order</label>
+								<select class="ui dropdown">
+									<option value="">-</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui black button cancel">
+				Cancel
+			</div>
+			<div class="ui positive right labeled icon button save">
+				Save
+				<i class="checkmark icon"></i>
 			</div>
 		</div>
 	</div>
