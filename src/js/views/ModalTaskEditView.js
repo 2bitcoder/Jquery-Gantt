@@ -44,6 +44,12 @@ var ModalTaskEditComponent = Backbone.View.extend({
             var id = this.settings.findHealthId(child.text);
             $(child).prop('value', id);
         }.bind(this));
+
+        var workOrderSelect = this.$el.find('[name="wo"]');
+        workOrderSelect.empty();
+        this.settings.statuses.wdata[0].data.forEach(function(data) {
+            $('<option value="' + data.ID + '">' + data.WONumber + '</option>').appendTo(workOrderSelect);
+        });
     },
     _fillData : function() {
         _.each(this.model.attributes, function(val, key) {

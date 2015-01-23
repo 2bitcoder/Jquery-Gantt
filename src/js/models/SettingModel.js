@@ -77,16 +77,11 @@ var SettingModel = Backbone.Model.extend({
 		}
 	},
 	findWOId : function(wo) {
-		for(var category in this.statuses.wdata) {
-			var data = this.statuses.cdata[category];
-			if (data.Category === 'Milestone Health') {
-				for (var i in data.data) {
-					var statusItem = data.data[i];
-					if (statusItem.cfg_item.toLowerCase() === health.toLowerCase()) {
-						return statusItem.ID;
-					}
-				}
-			}
+		for(var i in this.statuses.wdata[0].data) {
+			var data = this.statuses.wdata[0].data[i];
+            if (data.WONumber.toLowerCase() === wo.toLowerCase()) {
+                return data.ID;
+            }
 		}
 	},
 	calcminmax: function() {
