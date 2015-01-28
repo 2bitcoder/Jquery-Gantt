@@ -53,7 +53,7 @@ var SettingModel = Backbone.Model.extend({
 	findStatusId : function(status) {
 		for(var category in this.statuses.cdata) {
 			var data = this.statuses.cdata[category];
-			if (data.Category === 'Milestone Status') {
+			if (data.Category === 'Task Status') {
 				for (var i in data.data) {
 					var statusItem = data.data[i];
 					if (statusItem.cfg_item.toLowerCase() === status.toLowerCase()) {
@@ -66,7 +66,7 @@ var SettingModel = Backbone.Model.extend({
 	findHealthId : function(health) {
 		for(var category in this.statuses.cdata) {
 			var data = this.statuses.cdata[category];
-			if (data.Category === 'Milestone Health') {
+			if (data.Category === 'Task Health') {
 				for (var i in data.data) {
 					var statusItem = data.data[i];
 					if (statusItem.cfg_item.toLowerCase() === health.toLowerCase()) {
