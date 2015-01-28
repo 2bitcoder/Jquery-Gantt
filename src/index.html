@@ -73,6 +73,53 @@
 	<link rel="stylesheet" type="text/css" href="css/gantt.v2.css" />
 	<link rel="stylesheet" type="text/css" href="css/sortable.css" />
 	<link rel="stylesheet" type="text/css" href="css/TopMenu.css" />
+<style>
+    .ui.form input[type="text"], .ui.form input[type="email"], .ui.form input[type="date"], .ui.form input[type="password"], .ui.form input[type="number"], .ui.form input[type="url"], .ui.form input[type="tel"] {
+     padding: 0.4em 0.5em !important;   
+     }
+    .ui.form select {    
+        padding: 0.2em 0.5em !important;
+        width: 160px !important;
+     }
+ 
+    .ui.textarea, .ui.form textarea {
+        height: 6em !important;
+        padding: 0.3em 0.5em !important;
+    }
+
+    .labelsolid {
+        background-color: white;
+        font-weight:bold;
+        float: left;
+        height: 100%;
+        line-height: 1em;
+        margin: 0;
+        padding: 0;
+        position: static;
+    }
+
+    .label_80 {
+        display: block !important;
+        float: left;
+        padding-right: 5px;
+        padding-top: 5px;
+        text-align: left;
+        width: 80px !important;
+    }
+    .textdiv{
+        padding:8px;
+    }
+    .ui.form .field {
+        margin: 0 0 0.5em !important;
+    }
+    .noborder {
+        border-width:0px !important;
+        border:none !important;
+    }
+    .ui.checkbox {    
+        width: 130px !important;
+    }
+</style>	
 </head>
 <body id="home">
 
@@ -278,20 +325,20 @@
 			<div class="description">
 				<div class="ui form">
 					<div class="inline field">
-						<label>Issue id</label>
-						<input type="text" name="id" readonly="readonly">
+                        <label class="label_80 labelsolid">Task ID</label>
+                        <input type="text" name="id" readonly="readonly" size="8px" class="noborder">
 					</div>
 					<div class="inline field">
-						<label>Name</label>
-						<input type="text"  name="name">
+                        <label class="label_80 labelsolid">Name</label>
+                        <input type="text" name="name" size="100px" >
 					</div>
 					<div class="inline field">
-						<label>Start date</label>
-						<input type="text" name="start">
+                        <label class="label_80 labelsolid" >Start date</label>
+                        <input type="text" name="start" size="12px">
 					</div>
 					<div class="inline field">
-						<label>End date</label>
-						<input type="text" name="end">
+                        <label class="label_80 labelsolid" >End date</label>
+                        <input type="text" name="end" size="12px">
 					</div>
 					<div class="tabs">
 						<div class="ui top attached tabular menu">
@@ -304,7 +351,7 @@
 								<textarea name="description"></textarea>
 							</div>
 							<div class="inline field">
-								<label>Type</label>
+                                <label class="label_80 labelsolid">Type</label>
 								<div class="ui checkbox">
 									<input type="checkbox"  name="milestone">
 									<label>Milestone</label>
@@ -323,7 +370,7 @@
 								</div>
 							</div>
 							<div class="inline field">
-								<label>Status</label>
+                                <label class="label_80 labelsolid">Status</label>
 								<select class="ui" name="status">
 									<option value="0">Backlog</option>
 									<option value="1">Ready</option>
@@ -332,7 +379,7 @@
 								</select>
 							</div>
 							<div class="inline field">
-								<label>Health</label>
+                                <label class="label_80 labelsolid">Health</label>
 								<select class="ui" name="health">
 									<option value="0">Red</option>
 									<option value="1">Green</option>
@@ -340,31 +387,31 @@
 								</select>
 							</div>
 							<div class="inline field">
-								<label>Order</label>
-								<input type="text">
-							</div>
-							<div class="inline field">
-								<label>% Complete</label>
-								<input type="text"  name="complete">
+                                <label class="label_80 labelsolid">% Complete</label>
+								<input type="text"  name="complete" size="8px">
 							</div>
 						</div>
 						<div class="ui bottom attached tab segment" data-tab="second">
 							<div class="field">
 								<label>Allow timesheets</label>
-								<div class="ui checkbox">
-									<input type="checkbox"  name="timesheets">
-									<label>Allow (This section is used for timesheet control of this WBS Item, select "Allow" to mark this item to timesheet)</label>
-								</div>
-							</div>
+                                <div class="ui checkbox">
+                                    <input type="checkbox" name="timesheets">
+                                    <label>Allow</label>
+                                </div><br />
+                                <div class="textdiv">(This section is used for timesheet control of this WBS Item, select "Allow" to mark this item to timesheet)</div>
+							</div><br />
 							<div class="field">
 								<label>Activate timesheets</label>
-								<div class="ui checkbox">
-									<input type="checkbox" name="acttimesheets">
-									<label>Allow (Activating will make this WBS item immediately available to resources for activate timesheeting. Deselect to remove the ability to timesheet against this item)</label>
-								</div>
-							</div>
+                                <div class="ui checkbox" >
+                                    <input type="checkbox" name="acttimesheets">
+                                    <label>Allow</label>
+                                </div><br />
+                                <div class="textdiv">(Activating will make this WBS item immediately available to resources for activate timesheeting. Deselect to remove the ability to timesheet against this item)</div>
+                                </div>
+                            <br />
+                            <br />
 							<div class="inline field">
-								<label>Work order</label>
+                                <label class="label_80 labelsolid">Work Order</label>
 								<select class="ui" name="wo">
 								</select>
 							</div>
@@ -383,7 +430,6 @@
 			</div>
 		</div>
 	</div>
-
 	<!--LIBS-->
 	<script type="text/javascript" src="libs/jquery.js"></script>
 	<script type="text/javascript" src="libs/jquery-ui-1.10.4.custom.js"></script>
