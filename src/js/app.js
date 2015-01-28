@@ -9,6 +9,7 @@ var util = require('./utils/util');
 function fetchCollection(app) {
 	app.tasks.fetch({
 		success : function() {
+//            app.tasks.reset([]);
 			console.log('Success loading tasks.');
 			app.tasks.linkChildren();
 			app.tasks.checkSortedIndex();

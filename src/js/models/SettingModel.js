@@ -85,7 +85,7 @@ var SettingModel = Backbone.Model.extend({
 		}
 	},
 	calcminmax: function() {
-		var minDate = new Date(2020,1,1), maxDate = new Date(0,0,0);
+		var minDate = new Date(), maxDate = minDate.clone().addYears(1);
 		
 		this.collection.each(function(model) {
 			if (model.get('start').compareTo(minDate) === -1) {

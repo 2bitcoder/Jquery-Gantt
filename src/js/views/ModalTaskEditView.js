@@ -10,7 +10,7 @@ var ModalTaskEditComponent = Backbone.View.extend({
         this.$el.find('.ui.checkbox').checkbox();
         // setup values for selectors
         this._prepareSelects();
-//        this.$el.find('select.dropdown').dropdown();
+
         this.$el.find('.tabular.menu .item').tab();
 
 
@@ -47,7 +47,7 @@ var ModalTaskEditComponent = Backbone.View.extend({
 
         var workOrderSelect = this.$el.find('[name="wo"]');
         workOrderSelect.empty();
-        this.settings.statuses.wdata[0].data.forEach(function(data) {
+        this.settings.statuses.wodata[0].data.forEach(function(data) {
             $('<option value="' + data.ID + '">' + data.WONumber + '</option>').appendTo(workOrderSelect);
         });
     },

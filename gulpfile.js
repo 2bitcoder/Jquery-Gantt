@@ -10,15 +10,6 @@ gulp.task('scripts', function() {
         .pipe(browserify({
             debug : true,
             transform : ['brfs']
-//          shim : {
-//            contextMenu : {
-//              path : 'bower_components/jQuery-contextMenu/src/jquery.contextMenu.js',
-//              exports: 'jQuery.contextMenu',
-//              depends: {
-//                jquery: 'jQuery',
-//              }
-//            }
-//          }
         }).on('error', gutil.log))
         .pipe(gulp.dest('./src/'))
         .pipe(livereload());
