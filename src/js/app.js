@@ -18,7 +18,6 @@ function fetchCollection(app) {
 			if (window.location.hostname.indexOf('localhost') === -1) {
 				$.getJSON('/api/GanttConfig/wbs/43/2b00da46b57c0395', function(statuses) {
 					app.settings = statuses;
-					fetchCollection(app);
 				});
 			}
 
