@@ -44,7 +44,7 @@ var BasicTaskView = Backbone.KineticView.extend({
                     y : this._y
                 };
             }.bind(this),
-            id : this.model.id,
+            id : this.model.cid,
             draggable : true
         });
         var rect = new Kinetic.Rect({
