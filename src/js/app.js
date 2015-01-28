@@ -9,7 +9,13 @@ var util = require('./utils/util');
 function fetchCollection(app) {
 	app.tasks.fetch({
 		success : function() {
-//            app.tasks.reset([]);
+            // add empty task if no tasks from server
+            if (app.tasks.length === 0) {
+                app.tasks.reset([{
+                    name : 'New task'
+                }]);
+
+            }
 			console.log('Success loading tasks.');
 			app.tasks.linkChildren();
 			app.tasks.checkSortedIndex();
