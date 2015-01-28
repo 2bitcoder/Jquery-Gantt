@@ -51,9 +51,9 @@ var SettingModel = Backbone.Model.extend({
 		return this['s' + from];
 	},
 	findStatusId : function(status) {
-		for(var category in this.statuses.cdata) {
-			var data = this.statuses.cdata[category];
-			if (data.Category === 'Milestone Status') {
+		for(var category in this.statuses.cfgdata) {
+			var data = this.statuses.cfgdata[category];
+			if (data.Category === 'Task Status') {
 				for (var i in data.data) {
 					var statusItem = data.data[i];
 					if (statusItem.cfg_item.toLowerCase() === status.toLowerCase()) {
@@ -64,9 +64,9 @@ var SettingModel = Backbone.Model.extend({
 		}
 	},
 	findHealthId : function(health) {
-		for(var category in this.statuses.cdata) {
-			var data = this.statuses.cdata[category];
-			if (data.Category === 'Milestone Health') {
+		for(var category in this.statuses.cfgdata) {
+			var data = this.statuses.cfgdata[category];
+			if (data.Category === 'Task Health') {
 				for (var i in data.data) {
 					var statusItem = data.data[i];
 					if (statusItem.cfg_item.toLowerCase() === health.toLowerCase()) {
@@ -77,8 +77,8 @@ var SettingModel = Backbone.Model.extend({
 		}
 	},
 	findWOId : function(wo) {
-		for(var i in this.statuses.wdata[0].data) {
-			var data = this.statuses.wdata[0].data[i];
+		for(var i in this.statuses.wodata[0].data) {
+			var data = this.statuses.wodata[0].data[i];
             if (data.WONumber.toLowerCase() === wo.toLowerCase()) {
                 return data.ID;
             }

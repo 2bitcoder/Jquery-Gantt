@@ -1,61 +1,97 @@
 module.exports = {
-    "cdata":[
+    "cfgdata": [
         {
-            "Category":"Milestone Health",
-            "data":[
+            "Category": "Task Health",
+            "data": [
                 {
-                    "ID":14752,
-                    "cfg_item":"Green",
-                    "SortOrder":0
+                    "ID": 15027,
+                    "cfg_item": "Green",
+                    "SortOrder": 0,
+                    "cDefault": null,
+                    "Alias": null
                 },
                 {
-                    "ID":14753,
-                    "cfg_item":"Amber",
-                    "SortOrder":1
+                    "ID": 15028,
+                    "cfg_item": "Amber",
+                    "SortOrder": 1,
+                    "cDefault": null,
+                    "Alias": null
                 },
                 {
-                    "ID":14754,
-                    "cfg_item":"Red",
-                    "SortOrder":3
+                    "ID": 15029,
+                    "cfg_item": "Red",
+                    "SortOrder": 2,
+                    "cDefault": null,
+                    "Alias": null
                 }
             ]
         },
         {
-            "Category":"Milestone Status",
-            "data":[
+            "Category": "Task Status",
+            "data": [
                 {
-                    "ID":218,
-                    "cfg_item":"Backlog",
-                    "SortOrder":0
+                    "ID": 23,
+                    "cfg_item": "In Progress",
+                    "SortOrder": 2,
+                    "cDefault": null,
+                    "Alias": null
                 },
                 {
-                    "ID":218,
-                    "cfg_item":"Ready",
-                    "SortOrder":1
+                    "ID": 24,
+                    "cfg_item": "Complete",
+                    "SortOrder": 3,
+                    "cDefault": null,
+                    "Alias": null
                 },
                 {
-                    "ID":23,
-                    "cfg_item":"In Progress",
-                    "SortOrder":2
+                    "ID": 218,
+                    "cfg_item": "Ready",
+                    "SortOrder": 1,
+                    "cDefault": null,
+                    "Alias": null
                 },
                 {
-                    "ID":24,
-                    "cfg_item":"Complete",
-                    "SortOrder":3
+                    "ID": 15026,
+                    "cfg_item": "Backlog",
+                    "SortOrder": 0,
+                    "cDefault": null,
+                    "Alias": null
                 }
             ]
         }
     ],
-    "wdata":[
+    "wodata": [
         {
-            "WONumber":"WO10018",
-            "data":[
+            "WONumber": "WorkOrders",
+            "data": [
                 {
-                    "ID":43,
-                    "WONumber":"WO10018",
-                    "SortOrder":43
+                    "ID": 43,
+                    "WONumber": "WO10018",
+                    "SortOrder": 43
                 }
             ]
+        }
+    ],
+    "resourcedata": [
+        {
+            "UserId": 1,
+            "Username": "Greg Vandeligt",
+            "JobTitle": "Program Manager"
+        },
+        {
+            "UserId": 58,
+            "Username": "James Gumley",
+            "JobTitle": "Project Manager"
+        },
+        {
+            "UserId": 2,
+            "Username": "Lucy Minota",
+            "JobTitle": null
+        },
+        {
+            "UserId": 59,
+            "Username": "Rob Tynan",
+            "JobTitle": "Business Analyst"
         }
     ]
 };
