@@ -39,7 +39,7 @@ var GanttChartView = Backbone.View.extend({
         var self = this;
         this.stage.setAttrs({
             x : this._leftPadding,
-            height: Math.max($(".menu-container").innerHeight(), window.innerHeight - $(this.stage.getContainer()).offset().top),
+            height: Math.max($(".tasks").innerHeight() + this._topPadding, window.innerHeight - $(this.stage.getContainer()).offset().top),
             width: this.$el.innerWidth(),
             draggable: true,
             dragBoundFunc:  function(pos) {
@@ -82,6 +82,7 @@ var GanttChartView = Backbone.View.extend({
         var borderWidth = sdisplay.borderWidth || 1;
         var offset = 1;
         var rowHeight = 20;
+
 
         return function(context){
             var i, s, iLen = 0,	daysWidth = sattr.daysWidth, x,	length,	hData = sattr.hData;
@@ -126,7 +127,7 @@ var GanttChartView = Backbone.View.extend({
                 x = x + length;
                 xi = x - borderWidth + offset;
                 context.moveTo(xi, yi);
-                context.lineTo(xi, yf);
+                context.lineTo(xi, this.getStage().height());
 
                 context._context.save();
                 context._context.font = '6pt Arial,Helvetica,sans-serif';
@@ -155,6 +156,12 @@ var GanttChartView = Backbone.View.extend({
         this.listenTo(this.collection, 'remove', function(task) {
             this._removeViewForModel(task);
             this._resortViews();
+        });
+        this.listenTo(this.collection, 'add remove', function() {
+            // wait for left panel updates
+            setTimeout(function() {
+                this._updateStageAttrs();
+            }.bind(this), 100);
         });
         this.listenTo(this.collection, 'sort', function() {
             this._resortViews();
