@@ -54,7 +54,7 @@ module.exports = {
                     "ID": 15026,
                     "cfg_item": "Backlog",
                     "SortOrder": 0,
-                    "cDefault": null,
+                    "cDefault": true,
                     "Alias": null
                 }
             ]

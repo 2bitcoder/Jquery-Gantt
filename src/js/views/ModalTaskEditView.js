@@ -53,6 +53,12 @@ var ModalTaskEditComponent = Backbone.View.extend({
     },
     _fillData : function() {
         _.each(this.model.attributes, function(val, key) {
+            if (key === 'status' && (!val || !this.settings.findStatusForId(val))) {
+                val = this.settings.findDefaultStatusId();
+            }
+            if (key === 'health' && (!val || !this.settings.findHealthForId(val))) {
+                val = this.settings.findDefaultHealthId();
+            }
             var input = this.$el.find('[name="' + key + '"]');
             if (!input.length) {
                 return;
@@ -62,8 +68,6 @@ var ModalTaskEditComponent = Backbone.View.extend({
                 input.datepicker( "refresh" );
             } else if (input.prop('type') === 'checkbox') {
                 input.prop('checked', val);
-//            } else if (input.prop('type') === 'select-one') {
-//                input.dropdown('set value', val);
             } else {
                 input.val(val);
             }

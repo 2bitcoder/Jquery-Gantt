@@ -63,6 +63,32 @@ var SettingModel = Backbone.Model.extend({
 			}
 		}
 	},
+    findStatusForId : function(id) {
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Status') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    if (statusItem.ID.toString().toLowerCase() === id.toString().toLowerCase()) {
+                        return statusItem.ID;
+                    }
+                }
+            }
+        }
+    },
+    findDefaultStatusId : function() {
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Status') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    if (statusItem.cDefault) {
+                        return statusItem.ID;
+                    }
+                }
+            }
+        }
+    },
 	findHealthId : function(health) {
 		for(var category in this.statuses.cfgdata) {
 			var data = this.statuses.cfgdata[category];
@@ -70,12 +96,38 @@ var SettingModel = Backbone.Model.extend({
 				for (var i in data.data) {
 					var statusItem = data.data[i];
 					if (statusItem.cfg_item.toLowerCase() === health.toLowerCase()) {
-						return statusItem.ID;
+						return statusItem;
 					}
 				}
 			}
 		}
 	},
+    findHealthForId : function(id) {
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Health') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    if (statusItem.ID.toString().toLowerCase() === id.toString().toLowerCase()) {
+                        return statusItem;
+                    }
+                }
+            }
+        }
+    },
+    findDefaultHealthId : function() {
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Health') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    if (statusItem.cDefault) {
+                        return statusItem.ID;
+                    }
+                }
+            }
+        }
+    },
 	findWOId : function(wo) {
 		for(var i in this.statuses.wodata[0].data) {
 			var data = this.statuses.wodata[0].data[i];
