@@ -127,6 +127,9 @@ var TaskModel = Backbone.Model.extend({
             this.clearDependence();
         });
         this.listenTo(this.beforeModel, 'change:end', function() {
+            if (this.parent && this.parent.underMoving) {
+                return;
+            }
             if (this.get('start') < this.beforeModel.get('end')) {
                 this.moveToStart(this.beforeModel.get('end'));
             }
@@ -213,7 +216,9 @@ var TaskModel = Backbone.Model.extend({
         });
 
         // changes dates in all children
+        this.underMoving = true;
         this._moveChildren(daysDiff);
+        this.underMoving = false;
     },
     _moveChildren : function(days) {
         this.children.each(function(child) {

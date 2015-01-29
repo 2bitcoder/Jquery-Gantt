@@ -1,9 +1,11 @@
 "use strict";
 var expect = require("chai").expect;
 var Backbone = require('backbone');
+var _ = require('underscore');
 require('../src/libs/date');
 Backbone.sync = function() {};
 global.Backbone = Backbone;
+global._ = _;
 
 var Tasks = require('../src/js/collections/TaskCollection');
 
@@ -189,6 +191,34 @@ describe("Tasks", function(){
         expect(grandChild.get('start').toDateString()).to.equal(parent.get('start').toDateString());
     });
 
+    it('task moving should move all children (with deps)', function() {
+        var tasks = new Tasks();
+        tasks.reset([{
+                id : 1,
+                start : '2020-12-12'
+            },{
+                id : 2,
+                parentid : 1,
+                start : '2020-12-12',
+                end : '2020-12-15'
+        },{
+                id : 3,
+                parentid : 1,
+                depend: 2,
+                start : '2020-12-15',
+                end : '2020-12-21'
+        }], {parse : true});
+
+        var parent = tasks.get(1);
+        var child1 = tasks.get(2);
+        var child2 = tasks.get(3);
+
+        parent.moveToStart(new Date('2020-12-15'));
+
+        expect(child1.get('start').toDateString()).to.equal(parent.get('start').toDateString());
+        expect(child2.get('start').toDateString()).to.equal(child1.get('end').toDateString());
+    });
+
     it('resort tasks on parentid change', function() {
         var tasks = new Tasks();
         tasks.reset([{id : 1, parentid: 3}, {id : 2}, {id : 3, parentid : 2}]);
@@ -330,7 +360,7 @@ describe("Tasks", function(){
             expect(tasks.get(2).get('start').toDateString()).to.equal(tasks.get(1).get('end').toDateString());
         });
 
-        it('son`t move task on before model back move', function() {
+        it('don`t move task on before model back move', function() {
             var tasks = new Tasks();
             tasks.reset([{
                 id : 1,
