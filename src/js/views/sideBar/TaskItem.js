@@ -129,7 +129,11 @@ var TaskItem = React.createClass({
                     className : 'task' + (this.props.isSubTask ? ' sub-task' : ''),
                     'data-id' : this.props.model.cid,
                     onDoubleClick : function(e) {
+                        console.log('dbclick');
                         var className = e.target.className;
+                        if (!className) {
+                            className = e.target.parentNode.className
+                        }
                         var col = className.slice(4, className.length);
                         var state = this.state;
                         state.editRow = col;
