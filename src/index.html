@@ -73,20 +73,19 @@
 	<link rel="stylesheet" type="text/css" href="css/gantt.v2.css" />
 	<link rel="stylesheet" type="text/css" href="css/sortable.css" />
 	<link rel="stylesheet" type="text/css" href="css/TopMenu.css" />
-<style>
+    <style>
     .ui.form input[type="text"], .ui.form input[type="email"], .ui.form input[type="date"], .ui.form input[type="password"], .ui.form input[type="number"], .ui.form input[type="url"], .ui.form input[type="tel"] {
-     padding: 0.4em 0.5em !important;   
-     }
-    .ui.form select {    
+        padding: 0.4em 0.5em !important;
+    }
+    .ui.form select {
         padding: 0.2em 0.5em !important;
         width: 160px !important;
-     }
- 
+    }
+
     .ui.textarea, .ui.form textarea {
         height: 6em !important;
         padding: 0.3em 0.5em !important;
     }
-
     .labelsolid {
         background-color: white;
         font-weight:bold;
@@ -97,7 +96,6 @@
         padding: 0;
         position: static;
     }
-
     .label_80 {
         display: block !important;
         float: left;
@@ -116,10 +114,26 @@
         border-width:0px !important;
         border:none !important;
     }
-    .ui.checkbox {    
+    .ui.checkbox {
         width: 130px !important;
     }
-</style>	
+    .selectdiv{
+        padding:2px;
+    }
+    .column{
+        height:120px;
+    }
+    .right{
+        float:right;
+        border-left: 1px solid lightgray;
+    }
+    /*div.menu-container {*/
+        /*top: 120px;*/
+    /*}*/
+    #top-menu{
+        z-index:1000 !important
+    }
+    </style>
 </head>
 <body id="home">
 
@@ -134,117 +148,117 @@
 	<div id="ganttChart" class="Gantt">
 		<div class="ui page grid segment">
 			<div class="column">
-
-				<!--HEADER-->
 				<div class="ui seven column grid" id="top-menu">
+
+                    <!--HEADER-->
 					<div class="column">Gantt chart</div>
 
-					<!--GROUPING MENU-->
-					<div class="column"  id="grouping-menu">
-						<div class="header">
-							Grouping:
-							<div class="ui fitted divider"></div>
-						</div>
-						<div id="top-expand-all"  class="action">
-							Expand all
-						</div>
-						<div id="top-collapse-all"  class="action">
-							Collapse All
-						</div>
-					</div>
+                    <!--REPORTS MENU-->
+                    <div class="column right" id="reports-menu" style="width:150px">
+                        <div class="header">
+                            Report:
+                            <div class="ui fitted divider"></div>
+                        </div>
+                        <div id="print" class="action">
+                            Print
+                        </div>
+                    </div>
 
-					<!--PROJECT MENU-->
-					<div class="column"  id="project-menu">
-						<div class="header">
-							MS Project:
-							<div class="ui fitted divider"></div>
-						</div>
-						<div id="upload-project"  class="action">
-							Upload new project
-						</div>
-						<div id="download-project"  class="action">
-							Download new project
-						</div>
-					</div>
+                    <!--ZOOM MENU-->
+                    <div class="column right" id="zoom-menu" style="width:150px">
+                        <div class="header">
+                            Zooming:
+                            <div class="ui fitted divider"></div>
+                        </div>
+                        <div data-action="view-daily" class="action">
+                            Day
+                        </div>
+                        <div data-action="view-weekly" class="action">
+                            Week
+                        </div>
+                        <div data-action="view-monthly" class="action">
+                            Month
+                        </div>
+                        <div data-action="view-quarterly" class="action">
+                            Quarter
+                        </div>
+                    </div>
 
-					<!--REPORTS MENU-->
-					<div class="column"  id="reports-menu">
-						<div class="header">
-							Report:
-							<div class="ui fitted divider"></div>
-						</div>
-						<div id="print"  class="action">
-							Print
-						</div>
-					</div>
+                    <!--FILTER MENU-->
+                    <div class="column right" id="filter-menu" style="width:200px">
+                        <div class="header">
+                            Filters:
+                            <div class="ui fitted divider"></div>
+                        </div>
+                        <div class="selectdiv">
 
-					<!--FILTER MENU-->
-					<div class="column"  id="filter-menu">
-						<div class="header">
-							Filters:
-							<div class="ui fitted divider"></div>
-						</div>
-						<div>
-							Hightlights:
-							<select id="hightlights-select">
-								<option value="reset">...</option>
-								<option value="status-backlog">Status - Backlog</option>
-								<option value="status-ready">Status - Ready</option>
-								<option value="status-progress">Status - In Progress</option>
-								<option value="status-complete">Status - Complete</option>
-								<option value="late">Late Tasks</option>
-								<option value="due">Due Tasks</option>
-								<option value="milestone">Milestones</option>
-								<option value="deliverable">Deliverables</option>
-								<option value="financial">Financial Markers</option>
-								<option value="timesheets">Timesheets Tasks</option>
-								<option value="reportable">Reportable Tasks</option>
-								<option value="health-red">Health Red</option>
-								<option value="health-amber">Health Amber</option>
-								<option value="health-green">Health Green</option>
-							</select>
-						</div>
-						<div>
-							Filters:
-							<select id="filters-select">
-								<option value="reset">...</option>
-								<option value="status-backlog">Status - Backlog</option>
-								<option value="status-ready">Status - Ready</option>
-								<option value="status-progress">Status - In Progress</option>
-								<option value="status-complete">Status - Complete</option>
-								<option value="late">Late Tasks</option>
-								<option value="due">Due Tasks</option>
-								<option value="milestones">Milestones</option>
-								<option value="deliverables">Deliverables</option>
-								<option value="financial">Financial Markers</option>
-								<option value="timesheets">Timesheets Tasks</option>
-								<option value="reportable">Reportable Tasks</option>
-								<option value="health-red">Health Red</option>
-								<option value="health-amber">Health Amber</option>
-								<option value="health-green">Health Green</option>
-							</select>
-						</div>
-					</div>
+                            <select id="hightlights-select">
+                                <option value="reset">-- Highlights --</option>
+                                <option value="status-backlog">Status - Backlog</option>
+                                <option value="status-ready">Status - Ready</option>
+                                <option value="status-progress">Status - In Progress</option>
+                                <option value="status-complete">Status - Complete</option>
+                                <option value="late">Late Tasks</option>
+                                <option value="due">Due Tasks</option>
+                                <option value="milestone">Milestones</option>
+                                <option value="deliverable">Deliverables</option>
+                                <option value="financial">Financial Markers</option>
+                                <option value="timesheets">Timesheets Tasks</option>
+                                <option value="reportable">Reportable Tasks</option>
+                                <option value="health-red">Health Red</option>
+                                <option value="health-amber">Health Amber</option>
+                                <option value="health-green">Health Green</option>
+                            </select>
+                        </div>
+                        <div class="selectdiv">
 
-					<!--ZOOM MENU-->
-					<div class="column" id="zoom-menu">
-						<div class="header">
-							Zooming:
-							<div class="ui fitted divider"></div>
-						</div>
-						<div data-action="view-daily" class="action">
-							Day
-						</div>
-						<div data-action="view-weekly" class="action">
-							Week
-						</div>
-						<div data-action="view-monthly" class="action">
-							Month
-						</div>
-						<div data-action="view-quarterly" class="action">
-							Quarter
-						</div>
-					</div>
+                            <select id="filters-select">
+                                <option value="reset">-- Filters --</option>
+                                <option value="status-backlog">Status - Backlog</option>
+                                <option value="status-ready">Status - Ready</option>
+                                <option value="status-progress">Status - In Progress</option>
+                                <option value="status-complete">Status - Complete</option>
+                                <option value="late">Late Tasks</option>
+                                <option value="due">Due Tasks</option>
+                                <option value="milestones">Milestones</option>
+                                <option value="deliverables">Deliverables</option>
+                                <option value="financial">Financial Markers</option>
+                                <option value="timesheets">Timesheets Tasks</option>
+                                <option value="reportable">Reportable Tasks</option>
+                                <option value="health-red">Health Red</option>
+                                <option value="health-amber">Health Amber</option>
+                                <option value="health-green">Health Green</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!--GROUPING MENU-->
+                    <div class="column right"  id="grouping-menu" style="width:150px">
+                        <div class="header">
+                            Grouping:
+                            <div class="ui fitted divider"></div>
+                        </div>
+                        <div id="top-expand-all"  class="action">
+                            Expand all
+                        </div>
+                        <div id="top-collapse-all"  class="action">
+                            Collapse All
+                        </div>
+                    </div>
+
+                    <!--PROJECT MENU-->
+                    <div class="column right" id="project-menu" style="width:200px">
+                        <div class="header">
+                            MS Project:
+                            <div class="ui fitted divider"></div>
+                        </div>
+                        <div id="upload-project" class="action">
+                            Upload new project
+                        </div>
+                        <div id="download-project" class="action">
+                            Download new project
+                        </div>
+                    </div>
 				</div>
 				
 				<div class="item-selector"></div>
