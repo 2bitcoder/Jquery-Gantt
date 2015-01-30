@@ -5,12 +5,12 @@ var Settings = require('./models/SettingModel');
 
 var GanttView = require('./views/GanttView');
 var util = require('./utils/util');
+var params = util.getURLParams();
 
 function fetchCollection(app) {
 	app.tasks.fetch({
 		success : function() {
             // add empty task if no tasks from server
-//            app.tasks.reset([]);
             if (app.tasks.length === 0) {
                 app.tasks.reset([{
                     name : 'New task'
@@ -23,7 +23,7 @@ function fetchCollection(app) {
 
 			app.settings = new Settings({}, {app : app});
 			if (window.location.hostname.indexOf('localhost') === -1) {
-				$.getJSON('/api/GanttConfig/wbs/43/2b00da46b57c0395', function(statuses) {
+				$.getJSON('/api/GanttConfig/wbs/' + params.project + '/' + params.sitekey, function(statuses) {
 					app.settings = statuses;
 				});
 			}
