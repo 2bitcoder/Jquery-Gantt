@@ -10,6 +10,7 @@ function fetchCollection(app) {
 	app.tasks.fetch({
 		success : function() {
             // add empty task if no tasks from server
+            app.tasks.reset([]);
             if (app.tasks.length === 0) {
                 app.tasks.reset([{
                     name : 'New task'
