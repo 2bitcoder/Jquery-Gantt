@@ -97,13 +97,13 @@ div.gantt-chart-container {
 }
 
 .task .col-name{
-	width:328px;
+	width:320px;
 	white-space: nowrap;
 	overflow: hidden;
 }
 
 .task .col-sortindex {
-    width:20px;
+    width:30px;
 }
 
 .task .col-name div{

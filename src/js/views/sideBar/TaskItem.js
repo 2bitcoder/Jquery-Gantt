@@ -8,8 +8,11 @@ var TaskItem = React.createClass({
             editRow : undefined
         };
     },
+    componentDidUpdate : function() {
+        $(this.getDOMNode()).find('input').focus();
+    },
     componentDidMount  : function() {
-        this.props.model.on('change:name change:complete change:start change:end change:duration', function() {
+        this.props.model.on('change:name change:complete change:start change:end change:duration change:hightlight', function() {
             this.forceUpdate();
         }, this);
     },
@@ -135,7 +138,6 @@ var TaskItem = React.createClass({
                     className : 'task' + (this.props.isSubTask ? ' sub-task' : ''),
                     'data-id' : this.props.model.cid,
                     onDoubleClick : function(e) {
-                        console.log('dbclick');
                         var className = e.target.className;
                         if (!className) {
                             className = e.target.parentNode.className;
