@@ -154,6 +154,9 @@ var TaskCollection = Backbone.Collection.extend({
 
 		this._preventSorting = true;
 		underSublings.forEach(function(child) {
+            if (child.get('depend') === task.id) {
+                child.clearDependence();
+            }
 			child.save('parentid', task.id);
 		});
 		this._preventSorting = false;

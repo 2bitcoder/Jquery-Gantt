@@ -282,6 +282,40 @@ describe("Tasks", function(){
         expect(tasks.get(4).parent.id).to.equal(2);
     });
 
+    it('outdent width dependencies', function() {
+        var tasks = new Tasks();
+        tasks.reset([{
+            id : 1
+        }, {
+            id : 2,
+            parentid: 1,
+            start : new Date('2020-01-01'),
+            end : new Date('2020-01-05')
+        }, {
+            id : 3,
+            parentid : 1,
+            depend : 2,
+            start : new Date('2020-01-05'),
+            end : new Date('2020-01-10')
+        }]);
+
+        var count = 0;
+        tasks.on('sort', function() {
+            count++;
+        });
+
+        tasks.outdent(tasks.get(2));
+        // only one sort
+        expect(count).to.equal(1);
+
+        expect(tasks.get(1).children.length).to.equal(0);
+        expect(tasks.get(2).children.length).to.equal(1);
+
+        expect(tasks.get(2).children.at(0).id).to.equal(3);
+
+        expect(tasks.get(3).parent.id).to.equal(2);
+    });
+
     it('indent task', function() {
         var tasks = new Tasks();
         tasks.reset([{id : 1}, {id : 2, parentid : 1}, {id : 3}]);

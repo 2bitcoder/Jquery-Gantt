@@ -2,9 +2,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var _ = require('lodash');
-var serveStatic = require('serve-static')
+var serveStatic = require('serve-static');
 
-var tasks = require('./data/tasks');
+var tasks = require('./data/tasks2');
 var idCounter = 0;
 _(tasks).each(function(task) {
     idCounter = Math.max(parseInt(task.id), idCounter);
