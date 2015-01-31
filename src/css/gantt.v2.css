@@ -85,7 +85,8 @@ p a {
 }
 
 .hdr-title {
-    padding-top: 13px;
+    padding-top: 1px;
+    margin-bottom: 12px;
 }
 
 .masthead.segment .information {
@@ -156,7 +157,7 @@ div.menu-container,#gantt-container{
 }
 
 .panel-expanded {
-    width: 670px;
+    width: 640px;
 }
 
  /*style reset for chosen*/
@@ -169,8 +170,8 @@ div.menu-container,#gantt-container{
 }
 
 .menu-header{
-  margin-top: 12px;
-  margin-bottom: 12px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .content-edit{

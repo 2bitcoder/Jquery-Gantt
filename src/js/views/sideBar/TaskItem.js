@@ -132,7 +132,7 @@ var TaskItem = React.createClass({
                         console.log('dbclick');
                         var className = e.target.className;
                         if (!className) {
-                            className = e.target.parentNode.className
+                            className = e.target.parentNode.className;
                         }
                         var col = className.slice(4, className.length);
                         var state = this.state;
@@ -143,6 +143,10 @@ var TaskItem = React.createClass({
                         'backgroundColor' : this.props.model.get('hightlight')
                     }
                 },
+                React.createElement('li', {
+                    key : 'sortindex',
+                    className : 'col-sortindex'
+                }, model.get('sortindex')),
                 React.createElement('li', {
                         key : 'name',
                         className : 'col-name'
@@ -172,10 +176,6 @@ var TaskItem = React.createClass({
                     key : 'end',
                     className : 'col-end'
                 }, this._createField('end')),
-                React.createElement('li', {
-                    key : 'status',
-                    className : 'col-status'
-                }, model.get('status')),
                 React.createElement('li', {
                     key : 'duration',
                     className : 'col-duration'

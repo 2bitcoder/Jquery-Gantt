@@ -99,15 +99,21 @@ div.gantt-chart-container {
 	overflow: hidden;
 }
 
+.task .col-sortindex {
+    width:20px;
+}
+
 .task .col-name div{
 	display: inline-block;
 }
 
 .task .col-start{
 	padding-left: 10px;
+	width: 90px;
 }
 .task  .col-end{
 	padding-left: 10px;
+	width: 90px;
 }
 .task .col-complete{
 	text-align: center;

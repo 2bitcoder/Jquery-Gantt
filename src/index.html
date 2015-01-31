@@ -162,6 +162,11 @@
                         <div id="print" class="action">
                             Print
                         </div>
+                        <br><br>
+                        <div class="ui fitted divider"></div>
+                        <div id="showVideo" class="action">
+                            Help Video
+                        </div>
                     </div>
 
                     <!--ZOOM MENU-->
@@ -310,8 +315,19 @@
 
 						<!--SIDE BAR HEADER-->
 						<div class="menu-header">
-							<div class="ui small green button btnW" id="tHandle" data-variation="inverted" data-content="Add a new task group from here"></div>
-							<div class="ui small green button new-task" data-variation="inverted" data-content="Add a new task group from here">+</div>
+							<div class="ui tiny green button btnW" id="tHandle" data-variation="inverted" data-content="Add a new task group from here"></div>
+							<div class="ui tiny green button new-task" data-variation="inverted" data-content="Add a new task group from here">+</div>
+                            <div class="task-container">
+                                <ul class="task">
+                                    <li class="col-sortindex">#</li>
+                                    <li class="col-name">Name</li>
+                                    <li class="col-complete">%</li>
+                                    <li class="col-start">Start</li>
+                                    <li class="col-end">End</li>
+                                    <li class="col-duration">Dur</li>
+                                </ul>
+                            </div>
+
 							<div class="hdr-title">
 							</div>
 						</div>
@@ -444,6 +460,24 @@
 			</div>
 		</div>
 	</div>
+
+    <!--HELP VIDEO MODAL-->
+    <div class="ui modal" id="showVideoModal">
+        <i class="close icon"></i>
+        <div class="header">
+            Help Video
+        </div>
+        <div class="content">
+            <div class="description">
+                <iframe width="854" height="510" src="https://www.youtube.com/embed/o_wGOfMlB6w" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui positive button save">
+                Close
+            </div>
+        </div>
+    </div>
 	<!--LIBS-->
 	<script type="text/javascript" src="libs/jquery.js"></script>
 	<script type="text/javascript" src="libs/jquery-ui-1.10.4.custom.js"></script>
