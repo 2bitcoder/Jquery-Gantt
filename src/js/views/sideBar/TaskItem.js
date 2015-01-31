@@ -9,7 +9,7 @@ var TaskItem = React.createClass({
         };
     },
     componentDidMount  : function() {
-        this.props.model.on('change', function() {
+        this.props.model.on('change:name change:complete change:start change:end change:duration', function() {
             this.forceUpdate();
         }, this);
     },
@@ -120,6 +120,12 @@ var TaskItem = React.createClass({
                     this.setState(state);
                     this.props.model.save();
                 }
+            }.bind(this),
+            onBlur : function(e) {
+                var state = this.state;
+                state.editRow = undefined;
+                this.setState(state);
+                this.props.model.save();
             }.bind(this)
         });
     },
@@ -146,7 +152,7 @@ var TaskItem = React.createClass({
                 React.createElement('li', {
                     key : 'sortindex',
                     className : 'col-sortindex'
-                }, model.get('sortindex')),
+                }, model.get('sortindex') + 1),
                 React.createElement('li', {
                         key : 'name',
                         className : 'col-name'

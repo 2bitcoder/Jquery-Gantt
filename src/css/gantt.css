@@ -70,6 +70,9 @@ div.head-bar{
 .task-container{
 	width: 750px;
 }
+.task-container-title{
+    width: 750px;
+}
 .task{
 	white-space: nowrap;
 }
