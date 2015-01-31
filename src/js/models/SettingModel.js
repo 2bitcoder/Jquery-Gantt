@@ -109,7 +109,7 @@ var SettingModel = Backbone.Model.extend({
                 for (var i in data.data) {
                     var statusItem = data.data[i];
                     if (statusItem.ID.toString().toLowerCase() === id.toString().toLowerCase()) {
-                        return statusItem;
+                        return statusItem.ID;
                     }
                 }
             }
