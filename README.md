@@ -22,8 +22,7 @@ User Interface:
 *  different view options, Day, Week, Month, Quarter, Annual
 *  Expandable table section for additional line item details
 
-![](jQueryGantt.png)
-![](ganttImage2.jpg)
+[![Alt text for your video](http://img.youtube.com/vi/2EzHS1TR2v0/0.jpg)](http://www.youtube.com/watch?v=2EzHS1TR2v0)
 
 ### Work Required
 * Create onchange constructs to allow write of data to backend systems (ajax)
