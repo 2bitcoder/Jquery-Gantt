@@ -13,7 +13,7 @@ The version 1.0 development is in Beta a stage, the Gantt Editor plugin allows f
 ### Current State of Development
 Jquery-Gantt Editor currently reads in json files from api sources, and outputs the results in a gantt style chart to a browser screen. 
 
-Functions available:
+## Functions available:
 *  Add, edit, delete tasks
 *  dependencies created between items
 *  gantt bars moved to change dates
@@ -25,13 +25,13 @@ Functions available:
 *  Add tasks above and below line item 
 *  Changes are automatically saved to the server through an api 
 
-User Interface:
+## User Interface:
 *  different view options, Day, Week, Month, Quarter
 *  Expandable table section for additional line item details
 *  Highlight rows with attributes
 *  Filter rows with attributes
 
-# Video Link of Gantt Editor in Action
+## Video Link of Gantt Editor in Action
 [![Alt text for your video](http://img.youtube.com/vi/2EzHS1TR2v0/0.jpg)](http://www.youtube.com/watch?v=2EzHS1TR2v0)
 
 ### Work Required to complete Version 1.0
