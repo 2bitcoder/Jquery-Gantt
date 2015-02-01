@@ -166,9 +166,9 @@ var GanttChartView = Backbone.View.extend({
         this.listenTo(this.collection, 'sort', function() {
             this._resortViews();
         });
-        this.listenTo(this.collection, 'change:hidden', function() {
+        this.listenTo(this.collection, 'change:hidden', _.debounce(function() {
             this._resortViews();
-        });
+        }.bind(this)), 5);
         this.listenTo(this.collection, 'change:depend', function(task) {
             if (task.get('depend')) {
                 this._addConnectorView(task);

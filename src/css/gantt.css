@@ -102,6 +102,11 @@ div.gantt-chart-container {
 	overflow: hidden;
 }
 
+.task .col-name i{
+    margin: 5px;
+    cursor: pointer;
+}
+
 .task .col-sortindex {
     width:30px;
 }

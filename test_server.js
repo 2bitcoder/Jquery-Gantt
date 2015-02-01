@@ -4,9 +4,14 @@ var logger = require('morgan');
 var _ = require('lodash');
 var serveStatic = require('serve-static');
 
-var tasks = require('./data/tasks2');
+var tasks = require('./data/tasks_stress');
+tasks = tasks.concat(tasks).concat(tasks);
+
 var idCounter = 0;
 _(tasks).each(function(task) {
+    if (!task.id) {
+        task.id = idCounter++;
+    }
     idCounter = Math.max(parseInt(task.id), idCounter);
 });
 

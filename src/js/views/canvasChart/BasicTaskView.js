@@ -161,7 +161,7 @@ var BasicTaskView = Backbone.KineticView.extend({
     },
     _initModelEvents : function() {
         // don't update element while dragging
-        this.listenTo(this.model, 'change', function() {
+        this.listenTo(this.model, 'change:start change:end change:complete', function() {
             var dragging = this.el.isDragging();
             this.el.getChildren().each(function(child) {
                 dragging = dragging || child.isDragging();
@@ -213,7 +213,7 @@ var BasicTaskView = Backbone.KineticView.extend({
         tool.x(x.x2 - x.x1);
         tool.y(this._topPadding);
 
-        this.el.getLayer().draw();
+        this.el.getLayer().batchDraw();
         return this;
     },
     setY : function(y) {
