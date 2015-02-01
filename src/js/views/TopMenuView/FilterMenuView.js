@@ -43,7 +43,7 @@ var FilterView = Backbone.View.extend({
     colors : {
         'status-backlog' : '#D2D2D9',
         'status-ready' : '#B2D1F0',
-        'status-progress' : '#66A3E0',
+        'status-in progress' : '#66A3E0',
         'status-complete' : '#99C299',
         'late' : '#FFB2B2',
         'due' : ' #FFC299',
@@ -62,7 +62,7 @@ var FilterView = Backbone.View.extend({
         }
         if (creteria.indexOf('status') !== -1) {
             var status = creteria.slice(creteria.indexOf('-') + 1);
-            var id = this.settings.findStatusId(status).toString();
+            var id = (this.settings.findStatusId(status) || '').toString();
             return this.collection.filter(function(task) {
                 return task.get('status').toString() === id;
             });
@@ -86,7 +86,7 @@ var FilterView = Backbone.View.extend({
         }
         if (creteria.indexOf('health') !== -1) {
             var health = creteria.slice(creteria.indexOf('-') + 1);
-            var healthId = this.settings.findHealthId(health).toString();
+            var healthId = (this.settings.findHealthId(health) || '').toString();
             return this.collection.filter(function(task) {
                 return task.get('health').toString() === healthId;
             });
