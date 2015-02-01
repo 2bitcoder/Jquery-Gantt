@@ -22,6 +22,7 @@ User Interface:
 *  different view options, Day, Week, Month, Quarter, Annual
 *  Expandable table section for additional line item details
 
+## Video Link of Gantt Editor in Action
 [![Alt text for your video](http://img.youtube.com/vi/2EzHS1TR2v0/0.jpg)](http://www.youtube.com/watch?v=2EzHS1TR2v0)
 
 ### Work Required
