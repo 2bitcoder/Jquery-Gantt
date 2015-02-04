@@ -23,14 +23,14 @@ var GanttChartView = Backbone.View.extend({
         this._updateStageAttrs();
     },
     _initStage : function() {
-        this.stage = new Kinetic.Stage({
+        this.stage = new Konva.Stage({
             container : this.el
         });
         this._updateStageAttrs();
     },
     _initLayers : function() {
-        this.Flayer = new Kinetic.Layer();
-        this.Blayer = new Kinetic.Layer();
+        this.Flayer = new Konva.Layer();
+        this.Blayer = new Konva.Layer();
         this.stage.add(this.Blayer, this.Flayer);
     },
     _updateStageAttrs : function() {
@@ -61,14 +61,14 @@ var GanttChartView = Backbone.View.extend({
         this.stage.draw();
     },
     _initBackground : function() {
-        var shape = new Kinetic.Shape({
+        var shape = new Konva.Shape({
             sceneFunc: this._getSceneFunction(),
             stroke: 'lightgray',
             strokeWidth : 0
         });
         var sattr = this.settings.sattr;
         var width = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
-        var back = new Kinetic.Rect({
+        var back = new Konva.Rect({
             height : this.stage.height(),
             width : width
         });

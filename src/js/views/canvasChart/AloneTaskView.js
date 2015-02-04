@@ -24,7 +24,7 @@ var AloneTaskView = BasicTaskView.extend({
     },
     el : function() {
         var group = BasicTaskView.prototype.el.call(this);
-        var leftBorder = new Kinetic.Rect({
+        var leftBorder = new Konva.Rect({
             dragBoundFunc : function(pos) {
                 var offset = this.el.getStage().x() + this.el.x();
                 var localX = pos.x - offset;
@@ -41,7 +41,7 @@ var AloneTaskView = BasicTaskView.extend({
             name : 'leftBorder'
         });
         group.add(leftBorder);
-        var rightBorder = new Kinetic.Rect({
+        var rightBorder = new Konva.Rect({
             dragBoundFunc : function(pos) {
                 var offset = this.el.getStage().x() + this.el.x();
                 var localX = pos.x - offset;
@@ -79,6 +79,9 @@ var AloneTaskView = BasicTaskView.extend({
         // move tool position
         var tool = this.el.find('.dependencyTool')[0];
         tool.x(rightX);
+        var resources = this.el.find('.resources')[0];
+        resources.x(rightX + this._toolbarOffset);
+
         this._updateDates();
     },
     render : function() {

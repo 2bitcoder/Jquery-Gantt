@@ -1,6 +1,6 @@
 "use strict";
 
-var ConnectorView = Backbone.KineticView.extend({
+var ConnectorView = Backbone.KonvaView.extend({
     _color : 'grey',
     _wrongColor : 'red',
     initialize : function (params) {
@@ -13,7 +13,7 @@ var ConnectorView = Backbone.KineticView.extend({
         this._initModelEvents();
     },
     el : function() {
-        var line = new Kinetic.Line({
+        var line = new Konva.Line({
             strokeWidth : 2,
             stroke : 'black',
             points : [0,0,0,0]

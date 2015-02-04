@@ -11,7 +11,7 @@ var NestedTaskView = BasicTaskView.extend({
     _completeColor : '#C95F10',
     el : function() {
         var group = BasicTaskView.prototype.el.call(this);
-        var leftBorder = new Kinetic.Line({
+        var leftBorder = new Konva.Line({
             fill : this._color,
             y : this._topPadding + this._barHeight,
             points : [0, 0, this._borderSize * 1.5, 0, 0, this._borderSize],
@@ -19,7 +19,7 @@ var NestedTaskView = BasicTaskView.extend({
             name : 'leftBorder'
         });
         group.add(leftBorder);
-        var rightBorder = new Kinetic.Line({
+        var rightBorder = new Konva.Line({
             fill : this._color,
             y : this._topPadding + this._barHeight,
             points : [-this._borderSize * 1.5, 0, 0, 0, 0, this._borderSize],

@@ -25,6 +25,7 @@ var TaskModel = Backbone.Model.extend({
         color: '#0090d3',   // user color, not used for now
 
         // some additional properties
+        resources : [],         //list of id
         health: 21,
         reportable: false,
         wo: 2,                  //Select List in properties modal   (configdata)

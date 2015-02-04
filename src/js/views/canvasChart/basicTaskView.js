@@ -1,10 +1,18 @@
 "use strict";
+var ResourceEditor = require('../ResourcesEditor');
 
-var BasicTaskView = Backbone.KineticView.extend({
+var linkImage = new Image();
+linkImage.src = '/css/images/link.png';
+
+var userImage = new Image();
+userImage.src = '/css/images/user.png';
+
+var BasicTaskView = Backbone.KonvaView.extend({
     _fullHeight : 21,
     _topPadding : 3,
     _barHeight : 15,
     _completeColor : '#e88134',
+    _toolbarOffset : 20,
     initialize : function(params) {
         this.height = this._fullHeight;
         this.settings = params.settings;
@@ -24,20 +32,21 @@ var BasicTaskView = Backbone.KineticView.extend({
                 this.render();
             },
             'mouseover' : function(e) {
-                this._showDependencyTool();
+                this._showTools();
                 this._grabPointer(e);
             },
             'mouseout' : function() {
-                this._hideDependencyTool();
+                this._hideTools();
                 this._defaultMouse();
             },
             'dragstart .dependencyTool' : '_startConnecting',
             'dragmove .dependencyTool' : '_moveConnect',
-            'dragend .dependencyTool' : '_createDependency'
+            'dragend .dependencyTool' : '_createDependency',
+            'click .resources' : '_editResources'
         };
     },
     el : function() {
-        var group = new Kinetic.Group({
+        var group = new Konva.Group({
             dragBoundFunc : function(pos) {
                 return {
                     x : pos.x,
@@ -47,36 +56,78 @@ var BasicTaskView = Backbone.KineticView.extend({
             id : this.model.cid,
             draggable : true
         });
-        var rect = new Kinetic.Rect({
+        var fakeBackground = new Konva.Rect({
+            y : this._topPadding,
+            height : this._barHeight,
+            name : 'fakeBackground'
+        });
+        var rect = new Konva.Rect({
             fill : this._color,
             y : this._topPadding,
             height : this._barHeight,
             name : 'mainRect'
         });
-        var completeRect = new Kinetic.Rect({
+        var completeRect = new Konva.Rect({
             fill : this._completeColor,
             y : this._topPadding,
             height : this._barHeight,
             name : 'completeRect'
         });
         var self = this;
-        var arc = new Kinetic.Shape({
+        var arc = new Konva.Shape({
             y: this._topPadding,
-            fill : 'green',
+            fill : 'lightgreen',
             drawFunc: function(context) {
+                var horOffset = 6;
                 context.beginPath();
-                context.arc(0, self._barHeight / 2, self._barHeight / 2, - Math.PI / 2, Math.PI / 2);
                 context.moveTo(0, 0);
+                context.lineTo(horOffset, 0);
+                context.arc(horOffset, self._barHeight / 2, self._barHeight / 2, - Math.PI / 2, Math.PI / 2);
                 context.lineTo(0, self._barHeight);
-                context.fillStrokeShape(this);
+                context.lineTo(0, 0);
+                context.fillShape(this);
+                context.drawImage(linkImage, 1, (self._barHeight - 10) / 2,10,10);
+            },
+            hitFunc : function(context) {
+                context.beginPath();
+                context.rect(0, 0, 6 + self._barHeight, self._barHeight);
+                context.fillShape(this);
             },
             name : 'dependencyTool',
             visible : false,
             draggable : true
         });
 
-        group.add(rect, completeRect, arc);
+        var toolbar = new Konva.Group({
+            y: this._topPadding,
+            name : 'resources',
+            visible : false
+        });
+        var toolback = new Konva.Rect({
+            fill : 'lightgrey',
+            width : self._barHeight,
+            height : self._barHeight,
+            cornerRadius : 2
+        });
+        var userIm = new Konva.Image({
+            image : userImage,
+            x : (self._barHeight - 10) / 2,
+            y : (self._barHeight - 10) / 2,
+            width : 10,
+            height : 10
+        });
+        toolbar.add(toolback, userIm);
+
+        group.add(fakeBackground, rect, completeRect, arc, toolbar);
         return group;
+    },
+    _editResources : function() {
+        var view = new ResourceEditor({
+            model : this.model,
+            settings : this.settings
+        });
+        var pos = this.el.getStage().getPointerPosition();
+        view.render(pos);
     },
     _updateDates : function() {
         var attrs = this.settings.getSetting('attr'),
@@ -93,22 +144,24 @@ var BasicTaskView = Backbone.KineticView.extend({
             end: boundaryMin.clone().addDays(days2 - 1)
         });
     },
-    _showDependencyTool : function() {
-        this.el.find('.dependencyTool')[0].show();
+    _showTools : function() {
+        this.el.find('.dependencyTool').show();
+        this.el.find('.resources').show();
         this.el.getLayer().draw();
     },
     _grabPointer : function(e) {
         var name = e.target.name();
-        if ((name !== 'mainRect') && (name !== 'dependencyTool') && (name !== 'completeRect')) {
-            return;
+        if ((name === 'mainRect') || (name === 'dependencyTool') ||
+            (name === 'completeRect') || (e.target.getParent().name() === 'resources')) {
+            document.body.style.cursor = 'pointer';
         }
-        document.body.style.cursor = 'pointer';
     },
     _defaultMouse : function() {
         document.body.style.cursor = 'default';
     },
-    _hideDependencyTool : function() {
-        this.el.find('.dependencyTool')[0].hide();
+    _hideTools : function() {
+        this.el.find('.dependencyTool').hide();
+        this.el.find('.resources').hide();
         this.el.getLayer().draw();
     },
     _startConnecting : function() {
@@ -116,7 +169,7 @@ var BasicTaskView = Backbone.KineticView.extend({
         var tool = this.el.find('.dependencyTool')[0];
         tool.hide();
         var pos = tool.getAbsolutePosition();
-        var connector = new Kinetic.Line({
+        var connector = new Konva.Line({
             stroke : 'black',
             strokeWidth : 1,
             points : [pos.x - stage.x(), pos.y, pos.x - stage.x(), pos.y],
@@ -161,7 +214,7 @@ var BasicTaskView = Backbone.KineticView.extend({
     },
     _initModelEvents : function() {
         // don't update element while dragging
-        this.listenTo(this.model, 'change', function() {
+        this.listenTo(this.model, 'change:start change:end change:complete', function() {
             var dragging = this.el.isDragging();
             this.el.getChildren().each(function(child) {
                 dragging = dragging || child.isDragging();
@@ -199,6 +252,11 @@ var BasicTaskView = Backbone.KineticView.extend({
         // move group
         this.el.x(x.x1);
 
+        // update fake background rect params
+        var back = this.el.find('.fakeBackground')[0];
+        back.x( - 20);
+        back.width(x.x2 - x.x1 + 60);
+
         // update main rect params
         var rect = this.el.find('.mainRect')[0];
         rect.x(0);
@@ -213,7 +271,11 @@ var BasicTaskView = Backbone.KineticView.extend({
         tool.x(x.x2 - x.x1);
         tool.y(this._topPadding);
 
-        this.el.getLayer().draw();
+        var resources = this.el.find('.resources')[0];
+        resources.x(x.x2 - x.x1 + this._toolbarOffset);
+        resources.y(this._topPadding);
+
+        this.el.getLayer().batchDraw();
         return this;
     },
     setY : function(y) {
