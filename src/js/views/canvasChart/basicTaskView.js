@@ -2,10 +2,10 @@
 var ResourceEditor = require('../ResourcesEditor');
 
 var linkImage = new Image();
-linkImage.src = '/css/images/link.png';
+linkImage.src = 'css/images/link.png';
 
 var userImage = new Image();
-userImage.src = '/css/images/user.png';
+userImage.src = 'css/images/user.png';
 
 var BasicTaskView = Backbone.KonvaView.extend({
     _fullHeight : 21,
@@ -38,7 +38,6 @@ var BasicTaskView = Backbone.KonvaView.extend({
                 this._grabPointer(e);
             },
             'mouseleave' : function(e) {
-                console.error(e);
                 this._hideTools();
                 this._showResourcesList();
                 this._defaultMouse();
@@ -298,16 +297,16 @@ var BasicTaskView = Backbone.KonvaView.extend({
         var resourceList = this.el.find('.resourceList')[0];
         resourceList.x(x.x2 - x.x1 + this._resourceListOffset);
         resourceList.y(this._topPadding + 2);
-        var text = '';
+        var names = [];
         this.model.get('resources').forEach(function(resourceId) {
-            var res = _.find(this.settings.statuses.resourcedata, function(res) {
+            var res = _.find((this.settings.statuses.resourcedata || []), function(res) {
                 return res.UserId.toString() === resourceId.toString();
             });
             if (res) {
-                text += res.Username + ' ';
+                names.push(res.Username);
             }
         }.bind(this));
-        resourceList.text(text);
+        resourceList.text(names.join(', '));
 
         this.el.getLayer().batchDraw();
         return this;
