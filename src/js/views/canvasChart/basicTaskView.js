@@ -13,6 +13,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
     _barHeight : 15,
     _completeColor : '#e88134',
     _toolbarOffset : 20,
+    _resourceListOffset : 20,
     initialize : function(params) {
         this.height = this._fullHeight;
         this.settings = params.settings;
@@ -31,12 +32,15 @@ var BasicTaskView = Backbone.KonvaView.extend({
                 this.model.saveWithChildren();
                 this.render();
             },
-            'mouseover' : function(e) {
+            'mouseenter' : function(e) {
                 this._showTools();
+                this._hideResourcesList();
                 this._grabPointer(e);
             },
-            'mouseout' : function() {
+            'mouseleave' : function(e) {
+                console.error(e);
                 this._hideTools();
+                this._showResourcesList();
                 this._defaultMouse();
             },
             'dragstart .dependencyTool' : '_startConnecting',
@@ -118,7 +122,13 @@ var BasicTaskView = Backbone.KonvaView.extend({
         });
         toolbar.add(toolback, userIm);
 
-        group.add(fakeBackground, rect, completeRect, arc, toolbar);
+        var resourceList = new Konva.Text({
+            name : 'resourceList',
+            y : this._topPadding,
+            listening : false
+        });
+
+        group.add(fakeBackground, rect, completeRect, arc, toolbar, resourceList);
         return group;
     },
     _editResources : function() {
@@ -149,6 +159,19 @@ var BasicTaskView = Backbone.KonvaView.extend({
         this.el.find('.resources').show();
         this.el.getLayer().draw();
     },
+    _hideTools : function() {
+        this.el.find('.dependencyTool').hide();
+        this.el.find('.resources').hide();
+        this.el.getLayer().draw();
+    },
+    _showResourcesList : function() {
+        this.el.find('.resourceList').show();
+        this.el.getLayer().batchDraw();
+    },
+    _hideResourcesList : function() {
+        this.el.find('.resourceList').hide();
+        this.el.getLayer().batchDraw();
+    },
     _grabPointer : function(e) {
         var name = e.target.name();
         if ((name === 'mainRect') || (name === 'dependencyTool') ||
@@ -158,11 +181,6 @@ var BasicTaskView = Backbone.KonvaView.extend({
     },
     _defaultMouse : function() {
         document.body.style.cursor = 'default';
-    },
-    _hideTools : function() {
-        this.el.find('.dependencyTool').hide();
-        this.el.find('.resources').hide();
-        this.el.getLayer().draw();
     },
     _startConnecting : function() {
         var stage = this.el.getStage();
@@ -214,7 +232,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
     },
     _initModelEvents : function() {
         // don't update element while dragging
-        this.listenTo(this.model, 'change:start change:end change:complete', function() {
+        this.listenTo(this.model, 'change:start change:end change:complete change:resources', function() {
             var dragging = this.el.isDragging();
             this.el.getChildren().each(function(child) {
                 dragging = dragging || child.isDragging();
@@ -274,6 +292,22 @@ var BasicTaskView = Backbone.KonvaView.extend({
         var resources = this.el.find('.resources')[0];
         resources.x(x.x2 - x.x1 + this._toolbarOffset);
         resources.y(this._topPadding);
+
+
+        // update resource list
+        var resourceList = this.el.find('.resourceList')[0];
+        resourceList.x(x.x2 - x.x1 + this._resourceListOffset);
+        resourceList.y(this._topPadding + 2);
+        var text = '';
+        this.model.get('resources').forEach(function(resourceId) {
+            var res = _.find(this.settings.statuses.resourcedata, function(res) {
+                return res.UserId.toString() === resourceId.toString();
+            });
+            if (res) {
+                text += res.Username + ' ';
+            }
+        }.bind(this));
+        resourceList.text(text);
 
         this.el.getLayer().batchDraw();
         return this;
