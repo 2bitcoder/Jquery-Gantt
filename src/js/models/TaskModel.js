@@ -1,5 +1,7 @@
 "use strict";
 
+var ResCollection = require('../collections/ResourceReferenceCollection');
+
 var util = require('../utils/util');
 var params = util.getURLParams();
 
@@ -8,6 +10,9 @@ var SubTasks = Backbone.Collection.extend({
         return model.get('sortindex');
     }
 });
+
+var resLinks = new ResCollection();
+resLinks.fetch();
 
 var TaskModel = Backbone.Model.extend({
     defaults: {
@@ -87,6 +92,10 @@ var TaskModel = Backbone.Model.extend({
 
         // time checking
         this.listenTo(this.children, 'add remove change:complete', this._checkComplete);
+
+        this.listenTo(this, 'change:resources', function() {
+            resLinks.updateResourcesForTask(this);
+        });
     },
     isNested : function() {
         return !!this.children.length;
@@ -166,6 +175,14 @@ var TaskModel = Backbone.Model.extend({
                 delete response[key];
             }
         });
+
+        // update resources as list of ID
+        var ids = [];
+        (response.Resources || []).forEach(function(resInfo) {
+            ids.push(resInfo.ResID);
+        });
+        response.Resources = undefined;
+        response.resources = ids;
         return response;
     },
     _checkTime : function() {

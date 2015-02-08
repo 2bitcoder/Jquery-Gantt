@@ -22,6 +22,8 @@ function fetchCollection(app) {
 			app.tasks.checkSortedIndex();
 
 			app.settings = new Settings({}, {app : app});
+
+            // load statuses settings
 			if (window.location.hostname.indexOf('localhost') === -1) {
 				$.getJSON('/api/GanttConfig/wbs/' + params.project + '/' + params.sitekey, function(statuses) {
 					app.settings = statuses;

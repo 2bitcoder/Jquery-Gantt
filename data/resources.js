@@ -1,9 +1,9 @@
-var demoResources = [
-    {"wbsid":1,
-    "res_id":1,
-    "res_name":"Joe Black",
-    "res_allocation":60},
-    {"wbsid":3,
-    "res_id":2,
-    "res_name":"John Blackmore",
-    "res_allocation":40}];
+module.exports = [{
+    "WBSID": 1897,
+    "ResID": 1,
+    "id" : 1,
+    "TSActivate": true,
+    "ProjectRef": 43,
+    "WBSProfileID" : 177,
+    "PartitNo" : "2b00da46b57c0395"
+}];

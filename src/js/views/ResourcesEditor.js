@@ -63,7 +63,7 @@ var ResourceEditorView = Backbone.View.extend({
                 resources.push($input.attr('name'));
             }
         }.bind(this));
-        this.model.save('resources', resources);
+        this.model.set('resources', resources);
     }
 });
 

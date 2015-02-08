@@ -1,7 +1,7 @@
 "use strict";
 
 var util = require('../utils/util');
-var testStatuses = require('../../../data/statuses');
+var testStatuses = require('../../../data/config');
 
 //var hfunc = function(pos, evt) {
 //	var dragInterval = app.settings.getSetting('attr', 'dragInterval');

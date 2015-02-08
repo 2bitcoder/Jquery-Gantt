@@ -1,18 +1,29 @@
+"use strict";
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var _ = require('lodash');
 var serveStatic = require('serve-static');
 
-var tasks = require('./data/tasks_stress');
-tasks = tasks.concat(tasks).concat(tasks);
+var tasks = require('./data/tasks');
 
-var idCounter = 0;
+var resources = require('./data/resources');
+
+var taskIdCounter = 0;
 _(tasks).each(function(task) {
     if (!task.id) {
-        task.id = idCounter++;
+        task.id = taskIdCounter++;
     }
-    idCounter = Math.max(parseInt(task.id), idCounter);
+    taskIdCounter = Math.max(parseInt(task.id), taskIdCounter);
+});
+
+var resourceIdCounter = 0;
+_(resources).each(function(resource) {
+    if (!resource.id) {
+        resource.id = resourceIdCounter++;
+    }
+    resourceIdCounter = Math.max(parseInt(resource.id), resourceIdCounter);
 });
 
 var app = express();
@@ -28,75 +39,81 @@ app.get('/', function(req, res) {
     res.send('please select a collection, e.g., /collections/messages')
 });
 
-app.get('/api/tasks', function(req, res) {
-    console.log('return tasks');
-    res.send(tasks);
-});
-
-
-app.post('/api/tasks', function(req, res) {
-    console.log('add task', req.body);
-    req.body.id = ++idCounter;
-    tasks.push(req.body);
-    return res.send(req.body);
-});
-
-app.get('/api/tasks/:id', function(req, res) {
-    var id = req.params.id.toString();
-    console.log('return task with id ' + id);
-
-    var task = _(tasks).find(function(task) {
-        return task.id.toString() === id;
+function generateAPI(items, baseURL) {
+    app.get(baseURL, function(req, res) {
+        console.log('return items ', baseURL);
+        res.send(items);
     });
 
-    res.send(task || {});
-});
 
-app.put('/api/tasks/:id', function(req, res) {
-    var id = req.params.id.toString();
-    console.log('update task with id ' + id);
-
-    var task = _(tasks).find(function(task) {
-        return task.id.toString() === id;
+    app.post(baseURL, function(req, res) {
+        console.log('add item', req.body);
+        req.body.id = ++taskIdCounter;
+        tasks.push(req.body);
+        return res.send(req.body);
     });
 
-    if (task) {
-        _(req.body).each(function(val, key) {
-            task[key] = val;
+    app.get(baseURL + '/:id', function(req, res) {
+        var id = req.params.id.toString();
+        console.log('return item with id ' + id);
+
+        var task = _(items).find(function(item) {
+            return item.id.toString() === id;
         });
-        _(task).each(function(val, key) {
-            if (!req.body[key]) {
-                task[key] = undefined;
-            }
-        });
-    } else {
-        console.error('no such task');
-    }
-    res.send(task || {});
-});
 
-app.delete('/api/tasks/:id', function(req, res) {
-    var id = req.params.id.toString();
-
-    console.log('delete task with id ' + req.params.id);
-
-    var task = _(tasks).find(function(task) {
-        return task.id.toString() === id;
+        res.send(task || {});
     });
 
-    if (task) {
-        tasks = _.without(tasks, task);
-        res.send({
-          msg : 'success'
+    app.put(baseURL + '/:id', function(req, res) {
+        var id = req.params.id.toString();
+        console.log('update item with id ' + id);
+
+        var item = _(items).find(function(item) {
+            return item.id.toString() === id;
         });
-    } else {
-        console.error('no such task');
-        res.send({
-          msg: 'error'
+
+        if (item) {
+            _(req.body).each(function(val, key) {
+                item[key] = val;
+            });
+            _(item).each(function(val, key) {
+                if (!req.body[key]) {
+                    item[key] = undefined;
+                }
+            });
+        } else {
+            console.error('no such item');
+        }
+        res.send(item || {});
+    });
+
+    app.delete(baseURL + '/:id', function(req, res) {
+        console.log(req.params);
+        var id = req.params.id.toString();
+
+        console.log('delete item with id ' + req.params.id);
+
+        var item = _(items).find(function(item) {
+            return item.id.toString() === id;
         });
-    }
-});
+
+        if (item) {
+            items = _.without(items, item);
+            res.send({
+                msg : 'success'
+            });
+        } else {
+            console.error('no such task');
+            res.send({
+                msg: 'error'
+            });
+        }
+    });
+}
+
+generateAPI(tasks, '/api/tasks');
+generateAPI(resources, '/api/resources/1/1');
 
 app.listen(3000, function(){
-  console.log('Express server listening on port 3000')
+  console.log('Express server listening on port 3000');
 });
