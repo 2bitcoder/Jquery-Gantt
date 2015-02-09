@@ -1,5 +1,6 @@
 "use strict";
-var parseXML = require('../xmlToTasksJSON');
+var parseXML = require('../../utils/xmlWorker').parseXMLObj;
+var JSONToXML = require('../../utils/xmlWorker').JSONToXML
 
 var MSProjectMenuView = Backbone.View.extend({
     el : '#project-menu',
@@ -41,7 +42,9 @@ var MSProjectMenuView = Backbone.View.extend({
             }).modal('show');
         },
         'click #download-project' : function() {
-            alert('not implemented');
+            var data = JSONToXML(this.collection.toJSON());
+            var blob = new Blob([data], {type : 'application/json'});
+            saveAs(blob, 'GanttTasks.xml');
         }
     },
     importData : function() {
