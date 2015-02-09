@@ -41,7 +41,7 @@ var ResourceEditorView = Backbone.View.extend({
             htmlString += '<div class="ui checkbox">' +
                     '<input type="checkbox"  name="' + resource.UserId + '">' +
                     '<label>' + resource.Username + '</label>' +
-                '</div>';
+                '</div><br>';
         });
         htmlString +='<br><div style="text-align:center;"><div class="ui positive right button save tiny">' +
                 'Close' +

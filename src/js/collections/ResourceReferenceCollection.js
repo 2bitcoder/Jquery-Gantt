@@ -40,8 +40,6 @@ var Collection = Backbone.Collection.extend({
                 result.push(obj);
             });
         });
-        console.log(result);
-
         return result;
     }
 });

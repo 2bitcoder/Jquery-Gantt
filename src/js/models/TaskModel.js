@@ -109,9 +109,19 @@ var TaskModel = Backbone.Model.extend({
     dependOn : function(beforeModel) {
         this.set('depend', beforeModel.id);
         this.beforeModel = beforeModel;
-        this.moveToStart(beforeModel.get('end'));
+        if (this.get('start') < beforeModel.get('end')) {
+            this.moveToStart(beforeModel.get('end'));
+        }
         this.save();
         this._listenBeforeModel();
+    },
+    toJSON : function() {
+        var json = Backbone.Model.prototype.toJSON.call(this);
+        delete json.resources;
+        delete json.hidden;
+        delete json.collapsed;
+        delete json.hightlight;
+        return json;
     },
     clearDependence : function() {
         if (this.beforeModel) {

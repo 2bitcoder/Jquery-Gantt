@@ -364,11 +364,32 @@ describe("Tasks", function(){
                 id : 1,
                 start : new Date('2014-12-10'),
                 end : new Date('2014-12-12')
-            }, {id : 2}, {id : 3}]);
+            }, {
+                id : 2,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }, {
+                id : 3,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }]);
 
             tasks.createDependency(tasks.get(1), tasks.get(2));
             expect(tasks.get(2).get('depend')).to.equal(1);
             expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-12').toDateString());
+        });
+
+        it('don`t move task on deps creating if dates is ok', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }, {id : 2, start : new Date('2014-12-15')}, {id : 3}]);
+
+            tasks.createDependency(tasks.get(1), tasks.get(2));
+            expect(tasks.get(2).get('depend')).to.equal(1);
+            expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-15').toDateString());
         });
 
         it('move task on deps creating via JSON', function() {
@@ -377,7 +398,16 @@ describe("Tasks", function(){
                 id : 1,
                 start : new Date('2014-12-10'),
                 end : new Date('2014-12-12')
-            }, {id : 2, depend : 1}, {id : 3}]);
+            }, {
+                id : 2,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12'),
+                depend : 1
+            }, {
+                id : 3,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }]);
 
             expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-12').toDateString());
         });
@@ -388,7 +418,16 @@ describe("Tasks", function(){
                 id : 1,
                 start : new Date('2014-12-10'),
                 end : new Date('2014-12-12')
-            }, {id : 2, depend : 1}, {id : 3}]);
+            }, {
+                id : 2,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12'),
+                depend : 1
+            }, {
+                id : 3,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12')
+            }]);
 
             tasks.get(1).move(10);
             expect(tasks.get(2).get('start').toDateString()).to.equal(tasks.get(1).get('end').toDateString());
