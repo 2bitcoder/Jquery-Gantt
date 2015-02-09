@@ -258,10 +258,10 @@
                             <div class="ui fitted divider"></div>
                         </div>
                         <div id="upload-project" class="action">
-                            Upload new project
+                            Import MS Project File
                         </div>
                         <div id="download-project" class="action">
-                            Download new project
+                            Save as MS Project
                         </div>
                     </div>
 				</div>
@@ -478,6 +478,27 @@
         </div>
     </div>
 
+    <!--MS PROJECT IMPORT MODAL-->
+    <div class="ui modal" id="msimport">
+        <i class="close icon"></i>
+        <div class="header">
+            Import MS Project xml file
+        </div>
+        <div class="content">
+            <form id="xmlinput-form">
+                <input type="file" id="xmlinput">
+            </form>
+        </div>
+        <div class="actions">
+            <div class="ui black button cancel">
+                Cancel
+            </div>
+            <div class="ui positive button save">
+                Import
+            </div>
+        </div>
+    </div>
+
     <!--POPUP FOR RESOURCE EDITOR-->
     <div class="ui custom popup">
     </div>
@@ -498,6 +519,7 @@
 	<script type="text/javascript" src="libs/backbone.KonvaView.js"></script>
 	<script type="text/javascript" src="libs/date.js"></script>
 	<script type="text/javascript" src="libs/react.js"></script>
+    <script type="text/javascript" src="libs/xmlToJSON.js"></script>
 
 	<!--APP-->
 	<script type="text/javascript" src="app.js"></script>

@@ -178,7 +178,16 @@ var TaskCollection = Backbone.Collection.extend({
 		if (prevTask) {
 			task.save('parentid', prevTask.id);
 		}
-	}
+	},
+    importTasks : function(taskJSONarray) {
+        var sortindex = this.last().get('sortindex');
+        taskJSONarray.forEach(function(taskItem) {
+            taskItem.sortindex =  ++sortindex;
+        }.bind(this));
+        this.add(taskJSONarray, {parse : true}).forEach(function(task) {
+            task.save();
+        });
+    }
 });
 
 module.exports = TaskCollection;

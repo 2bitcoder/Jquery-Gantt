@@ -157,12 +157,12 @@ var GanttChartView = Backbone.View.extend({
             this._removeViewForModel(task);
             this._resortViews();
         });
-        this.listenTo(this.collection, 'add remove', function() {
+        this.listenTo(this.collection, 'add remove', _.debounce(function() {
             // wait for left panel updates
             setTimeout(function() {
                 this._updateStageAttrs();
             }.bind(this), 100);
-        });
+        }, 10));
         this.listenTo(this.collection, 'sort', function() {
             this._resortViews();
         });
@@ -242,7 +242,7 @@ var GanttChartView = Backbone.View.extend({
         view.render();
         this._connectorViews.push(view);
     },
-    _resortViews : function() {
+    _resortViews : _.debounce(function() {
         var lastY = this._topPadding;
         this.collection.each(function(task) {
             if (task.get('hidden')) {
@@ -276,7 +276,7 @@ var GanttChartView = Backbone.View.extend({
             connectorView.setY2(afterView.getY()  + afterView._fullHeight / 2);
         }.bind(this));
         this.Flayer.draw();
-    }
+    }, 10)
 });
 
 module.exports = GanttChartView;
