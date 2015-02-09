@@ -1,9 +1,62 @@
-module.exports = [{
-    "WBSID": 1897,
-    "ResID": 1,
-    "id" : 1,
-    "TSActivate": true,
-    "ProjectRef": 43,
-    "WBSProfileID" : 177,
-    "PartitNo" : "2b00da46b57c0395"
-}];
+module.exports = [
+    {
+        "WBSID":1832,
+        "Resources":[
+            {
+                "ID":74,
+                "TSActivate":null,
+                "ResID":58
+            },
+            {
+                "ID":75,
+                "TSActivate":null,
+                "ResID":55
+            },
+            {
+                "ID":76,
+                "TSActivate":null,
+                "ResID":56
+            },
+            {
+                "ID":77,
+                "TSActivate":null,
+                "ResID":59
+            }
+        ]
+    },
+    {
+        "WBSID":1894,
+        "Resources":[
+            {
+                "ID":78,
+                "TSActivate":null,
+                "ResID":58
+            },
+            {
+                "ID":79,
+                "TSActivate":null,
+                "ResID":59
+            },
+            {
+                "ID":111,
+                "TSActivate":true,
+                "ResID":1
+            }
+        ]
+    },
+    {
+        "WBSID":1897,
+        "Resources":[
+            {
+                "ID":72,
+                "TSActivate":null,
+                "ResID":58
+            },
+            {
+                "ID":73,
+                "TSActivate":null,
+                "ResID":1
+            }
+        ]
+    }
+];

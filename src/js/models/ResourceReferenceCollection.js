@@ -11,7 +11,8 @@ var Collection = Backbone.Collection.extend({
     idAttribute : 'ID',
     updateResourcesForTask : function(task) {
         // remove old references
-        this.toArray().forEach(function(ref) {
+        this.each(function(ref) {
+            console.log(ref);
             if (ref.get('WBSID').toString() !== task.id.toString()) {
                 return;
             }
@@ -19,7 +20,7 @@ var Collection = Backbone.Collection.extend({
             if (isOld) {
                 ref.destroy();
             }
-        }, this);
+        });
         // add new references
         task.get('resources').forEach(function(resId) {
             var isExist = this.findWhere({ResID : resId});
