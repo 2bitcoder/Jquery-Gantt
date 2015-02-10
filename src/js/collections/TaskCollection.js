@@ -215,7 +215,7 @@ var TaskCollection = Backbone.Collection.extend({
             var child = this.findWhere({
                 name : item[1]
             });
-            child.set('parentid', parent.id);
+            child.save('parentid', parent.id);;
         }.bind(this));
     }
 });
