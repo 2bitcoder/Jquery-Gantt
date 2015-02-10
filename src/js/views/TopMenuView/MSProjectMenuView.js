@@ -50,9 +50,18 @@ var MSProjectMenuView = Backbone.View.extend({
     },
     importData : function() {
         var col = this.collection;
-        col.importTasks(parseXML(this.xmlData), function() {
+        var defStatus = this.settings.findDefaultStatusId();
+        var defHealth = this.settings.findDefaultHealthId();
+        var defWO = this.settings.findDefaulWOId();
+        var data = parseXML(this.xmlData);
+        data.forEach(function(item) {
+            item.health = defHealth;
+            item.status = defStatus;
+            item.wo = defWO;
+        });
+        console.log(data);
+        col.importTasks(data, function() {
             var deps = parseDepsFromXML(this.xmlData);
-//            console.log(deps);
             col.createDeps(deps);
         }.bind(this));
     }
