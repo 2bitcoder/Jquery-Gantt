@@ -24,20 +24,35 @@ function parseXMLObj(xmlString) {
 module.exports.parseDepsFromXML = function(xmlString) {
     var obj = xmlToJSON.parseString(xmlString);
     var uids = {};
+    var outlines = {};
     var deps = [];
+    var parents = [];
     _.each(obj.Project[0].Tasks[0].Task, function(xmlItem) {
         if (!xmlItem.Name) {
             return;
         }
-        uids[xmlItem.UID[0]._text] = xmlItem.Name[0]._text;
+        uids[xmlItem.UID[0]._text] = xmlItem.Name[0]._text.toString();
+        outlines[xmlItem.OutlineNumber[0]._text.toString()] = xmlItem.Name[0]._text;
     });
     _.each(obj.Project[0].Tasks[0].Task, function(xmlItem) {
+        if (!xmlItem.Name) {
+            return;
+        }
+        var name = xmlItem.Name[0]._text;
         if (xmlItem.PredecessorLink) {
-            deps.push([uids[xmlItem.PredecessorLink[0].PredecessorUID[0]._text], xmlItem.Name[0]._text]);
+            deps.push([uids[xmlItem.PredecessorLink[0].PredecessorUID[0]._text], name]);
+        }
+        var outline = xmlItem.OutlineNumber[0]._text.toString();
+        if (outline.indexOf('.') !== -1) {
+            var parentOutline = outline.slice(0,outline.lastIndexOf('.'));
+            parents.push([outlines[parentOutline], name]);
         }
     });
-    return deps;
-}
+    return {
+        deps : deps,
+        parents : parents
+    };
+};
 
 module.exports.parseXMLObj = parseXMLObj;
 

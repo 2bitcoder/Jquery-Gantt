@@ -197,8 +197,9 @@ var TaskCollection = Backbone.Collection.extend({
             });
         });
     },
-    createDeps : function(deps) {
-        deps.forEach(function(dep) {
+    createDeps : function(data) {
+
+        data.deps.forEach(function(dep) {
             var beforeModel = this.findWhere({
                 name : dep[0]
             });
@@ -206,6 +207,15 @@ var TaskCollection = Backbone.Collection.extend({
                 name : dep[1]
             });
             this.createDependency(beforeModel, afterModel);
+        }.bind(this));
+        data.parents.forEach(function(item) {
+            var parent = this.findWhere({
+                name : item[0]
+            });
+            var child = this.findWhere({
+                name : item[1]
+            });
+            child.set('parentid', parent.id);
         }.bind(this));
     }
 });
