@@ -179,14 +179,34 @@ var TaskCollection = Backbone.Collection.extend({
 			task.save('parentid', prevTask.id);
 		}
 	},
-    importTasks : function(taskJSONarray) {
+    importTasks : function(taskJSONarray, callback) {
         var sortindex = this.last().get('sortindex');
         taskJSONarray.forEach(function(taskItem) {
             taskItem.sortindex =  ++sortindex;
         }.bind(this));
+        var length = taskJSONarray.length;
+        var done = 0;
         this.add(taskJSONarray, {parse : true}).forEach(function(task) {
-            task.save();
+            task.save({},{
+                success : function() {
+                    done +=1;
+                    if (done === length) {
+                        callback();
+                    }
+                }
+            });
         });
+    },
+    createDeps : function(deps) {
+        deps.forEach(function(dep) {
+            var beforeModel = this.findWhere({
+                name : dep[0]
+            });
+            var afterModel = this.findWhere({
+                name : dep[1]
+            });
+            this.createDependency(beforeModel, afterModel);
+        }.bind(this));
     }
 });
 

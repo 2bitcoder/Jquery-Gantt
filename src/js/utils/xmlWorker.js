@@ -6,15 +6,37 @@ var compiled = _.template(xml);
 
 function parseXMLObj(xmlString) {
     var obj = xmlToJSON.parseString(xmlString);
-    var tasks = _.map(obj.Project[0].Tasks[0].Task, function(xmlItem) {
-        return {
+    var tasks = [];
+     _.each(obj.Project[0].Tasks[0].Task, function(xmlItem) {
+        if (!xmlItem.Name) {
+            return;
+        }
+         tasks.push({
             name : xmlItem.Name[0]._text,
             start : xmlItem.Start[0]._text,
             end : xmlItem.Finish[0]._text,
             complete : xmlItem.PercentComplete[0]._text
-        };
+        });
     });
     return tasks;
+}
+
+module.exports.parseDepsFromXML = function(xmlString) {
+    var obj = xmlToJSON.parseString(xmlString);
+    var uids = {};
+    var deps = [];
+    _.each(obj.Project[0].Tasks[0].Task, function(xmlItem) {
+        if (!xmlItem.Name) {
+            return;
+        }
+        uids[xmlItem.UID[0]._text] = xmlItem.Name[0]._text;
+    });
+    _.each(obj.Project[0].Tasks[0].Task, function(xmlItem) {
+        if (xmlItem.PredecessorLink) {
+            deps.push([uids[xmlItem.PredecessorLink[0].PredecessorUID[0]._text], xmlItem.Name[0]._text]);
+        }
+    });
+    return deps;
 }
 
 module.exports.parseXMLObj = parseXMLObj;

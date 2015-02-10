@@ -1,6 +1,7 @@
 "use strict";
 var parseXML = require('../../utils/xmlWorker').parseXMLObj;
-var JSONToXML = require('../../utils/xmlWorker').JSONToXML
+var JSONToXML = require('../../utils/xmlWorker').JSONToXML;
+var parseDepsFromXML = require('../../utils/xmlWorker').parseDepsFromXML;
 
 var MSProjectMenuView = Backbone.View.extend({
     el : '#project-menu',
@@ -48,7 +49,12 @@ var MSProjectMenuView = Backbone.View.extend({
         }
     },
     importData : function() {
-        this.collection.importTasks(parseXML(this.xmlData));
+        var col = this.collection;
+        col.importTasks(parseXML(this.xmlData), function() {
+            var deps = parseDepsFromXML(this.xmlData);
+//            console.log(deps);
+            col.createDeps(deps);
+        }.bind(this));
     }
 });
 
