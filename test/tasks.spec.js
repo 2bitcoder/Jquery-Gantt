@@ -412,6 +412,36 @@ describe("Tasks", function(){
             expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-12').toDateString());
         });
 
+        it('don`t move task on self dep', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : new Date('2014-12-10'),
+                end : new Date('2014-12-12'),
+                depend : 2
+            }, {
+                id : 2,
+                start : new Date('2014-12-12'),
+                end : new Date('2014-12-14'),
+                depend : 3
+            }, {
+                id : 3,
+                start : new Date('2014-12-14'),
+                end : new Date('2014-12-20'),
+                depend : 1
+            }]);
+
+            expect(tasks.get(1).beforeModel.id).to.equal(2);
+            expect(tasks.get(2).beforeModel.id).to.equal(3);
+            expect(tasks.get(3).beforeModel.id).to.equal(1);
+
+            tasks.get(3).moveToStart(new Date('2014-12-20'));
+
+
+           // expect(tasks.get(2).get('start').toDateString()).to.equal(new Date('2014-12-12').toDateString());
+            // expect(tasks.get(1).get('start').toDateString()).to.equal(new Date('2014-12-10').toDateString());
+        });
+
         it('move task on before model forward move', function() {
             var tasks = new Tasks();
             tasks.reset([{

@@ -150,6 +150,19 @@ var TaskModel = Backbone.Model.extend({
             if (this.parent && this.parent.underMoving) {
                 return;
             }
+            // check infinite depend loop
+            var before = this;
+            var befores = [];
+            while(true) {
+                before = before.beforeModel;
+                if (!before) {
+                    break;
+                }
+                if (befores.indexOf(before) !== -1) {
+                    return;
+                }
+                befores.push(before);
+            }
             if (this.get('start') < this.beforeModel.get('end')) {
                 this.moveToStart(this.beforeModel.get('end'));
             }
