@@ -25,7 +25,7 @@ var SidePanel = React.createClass({
     displayName: 'SidePanel',
     componentDidMount  : function() {
         this.props.collection.on('add remove', function() {
-            this.forceUpdate();
+            this.requestUpdate();
         }, this);
         this.props.collection.on('change:hidden', function() {
             this.requestUpdate();

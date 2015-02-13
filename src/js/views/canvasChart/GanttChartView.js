@@ -151,11 +151,11 @@ var GanttChartView = Backbone.View.extend({
     _initCollectionEvents : function() {
         this.listenTo(this.collection, 'add', function(task) {
             this._addTaskView(task);
-            this._resortViews();
+            this._requestResort();
         });
         this.listenTo(this.collection, 'remove', function(task) {
             this._removeViewForModel(task);
-            this._resortViews();
+            this._requestResort();
         });
         this.listenTo(this.collection, 'add remove', _.debounce(function() {
             // wait for left panel updates
@@ -163,24 +163,23 @@ var GanttChartView = Backbone.View.extend({
                 this._updateStageAttrs();
             }.bind(this), 100);
         }, 10));
-        this.listenTo(this.collection, 'sort', function() {
-            this._resortViews();
+
+        this.listenTo(this.collection, 'sort change:hidden', function() {
+            this._requestResort();
         });
-        this.listenTo(this.collection, 'change:hidden', _.debounce(function() {
-            this._resortViews();
-        }.bind(this)), 5);
+
         this.listenTo(this.collection, 'change:depend', function(task) {
             if (task.get('depend')) {
                 this._addConnectorView(task);
             } else {
                 this._removeConnector(task);
             }
-            this._resortViews();
+            this._requestResort();
         });
         this.listenTo(this.collection, 'nestedStateChange', function(task) {
             this._removeViewForModel(task);
             this._addTaskView(task);
-            this._resortViews();
+            this._requestResort();
         });
     },
     _removeViewForModel : function(model) {
@@ -242,7 +241,19 @@ var GanttChartView = Backbone.View.extend({
         view.render();
         this._connectorViews.push(view);
     },
-    _resortViews : _.debounce(function() {
+    _requestResort : (function() {
+        var waiting = false;
+        return function () {
+            if (waiting) {
+                return;
+            }
+            setTimeout(function() {
+                this._resortViews();
+                waiting = false;
+            }.bind(this), 5);
+        };
+    }()),
+    _resortViews : function() {
         var lastY = this._topPadding;
         this.collection.each(function(task) {
             if (task.get('hidden')) {
@@ -275,8 +286,8 @@ var GanttChartView = Backbone.View.extend({
             connectorView.setY1(beforeView.getY() + beforeView._fullHeight / 2);
             connectorView.setY2(afterView.getY()  + afterView._fullHeight / 2);
         }.bind(this));
-        this.Flayer.draw();
-    }, 10)
+        this.Flayer.batchDraw();
+    }
 });
 
 module.exports = GanttChartView;
