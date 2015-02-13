@@ -180,7 +180,10 @@ var TaskCollection = Backbone.Collection.extend({
 		}
 	},
     importTasks : function(taskJSONarray, callback) {
-        var sortindex = this.last().get('sortindex');
+    	var sortindex = 0;
+    	if (this.last()) {
+			sortindex = this.last().get('sortindex');
+    	}
         taskJSONarray.forEach(function(taskItem) {
             taskItem.sortindex =  ++sortindex;
         }.bind(this));

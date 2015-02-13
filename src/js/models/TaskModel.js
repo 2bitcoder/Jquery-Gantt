@@ -81,7 +81,7 @@ var TaskModel = Backbone.Model.extend({
             }.bind(this));
         });
         this.listenTo(this, 'destroy', function() {
-            this.children.each(function(child) {
+            this.children.toArray().forEach(function(child) {
                 child.destroy();
             });
             this.stopListening();
