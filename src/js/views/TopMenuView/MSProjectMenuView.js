@@ -77,6 +77,10 @@ var MSProjectMenuView = Backbone.View.extend({
     },
     importData : function() {
         this.progress(0);
+        // this is some sort of callback hell!!
+        // we need timeouts for better user experience
+        // I think user want to see animated progress bar
+        // but without timeouts it is not possible, right?
         setTimeout(function() {
             this.progress(21);
             var col = this.collection;

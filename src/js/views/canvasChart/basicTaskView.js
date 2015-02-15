@@ -298,12 +298,18 @@ var BasicTaskView = Backbone.KonvaView.extend({
         resourceList.x(x.x2 - x.x1 + this._resourceListOffset);
         resourceList.y(this._topPadding + 2);
         var names = [];
-        this.model.get('resources').forEach(function(resourceId) {
+        var list = this.model.get('resources');
+        list.forEach(function(resourceId) {
             var res = _.find((this.settings.statuses.resourcedata || []), function(res) {
                 return res.UserId.toString() === resourceId.toString();
             });
             if (res) {
-                names.push(res.Username);
+                if (list.length < 3) {
+                    names.push(res.Username);
+                } else {
+                    var aliases = _.map(res.Username.split(' '), function(str) { return str[0];}).join('');
+                    names.push(aliases);
+                }
             }
         }.bind(this));
         resourceList.text(names.join(', '));
