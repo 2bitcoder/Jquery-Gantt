@@ -82,14 +82,16 @@ var BasicTaskView = Backbone.KonvaView.extend({
             fill : 'lightgreen',
             drawFunc: function(context) {
                 var horOffset = 6;
+                var size =  self._barHeight + (self._borderSize || 0);
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(horOffset, 0);
-                context.arc(horOffset, self._barHeight / 2, self._barHeight / 2, - Math.PI / 2, Math.PI / 2);
-                context.lineTo(0, self._barHeight);
+                context.arc(horOffset, size / 2, size / 2, - Math.PI / 2, Math.PI / 2);
+                context.lineTo(0, size);
                 context.lineTo(0, 0);
                 context.fillShape(this);
-                context.drawImage(linkImage, 1, (self._barHeight - 10) / 2,10,10);
+                var imgSize = size - 4;
+                context.drawImage(linkImage, 1, (size - imgSize) / 2, imgSize, imgSize);
             },
             hitFunc : function(context) {
                 context.beginPath();
@@ -106,18 +108,18 @@ var BasicTaskView = Backbone.KonvaView.extend({
             name : 'resources',
             visible : false
         });
+        var size = self._barHeight + (self._borderSize || 0);
         var toolback = new Konva.Rect({
             fill : 'lightgrey',
-            width : self._barHeight,
-            height : self._barHeight,
+            width : size,
+            height : size,
             cornerRadius : 2
         });
+
         var userIm = new Konva.Image({
             image : userImage,
-            x : (self._barHeight - 10) / 2,
-            y : (self._barHeight - 10) / 2,
-            width : 10,
-            height : 10
+            width : size,
+            height : size
         });
         toolbar.add(toolback, userIm);
 
