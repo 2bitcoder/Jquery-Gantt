@@ -75,6 +75,7 @@ div.head-bar{
 }
 .task{
 	white-space: nowrap;
+	max-height: 21px;
 }
 
 .task-list-container{
@@ -103,9 +104,9 @@ div.gantt-chart-container {
 }
 
 .task .col-name i{
-    margin-left: 5px;
+    margin-left: 15px;
     margin-right: 5px;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .task .col-sortindex {
