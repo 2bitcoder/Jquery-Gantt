@@ -37,6 +37,9 @@ var GanttChartView = Backbone.View.extend({
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
         var self = this;
+//        debugger;
+        var previousTaskX = this._taskViews.length ? this._taskViews[0].el.x() : 0;
+        var previousOffsetX = this._taskViews.length ? this.stage.x() - this._leftPadding : 0;
         this.stage.setAttrs({
             x : this._leftPadding,
             height: Math.max($(".tasks").innerHeight() + this._topPadding, window.innerHeight - $(this.stage.getContainer()).offset().top),
@@ -52,13 +55,22 @@ var GanttChartView = Backbone.View.extend({
                 } else {
                     x = pos.x;
                 }
+                self.draggedToDay = Math.abs(x - self._leftPadding) / self.settings.getSetting('attr').daysWidth;
                 return {
                     x: x,
                     y: 0
                 };
             }
         });
-        this.stage.draw();
+        this.stage.batchDraw();
+        setTimeout(function() {
+            if (!this._taskViews.length || !previousTaskX) {
+                return;
+            }
+            this.stage.x(this._leftPadding - (this.draggedToDay || 0) * self.settings.getSetting('attr').daysWidth);
+            this.stage.batchDraw();
+        }.bind(this), 5);
+
     },
     _initBackground : function() {
         var shape = new Konva.Shape({

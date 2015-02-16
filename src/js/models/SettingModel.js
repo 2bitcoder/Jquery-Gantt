@@ -174,7 +174,7 @@ var SettingModel = Backbone.Model.extend({
 		} else if(interval === 'weekly') {
 			this.set('dpi', 7, {silent: true});
 			end = sattr.maxDate.clone().addDays(20 * 7);
-			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20 * 7).moveToDayOfWeek(1, -1);
+			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20).moveToDayOfWeek(1, -1);
 			sattr.daysWidth = 5;
 			sattr.cellWidth = sattr.daysWidth * 7;
 			sattr.dragInterval = sattr.daysWidth;
@@ -185,7 +185,7 @@ var SettingModel = Backbone.Model.extend({
 		} else if (interval === 'monthly') {
 			this.set('dpi', 30, {silent: true});
 			end = sattr.maxDate.clone().addDays(20 * 30);
-			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20 * 30).moveToFirstDayOfMonth();
+			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20).moveToFirstDayOfMonth();
 			sattr.daysWidth = 2;
 			sattr.cellWidth = 'auto';
 			sattr.dragInterval = 7 * sattr.daysWidth;
@@ -196,7 +196,7 @@ var SettingModel = Backbone.Model.extend({
 		} else if (interval === 'quarterly') {
 			this.set('dpi', 30, {silent: true});
 			end = sattr.maxDate.clone().addDays(20 * 30);
-			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20 * 30);
+			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20);
 			sattr.boundaryMin.moveToFirstDayOfQuarter();
 			sattr.daysWidth = 1;
 			sattr.cellWidth = 'auto';
