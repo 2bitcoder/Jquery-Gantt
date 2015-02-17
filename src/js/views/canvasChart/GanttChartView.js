@@ -37,11 +37,9 @@ var GanttChartView = Backbone.View.extend({
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
         var self = this;
-//        debugger;
         var previousTaskX = this._taskViews.length ? this._taskViews[0].el.x() : 0;
-        var previousOffsetX = this._taskViews.length ? this.stage.x() - this._leftPadding : 0;
         this.stage.setAttrs({
-            x : this._leftPadding,
+//            x : this._leftPadding,
             height: Math.max($(".tasks").innerHeight() + this._topPadding, window.innerHeight - $(this.stage.getContainer()).offset().top),
             width: this.$el.innerWidth(),
             draggable: true,
@@ -62,13 +60,16 @@ var GanttChartView = Backbone.View.extend({
                 };
             }
         });
-        this.stage.batchDraw();
+
         setTimeout(function() {
             if (!this._taskViews.length || !previousTaskX) {
-                return;
+                this.stage.x(this._leftPadding);
+            } else {
+                var minx = -(lineWidth - this.stage.width());
+                var x = this._leftPadding - (this.draggedToDay || 0) * self.settings.getSetting('attr').daysWidth;
+                this.stage.x(Math.max(minx, x));
             }
-            this.stage.x(this._leftPadding - (this.draggedToDay || 0) * self.settings.getSetting('attr').daysWidth);
-            this.stage.batchDraw();
+            this.stage.draw();
         }.bind(this), 5);
 
     },
@@ -159,6 +160,17 @@ var GanttChartView = Backbone.View.extend({
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this._updateStageAttrs();
         });
+
+        this.listenTo(this.settings, 'change:width', function() {
+            this._updateStageAttrs();
+            this._taskViews.forEach(function(view) {
+                view.render();
+            });
+            this._connectorViews.forEach(function(view) {
+                view.render();
+            });
+        });
+
     },
     _initCollectionEvents : function() {
         this.listenTo(this.collection, 'add', function(task) {

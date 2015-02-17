@@ -3,15 +3,6 @@
 var util = require('../utils/util');
 var testStatuses = require('../../../data/config');
 
-//var hfunc = function(pos, evt) {
-//	var dragInterval = app.settings.getSetting('attr', 'dragInterval');
-//	var n = Math.round((pos.x - evt.inipos.x) / dragInterval);
-//	return {
-//		x: evt.inipos.x + n * dragInterval,
-//		y: this.getAbsolutePosition().y
-//	};
-//};
-
 var SettingModel = Backbone.Model.extend({
 	defaults: {
 		interval: 'fix',
@@ -43,6 +34,10 @@ var SettingModel = Backbone.Model.extend({
 		this.collection = this.app.tasks;
 		this.calculateIntervals();
 		this.on('change:interval change:dpi', this.calculateIntervals);
+        this.listenTo(this.collection, 'add change:end', _.debounce(function() {
+            this.calculateIntervals();
+            this.trigger('change:width');
+        }, 500));
 	},
 	getSetting: function(from, attr){
 		if(attr){
@@ -152,7 +147,6 @@ var SettingModel = Backbone.Model.extend({
 		});
 		this.sattr.minDate = minDate;
 		this.sattr.maxDate = maxDate;
-		
 	},
 	setAttributes: function() {
 		var end,sattr=this.sattr,dattr=this.sdisplay,duration,size,cellWidth,dpi,retfunc,start,last,i=0,j=0,iLen=0,next=null;
@@ -161,7 +155,7 @@ var SettingModel = Backbone.Model.extend({
 
 		if (interval === 'daily') {
 			this.set('dpi', 1, {silent: true});
-			end = sattr.maxDate.clone().addDays(20);
+			end = sattr.maxDate.clone().addDays(60);
 			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20);
 			sattr.daysWidth = 12;
 			sattr.cellWidth = sattr.daysWidth;
@@ -184,7 +178,7 @@ var SettingModel = Backbone.Model.extend({
 			};
 		} else if (interval === 'monthly') {
 			this.set('dpi', 30, {silent: true});
-			end = sattr.maxDate.clone().addDays(20 * 30);
+			end = sattr.maxDate.clone().addDays(12 * 30);
 			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20).moveToFirstDayOfMonth();
 			sattr.daysWidth = 2;
 			sattr.cellWidth = 'auto';
@@ -215,7 +209,7 @@ var SettingModel = Backbone.Model.extend({
 			sattr.cellWidth = dpi * sattr.daysWidth;
 			sattr.boundaryMin = sattr.minDate.clone().addDays(-2 * dpi);
 			sattr.dragInterval = Math.round(0.3 * dpi) * sattr.daysWidth;
-			end = sattr.maxDate.clone().addDays(2 * dpi);
+			end = sattr.maxDate.clone().addDays(30 * 10);
 			sattr.mpc = Math.max(1, Math.round(dpi / 30));
 			retfunc = function(date){
 				return date.clone().addDays(dpi);
@@ -225,7 +219,7 @@ var SettingModel = Backbone.Model.extend({
 			sattr.cellWidth = (1 + Math.log(dpi)) * 12;
 			sattr.daysWidth = sattr.cellWidth / dpi;
 			sattr.boundaryMin = sattr.minDate.clone().addDays(-20 * dpi);
-			end = sattr.maxDate.clone().addDays(20 * dpi);
+			end = sattr.maxDate.clone().addDays(30 * 10);
 			sattr.mpc = Math.max(1, Math.round(dpi / 30));
 			retfunc = function(date) {
 				return date.clone().addDays(dpi);
@@ -275,6 +269,7 @@ var SettingModel = Backbone.Model.extend({
 		sattr.boundaryMax = end = last;
 		hData['3'] = hdata3;
 
+        console.log(end);
 		//enter duration of first date to end of year
 		var inter = Date.daysdiff(start, new Date(start.getFullYear(), 11, 31));
 		hData['1'].push({
