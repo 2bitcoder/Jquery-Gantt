@@ -157,7 +157,7 @@ var SettingModel = Backbone.Model.extend({
 			this.set('dpi', 1, {silent: true});
 			end = sattr.maxDate.clone().addDays(60);
 			sattr.boundaryMin = sattr.minDate.clone().addDays(-1 * 20);
-			sattr.daysWidth = 12;
+			sattr.daysWidth = 15;
 			sattr.cellWidth = sattr.daysWidth;
 			sattr.dragInterval = sattr.daysWidth;
 			retfunc = function(date){
@@ -234,7 +234,7 @@ var SettingModel = Backbone.Model.extend({
 		var hdata3 = [];
 		
 		start = sattr.boundaryMin;
-		
+
 		last = start;
 		if (interval === 'monthly' || interval === 'quarterly') {
 			var durfunc;
@@ -258,9 +258,11 @@ var SettingModel = Backbone.Model.extend({
 		} else {
 			var intervaldays = this.get('dpi');
 			while (last.compareTo(end) === -1) {
+                var isHoly = last.getDay() === 6 || last.getDay() === 0;
 				hdata3.push({
 					duration: intervaldays,
-					text: last.getDate()
+					text: last.getDate(),
+                    holy : (interval === 'daily') && isHoly
 				});
 				next = retfunc(last);
 				last = next;
@@ -269,7 +271,6 @@ var SettingModel = Backbone.Model.extend({
 		sattr.boundaryMax = end = last;
 		hData['3'] = hdata3;
 
-        console.log(end);
 		//enter duration of first date to end of year
 		var inter = Date.daysdiff(start, new Date(start.getFullYear(), 11, 31));
 		hData['1'].push({
@@ -317,7 +318,7 @@ var SettingModel = Backbone.Model.extend({
 			i += 1;
 			j = 0;
 		}
-		if (end.getMonth() !== start.getMonth && end.getFullYear() !== start.getFullYear()) {
+		if (end.getMonth() !== start.getMonth() && end.getFullYear() !== start.getFullYear()) {
 			hData['2'].push({
 				duration: Date.daysdiff(end.clone().moveToFirstDayOfMonth(), end),
 				text: util.formatdata(end.getMonth(), 'm')

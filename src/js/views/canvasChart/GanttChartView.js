@@ -77,7 +77,9 @@ var GanttChartView = Backbone.View.extend({
         var shape = new Konva.Shape({
             sceneFunc: this._getSceneFunction(),
             stroke: 'lightgray',
-            strokeWidth : 0
+            strokeWidth : 0,
+            fill : 'rgba(0,0,0,0.2)',
+            name : 'grid'
         });
         var sattr = this.settings.sattr;
         var width = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
@@ -128,20 +130,25 @@ var GanttChartView = Backbone.View.extend({
                 yi = yf; yf = yf + rowHeight;
             }
 
-            x = 0; length = 0; s = 3; yf = 1200;
+            x = 0; length = 0; s = 3;
             var dragInt = parseInt(sattr.dragInterval, 10);
             var hideDate = false;
             if( dragInt === 14 || dragInt === 30){
                 hideDate = true;
             }
             for (i = 0, iLen = hData[s].length; i < iLen; i++) {
-
                 length = hData[s][i].duration * daysWidth;
                 x = x + length;
                 xi = x - borderWidth + offset;
-                context.moveTo(xi, yi);
-                context.lineTo(xi, this.getStage().height());
-
+                if (hData[s][i].holy) {
+                    context.moveTo(xi, yi);
+                    context.lineTo(xi, this.getStage().height());
+                    context.lineTo(xi - length, this.getStage().height());
+                    context.lineTo(xi - length, yi);
+                } else {
+                    context.moveTo(xi, yi);
+                    context.lineTo(xi, this.getStage().height());
+                }
                 context._context.save();
                 context._context.font = '6pt Arial,Helvetica,sans-serif';
                 context._context.textAlign = 'center';
@@ -156,13 +163,25 @@ var GanttChartView = Backbone.View.extend({
             context.fillStrokeShape(this);
         };
     },
+    _cacheBackground : function() {
+        var sattr = this.settings.sattr;
+        var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
+        this.Blayer.findOne('.grid').cache({
+            x : 0,
+            y : 0,
+            width : lineWidth,
+            height : this.stage.height()
+        });
+    },
     _initSettingsEvents : function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this._updateStageAttrs();
+            this._cacheBackground();
         });
 
         this.listenTo(this.settings, 'change:width', function() {
             this._updateStageAttrs();
+            this._cacheBackground();
             this._taskViews.forEach(function(view) {
                 view.render();
             });
