@@ -137,7 +137,7 @@ var TaskCollection = Backbone.Collection.extend({
 			if (!beforeModel) {
 				task.unset('depend').save();
 			} else {
-				task.dependOn(beforeModel);
+				task.dependOn(beforeModel, true);
 			}
 		}.bind(this));
 	},
