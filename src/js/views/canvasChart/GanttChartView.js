@@ -78,7 +78,7 @@ var GanttChartView = Backbone.View.extend({
             sceneFunc: this._getSceneFunction(),
             stroke: 'lightgray',
             strokeWidth : 0,
-            fill : 'rgba(0,0,0,0.2)',
+            fill : 'rgba(0,0,0,0.1)',
             name : 'grid'
         });
         var sattr = this.settings.sattr;
