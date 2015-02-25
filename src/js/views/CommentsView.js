@@ -1,5 +1,6 @@
 "use strict";
-
+var util = require('../utils/util');
+var params = util.getURLParams();
 
 var CommentsView = Backbone.View.extend({
     el : '#taskCommentsModal',
@@ -21,10 +22,10 @@ var CommentsView = Backbone.View.extend({
 
         // init comments
         $("#taskComments").comments({
-            getCommentsUrl: "../api/comment/" + this.model.id,
-            postCommentUrl: "../api/comment/"  + this.model.id,
-            deleteCommentUrl: "../api/comment/" + this.model.id,
-            displayAvatar: true
+            getCommentsUrl: "/api/comment/" + this.model.id + "/" + params.sitekey + "/WBS/000",
+            postCommentUrl: "/api/comment/"  + this.model.id + "&ProjectRef=" + params.ProjectRef + "&ActionID=" + this.model.id + "&dtype=WBS&PartitNo=" + params.sitekey + "&CanReply=True&CanDelete=False",
+            deleteCommentUrl: "/api/comment/" + this.model.id,
+            displayAvatar: false
         });
     },
     _fillData : function() {
