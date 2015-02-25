@@ -149,14 +149,6 @@ app.post('/api/comment/:id/', function(req, res) {
 });
 
 
-//app.delete('/api/comment/:id/:commentId', function(req, res) {
-//    console.log('deleting comment');
-//    console.log(req.params);
-//    var id = req.params.id.toString();
-//    console.log('delete item with id ' + req.params.id);
-//});
-
-
 app.listen(3000, function(){
   console.log('Express server listening on port 3000');
 });

@@ -59,6 +59,9 @@ var ModalTaskEditComponent = Backbone.View.extend({
             if (key === 'health' && (!val || !this.settings.findHealthForId(val))) {
                 val = this.settings.findDefaultHealthId();
             }
+            if (key === 'wo' && (!val || !this.settings.findWOForId(val))) {
+                val = this.settings.findDefaultWOId();
+            }
             var input = this.$el.find('[name="' + key + '"]');
             if (!input.length) {
                 return;

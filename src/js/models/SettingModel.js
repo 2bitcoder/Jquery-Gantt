@@ -131,6 +131,14 @@ var SettingModel = Backbone.Model.extend({
             }
 		}
 	},
+    findWOForId : function(id) {
+        for(var i in this.statuses.wodata[0].data) {
+            var data = this.statuses.wodata[0].data[i];
+            if (data.ID.toString() === id.toString()) {
+                return data.WONumber;
+            }
+        }
+    },
     findDefaultWOId : function() {
         return this.statuses.wodata[0].data[0].ID;
     },
