@@ -65,24 +65,68 @@ var SidePanel = React.createClass({
             position : 'absolute',
             background : 'grey',
             opacity : '0.5',
-            lift : '0',
             top : '0',
             width : '100%'
         });
+//        this.propImg = $('<img src="css/images/info.png" width="21" height="21">');
+//        this.propImg.css({
+//            position : 'absolute',
+//            left : '4px',
+//            padding : '3px',
+//            top : '0',
+//            'z-index' : 100
+//        });
+//        this.propImg.on('click', function(e) {
+//            console.log('click');
+//            e.preventDefault();
+//            $('.task-container').contextMenu({
+//                x : e.clientX,
+//                y : e.clientY
+//            });
+//        });
         container.mouseenter(function() {
             this.hightlighter.appendTo(document.body);
+//            this.propImg.appendTo(document.body);
+//            this.propImg.show();
         }.bind(this));
 
         container.mouseover(function(e) {
             var $el = $(e.target);
+            // TODO: rewrite to find closest ul
+            if (!$el.data('id')) {
+                $el = $el.parent();
+                if (!$el.data('id')) {
+                    $el = $el.parent();
+                }
+            }
             var pos = $el.offset();
             this.hightlighter.css({
                 top : pos.top + 'px',
                 height : $el.height()
             });
+//            this.propImg.css({
+//                top : pos.top + 'px'
+//            });
         }.bind(this));
+
+//        var onImage = false;
+//        this.propImg.mouseover(function() {
+//            console.log('onimage');
+//            onImage = true;
+//        }.bind(this));
+//
+//        this.propImg.mouseleave(function() {
+//            onImage = false;
+//        }.bind(this));
+
         container.mouseleave(function() {
-            this.hightlighter.remove();
+            setTimeout(function() {
+//                if (onImage) {
+//                    return;
+//                }
+                this.hightlighter.remove();
+//                this.propImg.hide();
+            }.bind(this), 100);
         }.bind(this));
     },
     requestUpdate : (function() {

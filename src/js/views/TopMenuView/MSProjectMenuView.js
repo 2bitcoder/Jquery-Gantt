@@ -67,7 +67,7 @@ var MSProjectMenuView = Backbone.View.extend({
     _prepareData : function(data) {
         var defStatus = this.settings.findDefaultStatusId();
         var defHealth = this.settings.findDefaultHealthId();
-        var defWO = this.settings.findDefaulWOId();
+        var defWO = this.settings.findDefaultWOId();
         data.forEach(function(item) {
             item.health = defHealth;
             item.status = defStatus;

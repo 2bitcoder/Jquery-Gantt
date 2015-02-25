@@ -7,8 +7,8 @@ var _ = require('lodash');
 var serveStatic = require('serve-static');
 
 var tasks = require('./data/tasks');
-
 var resources = require('./data/resources');
+var comments = require('./data/comments');
 
 var taskIdCounter = 0;
 _(tasks).each(function(task) {
@@ -25,6 +25,7 @@ _(resources).each(function(resource) {
     }
     resourceIdCounter = Math.max(parseInt(resource.id), resourceIdCounter);
 });
+var commentsIdCounter = 3;
 
 var app = express();
 
@@ -113,6 +114,48 @@ function generateAPI(items, baseURL) {
 
 generateAPI(tasks, '/api/tasks');
 generateAPI(resources, '/api/resources/1/1');
+
+
+
+app.get('/api/comment/:id/', function(req, res) {
+    var id = req.params.id.toString();
+    console.log('return commetns with id ' + id);
+    res.send(comments[id] || []);
+});
+
+
+app.post('/api/comment/:id/', function(req, res) {
+    var id = req.params.id.toString();
+    console.log('add comment', req.body, 'to task', id);
+    var comment = {
+        Comment : req.body.comment,
+        Id : ++commentsIdCounter,
+        Author : 'User',
+        Date : new Date(),
+        UserAvatar: null,
+        ParentId: null,
+        CanDelete: false,
+        CanReply: true,
+        PartitNo: null,
+        vKey: null,
+        dtype: null,
+        ProjectRef: null,
+        ActionID: null,
+        UserID: null
+    };
+    comments[id] = comments[id] || [];
+    comments[id].push(comment);
+    return res.send(comment);
+});
+
+
+//app.delete('/api/comment/:id/:commentId', function(req, res) {
+//    console.log('deleting comment');
+//    console.log(req.params);
+//    var id = req.params.id.toString();
+//    console.log('delete item with id ' + req.params.id);
+//});
+
 
 app.listen(3000, function(){
   console.log('Express server listening on port 3000');

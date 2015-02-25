@@ -131,7 +131,7 @@ var SettingModel = Backbone.Model.extend({
             }
 		}
 	},
-    findDefaulWOId : function() {
+    findDefaultWOId : function() {
         return this.statuses.wodata[0].data[0].ID;
     },
 	calcminmax: function() {

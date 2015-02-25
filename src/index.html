@@ -131,7 +131,7 @@
         /*top: 120px;*/
     /*}*/
     #top-menu{
-        z-index:1000 !important
+        z-index:1000 !important;
     }
     </style>
 </head>
@@ -148,6 +148,8 @@
 	<div id="ganttChart" class="Gantt">
 		<div class="ui page grid segment">
 			<div class="column">
+
+                <!--HEAD-->
 				<div class="ui seven column grid" id="top-menu">
 
                     <!--HEADER-->
@@ -268,47 +270,8 @@
 				
 				<div class="item-selector"></div>
 
-				<!--ADD VIEW-->
-				<div class="ui small modal properties flip">
-					<i class="close icon"></i>
-					<div class="content">
-						<table class="ui celled table segment">
-							<thead>
-								<tr><th colspan="2"><center>Properties</center></th>
-								</tr>
-							</thead>
-								<tbody>
-									<tr>
-										<td>Task Name</td>
-										<td class="property-name"></td>
-									</tr>
-									<tr>
-										<td>Description</td>
-										<td class="property-description"></td>
-									</tr>
-									<tr>
-										<td>Start Date</td>
-										<td class="property-start"></td>
-									</tr>
-									<tr>
-										<td>End Date</td>
-										<td class="property-end"></td>
-									</tr>
-									<tr>
-										<td>Status</td>
-										<td class="property-status"></td>
-									</tr>
-									<tr>
-										<td>Duration</td>
-										<td class="property-duration"></td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</div>
-
 				<!--MAIN VIEW-->
-				<div class="ui" style="margin-top: 15px;">
+				<div class="ui" id="main-view">
 
 					<!--SIDE BAR-->
 					<div class="menu-container panel-collapsed">
@@ -461,6 +424,34 @@
 		</div>
 	</div>
 
+    <!--TASK COMMENTS VIEW-->
+    <div class="ui modal" id="taskCommentsModal">
+        <i class="close icon"></i>
+        <div class="header">
+            Task comments
+        </div>
+        <div class="content">
+            <div class="description">
+                <div class="ui form">
+                    <div class="inline field">
+                        <label class="label_80 labelsolid">Task ID</label>
+                        <input type="text" name="id" readonly="readonly" size="8px" class="noborder">
+                    </div>
+                    <div class="inline field">
+                        <label class="label_80 labelsolid">Name</label>
+                        <input type="text" name="name" readonly="readonly" size="100px" >
+                    </div>
+                </div>
+                <div id="taskComments"></div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui black button positive">
+                Close
+            </div>
+        </div>
+    </div>
+
     <!--HELP VIDEO MODAL-->
     <div class="ui modal" id="showVideoModal">
         <i class="close icon"></i>
@@ -527,6 +518,9 @@
     <script type="text/javascript" src="libs/xmlToJSON.js"></script>
     <script type="text/javascript" src="libs/FileSaver.js"></script>
     <script type="text/javascript" src="libs/jquery.noty.packaged.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="libs/jquery.comment/jquery.comment.min.css">
+    <script type="text/javascript" src="libs/jquery.comment/jquery.comment.js"></script>
 
 	<!--APP-->
 	<script type="text/javascript" src="app.js"></script>

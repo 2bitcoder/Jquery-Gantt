@@ -1,6 +1,7 @@
 "use strict";
 
 var ModalEdit = require('../ModalTaskEditView');
+var Comments = require('../CommentsView');
 
 function ContextMenuView(params) {
     this.collection = params.collection;
@@ -23,6 +24,12 @@ ContextMenuView.prototype.render = function() {
                     settings : self.settings
                 });
                 view.render();
+            }
+            if(key === 'comments'){
+                new Comments({
+                    model : model,
+                    settings : self.settings
+                }).render();
             }
             if (key === 'rowAbove'){
                 var data = {
@@ -49,6 +56,7 @@ ContextMenuView.prototype.render = function() {
             "outdent": { name: "&nbsp;Outdent Row", icon: "outdent" },
             "sep1": "---------",
             "properties": { name: "&nbsp;Properties", icon: "properties" },
+            "comments": { name: "&nbsp;Comments", icon: "comment" },
             "sep2": "---------",
             "delete": { name: "&nbsp;Delete Row", icon: "delete" }
         }

@@ -101,6 +101,7 @@
 .context-menu-item.icon-above { background-image: url(images/top.png); }
 .context-menu-item.icon-below { background-image: url(images/bottom.png); }
 .context-menu-item.icon-properties { background-image: url(images/properties.png); }
+.context-menu-item.icon-comment { background-image: url(images/comment.png); }
 
 /* vertically align inside labels */
 .context-menu-input > label > * { vertical-align: top; }
