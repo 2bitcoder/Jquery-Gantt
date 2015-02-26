@@ -148,7 +148,7 @@ var TaskItem = React.createClass({
                 }.bind(this)
             },
             React.createElement('img',{
-                src : '/css/images/comment.png'
+                src : 'css/images/comments.png'
             }),
             comments
         );
