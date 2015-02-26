@@ -17,7 +17,16 @@ var CommentsView = Backbone.View.extend({
                 $(document.body).removeClass('dimmable');
             }.bind(this),
             onApprove : function() {
-            }.bind(this)
+                console.log('onApprove');
+            }.bind(this),
+            onHide : function() {
+                console.log('onHide');
+                return false;
+            },
+            onDeny : function() {
+                console.log('onDeny');
+                return false;
+            }
         }).modal('show');
 
         var updateCount = function() {
