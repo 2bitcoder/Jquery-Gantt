@@ -20,13 +20,32 @@ var CommentsView = Backbone.View.extend({
             }.bind(this)
         }).modal('show');
 
-        // init comments
-        $("#taskComments").comments({
-            getCommentsUrl: "/api/comment/" + this.model.id + "/" + params.sitekey + "/WBS/000",
-            postCommentUrl: "/api/comment/"  + this.model.id + "&ProjectRef=" + params.ProjectRef + "&ActionID=" + this.model.id + "&dtype=WBS&PartitNo=" + params.sitekey + "&CanReply=True&CanDelete=False",
-            deleteCommentUrl: "/api/comment/" + this.model.id,
-            displayAvatar: false
-        });
+        var updateCount = function() {
+            var count = $("#taskComments").comments("count");
+            this.model.set('Comments', count);
+        }.bind(this);
+        var callback = {
+            afterDelete : updateCount,
+            afterCommentAdd : updateCount
+        };
+        if (window.location.hostname.indexOf('localhost') === -1) {
+            // init comments
+            $("#taskComments").comments({
+                getCommentsUrl: "/api/comment/" + this.model.id + "/" + params.sitekey + "/WBS/000",
+                postCommentUrl: "/api/comment/" + this.model.id + "/" + params.sitekey + "/WBS/" + params.project,
+                deleteCommentUrl: "/api/comment/" + this.model.id,
+                displayAvatar: false,
+                callback : callback
+            });
+        } else {
+            $("#taskComments").comments({
+                getCommentsUrl: "/api/comment/" + this.model.id,
+                postCommentUrl: "/api/comment/" + this.model.id,
+                deleteCommentUrl: "/api/comment/" + this.model.id,
+                displayAvatar: false,
+                callback : callback
+            });
+        }
     },
     _fillData : function() {
         _.each(this.model.attributes, function(val, key) {

@@ -113,6 +113,12 @@ div.gantt-chart-container {
     width:30px;
 }
 
+.task .col-comments {
+    margin-left: -40px;
+    color : blue;
+    font-size: 12px;
+}
+
 .task .col-name div{
 	display: inline-block;
 }

@@ -57,7 +57,8 @@ module.exports = [
         "acttimesheet":false,
         "deliverable":true,
         "wbstsid":100006,
-        "ResID":null
+        "ResID":null,
+        "Comments":0
     },
     {
         "id":1877,
@@ -84,7 +85,8 @@ module.exports = [
         "acttimesheet":false,
         "deliverable":false,
         "wbstsid":100044,
-        "ResID":null
+        "ResID":null,
+        "Comments":10
     },
     {
         "id":1878,

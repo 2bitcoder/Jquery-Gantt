@@ -26,6 +26,7 @@ var TaskModel = Backbone.Model.extend({
         start: new Date(),
         end: new Date(),
         parentid: 0,
+        Comments : 0,
 
         color: '#0090d3',   // user color, not used for now
 

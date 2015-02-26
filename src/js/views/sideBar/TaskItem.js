@@ -1,5 +1,6 @@
 "use strict";
 var DatePicker = require('./DatePicker');
+var CommetsView = require('../CommentsView');
 
 var TaskItem = React.createClass({
     displayName : 'TaskItem',
@@ -12,7 +13,7 @@ var TaskItem = React.createClass({
         $(this.getDOMNode()).find('input').focus();
     },
     componentDidMount  : function() {
-        this.props.model.on('change:name change:complete change:start change:end change:duration change:hightlight', function() {
+        this.props.model.on('change:name change:complete change:start change:end change:duration change:hightlight change:Comments', function() {
             this.forceUpdate();
         }, this);
     },
@@ -124,13 +125,33 @@ var TaskItem = React.createClass({
                     this.props.model.save();
                 }
             }.bind(this),
-            onBlur : function(e) {
+            onBlur : function() {
                 var state = this.state;
                 state.editRow = undefined;
                 this.setState(state);
                 this.props.model.save();
             }.bind(this)
         });
+    },
+    createCommentField : function() {
+        var comments = this.props.model.get('Comments') || 0;
+        if (!comments) {
+            return null;
+        }
+        return React.createElement('li', {
+                key : 'comments',
+                className : 'col-comments',
+                onClick : function() {
+                    new CommetsView({
+                        model : this.props.model
+                    }).render();
+                }.bind(this)
+            },
+            React.createElement('img',{
+                src : '/css/images/comment.png'
+            }),
+            comments
+        );
     },
     render : function() {
         var model = this.props.model;
@@ -172,6 +193,7 @@ var TaskItem = React.createClass({
                         },
                         this._createField('name'))
                 ),
+                this.createCommentField(),
                 React.createElement('li', {
                     key : 'complete',
                     className : 'col-complete'
