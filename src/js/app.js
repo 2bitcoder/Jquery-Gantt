@@ -7,6 +7,19 @@ var GanttView = require('./views/GanttView');
 var util = require('./utils/util');
 var params = util.getURLParams();
 
+function getConfig(cb) {
+    var configURL;
+    // load statuses settings
+    if (window.location.hostname.indexOf('localhost') === -1) {
+        configURL = '/api/GanttConfig/wbs/' + params.project + '/' + params.sitekey;
+    } else {
+        configURL = '/api/GanttConfig';
+    }
+    $.getJSON(configURL, function(statuses) {
+        cb(statuses);
+    });
+}
+
 function fetchCollection(app) {
 	app.tasks.fetch({
 		success : function() {
@@ -21,14 +34,9 @@ function fetchCollection(app) {
 			app.tasks.linkChildren();
 			app.tasks.checkSortedIndex();
 
-			app.settings = new Settings({}, {app : app});
 
-            // load statuses settings
-			if (window.location.hostname.indexOf('localhost') === -1) {
-				$.getJSON('/api/GanttConfig/wbs/' + params.project + '/' + params.sitekey, function(statuses) {
-					app.settings = statuses;
-				});
-			}
+
+
 
 			new GanttView({
 				app : app,
@@ -50,11 +58,15 @@ function fetchCollection(app) {
 $(function () {
 	var app = {};
 	app.tasks = new TaskCollection();
+    app.settings = new Settings({}, {app : app});
 
 	// detect API params from get, e.g. ?project=143&profile=17&sitekey=2b00da46b57c0395
 	var params = util.getURLParams();
 	if (params.project && params.profile && params.sitekey) {
 		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile + '/' + params.sitekey;
 	}
-	fetchCollection(app);
+    getConfig(function(statuses) {
+        app.settings.statuses = statuses;
+        fetchCollection(app);
+    });
 });

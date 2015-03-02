@@ -1,7 +1,6 @@
 "use strict";
 
 var util = require('../utils/util');
-var testStatuses = require('../../../data/config');
 
 var SettingModel = Backbone.Model.extend({
 	defaults: {
@@ -11,7 +10,7 @@ var SettingModel = Backbone.Model.extend({
 	},
 	initialize: function(attrs, params) {
 		this.app = params.app;
-		this.statuses = testStatuses;
+		this.statuses = undefined;
 		this.sattr = {
 			hData: {},
 			dragInterval: 1,

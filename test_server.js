@@ -10,6 +10,8 @@ var tasks = require('./data/tasks');
 var resources = require('./data/resources');
 var comments = require('./data/comments');
 
+var config = require('./data/config');
+
 var taskIdCounter = 0;
 _(tasks).each(function(task) {
     if (!task.id) {
@@ -119,8 +121,12 @@ generateAPI(resources, '/api/resources/1/1');
 
 app.get('/api/comment/:id/', function(req, res) {
     var id = req.params.id.toString();
-    console.log('return commetns with id ' + id);
+    console.log('return comments with id ' + id);
     res.send(comments[id] || []);
+});
+
+app.get('/api/GanttConfig', function(req, res) {
+    res.send(config);
 });
 
 
