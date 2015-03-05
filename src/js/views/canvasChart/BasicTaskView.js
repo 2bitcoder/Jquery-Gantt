@@ -15,6 +15,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
     _toolbarOffset : 20,
     _resourceListOffset : 20,
     _milestoneColor : 'blue',
+    _milestoneOffset : 0,
     initialize : function(params) {
         this.height = this._fullHeight;
         this.settings = params.settings;
@@ -75,10 +76,10 @@ var BasicTaskView = Backbone.KonvaView.extend({
             fill : this._milestoneColor,
             y : this._topPadding +this._barHeight / 2,
             x : this._barHeight / 2,
-            height : this._barHeight,
-            width : this._barHeight,
-            offsetX : this._barHeight / 2,
-            offsetY : this._barHeight / 2,
+            height : this._barHeight * 0.8,
+            width : this._barHeight * 0.8,
+            offsetX : this._barHeight * 0.8 / 2,
+            offsetY : this._barHeight * 0.8 / 2,
             name : 'diamond',
             rotation : 45,
             visible : false
@@ -298,25 +299,24 @@ var BasicTaskView = Backbone.KonvaView.extend({
         this.el.find('.completeRect')[0].width(this._calculateCompleteWidth());
         this.el.find('.completeRect')[0].x(0);
 
+        var _milestoneOffset = 0;
         if (this.model.get('milestone')) {
-            rect.hide();
-            this.el.find('.completeRect').hide();
-            this.el.find('.diamond').show();
+            _milestoneOffset = 10;
         }
 
         // move tool position
         var tool = this.el.find('.dependencyTool')[0];
-        tool.x(x.x2 - x.x1);
+        tool.x(x.x2 - x.x1 + _milestoneOffset);
         tool.y(this._topPadding);
 
         var resources = this.el.find('.resources')[0];
-        resources.x(x.x2 - x.x1 + this._toolbarOffset);
+        resources.x(x.x2 - x.x1 + this._toolbarOffset + _milestoneOffset);
         resources.y(this._topPadding);
 
 
         // update resource list
         var resourceList = this.el.find('.resourceList')[0];
-        resourceList.x(x.x2 - x.x1 + this._resourceListOffset);
+        resourceList.x(x.x2 - x.x1 + this._resourceListOffset + _milestoneOffset);
         resourceList.y(this._topPadding + 2);
         var names = [];
         var list = this.model.get('resources');

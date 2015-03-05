@@ -89,8 +89,17 @@ var AloneTaskView = BasicTaskView.extend({
         this.el.find('.leftBorder')[0].x(0);
         this.el.find('.rightBorder')[0].x(x.x2 - x.x1 - this._borderWidth);
         if (this.model.get('milestone')) {
+            this.el.find('.diamond').show();
+            this.el.find('.mainRect').hide();
+            this.el.find('.completeRect').hide();
             this.el.find('.leftBorder').hide();
             this.el.find('.rightBorder').hide();
+        } else {
+            this.el.find('.diamond').hide();
+            this.el.find('.mainRect').show();
+            this.el.find('.completeRect').show();
+            this.el.find('.leftBorder').show();
+            this.el.find('.rightBorder').show();
         }
         BasicTaskView.prototype.render.call(this);
         return this;

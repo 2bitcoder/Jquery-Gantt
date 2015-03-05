@@ -40,13 +40,15 @@ var ModalTaskEditComponent = Backbone.View.extend({
         var $end = this.$el.find('[name="end"]');
         $milestone.on('change', function() {
             var val = $milestone.prop('checked');
-            $deliverable.prop('checked', !val);
             if (val) {
                 $start.val($end.val());
+                $deliverable.prop('checked', false);
             }
         });
         $deliverable.on('change', function() {
-            $milestone.prop('checked', !$deliverable.prop('checked'));
+            if ($deliverable.prop('checked')) {
+                $milestone.prop('checked', false);
+            }
         });
     },
     _prepareSelects : function() {

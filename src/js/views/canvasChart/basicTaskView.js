@@ -76,10 +76,10 @@ var BasicTaskView = Backbone.KonvaView.extend({
             fill : this._milestoneColor,
             y : this._topPadding +this._barHeight / 2,
             x : this._barHeight / 2,
-            height : this._barHeight,
-            width : this._barHeight,
-            offsetX : this._barHeight / 2,
-            offsetY : this._barHeight / 2,
+            height : this._barHeight * 0.8,
+            width : this._barHeight * 0.8,
+            offsetX : this._barHeight * 0.8 / 2,
+            offsetY : this._barHeight * 0.8 / 2,
             name : 'diamond',
             rotation : 45,
             visible : false
@@ -301,9 +301,6 @@ var BasicTaskView = Backbone.KonvaView.extend({
 
         var _milestoneOffset = 0;
         if (this.model.get('milestone')) {
-            rect.hide();
-            this.el.find('.completeRect').hide();
-            this.el.find('.diamond').show();
             _milestoneOffset = 10;
         }
 
