@@ -30,7 +30,24 @@ var ModalTaskEditComponent = Backbone.View.extend({
                 this._saveData();
             }.bind(this)
         }).modal('show');
+        this._listenInputs();
 
+    },
+    _listenInputs : function() {
+        var $milestone = this.$el.find('[name="milestone"]');
+        var $deliverable = this.$el.find('[name="deliverable"]');
+        var $start = this.$el.find('[name="start"]');
+        var $end = this.$el.find('[name="end"]');
+        $milestone.on('change', function() {
+            var val = $milestone.prop('checked');
+            $deliverable.prop('checked', !val);
+            if (val) {
+                $start.val($end.val());
+            }
+        });
+        $deliverable.on('change', function() {
+            $milestone.prop('checked', !$deliverable.prop('checked'));
+        });
     },
     _prepareSelects : function() {
         var statusSelect = this.$el.find('[name="status"]');
@@ -75,6 +92,9 @@ var ModalTaskEditComponent = Backbone.View.extend({
                 input.val(val);
             }
         }, this);
+        if (this.model.children.length) {
+            this.$el.find('[name="milestone"]').parent().addClass('disabled');
+        }
     },
     _saveData : function() {
         _.each(this.model.attributes, function(val, key) {

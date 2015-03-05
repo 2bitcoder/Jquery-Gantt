@@ -535,6 +535,26 @@ describe("Tasks", function(){
             tasks.createDependency(tasks.get(3), tasks.get(2));
             expect(tasks.get(2).get('depend')).to.equal(undefined);
         });
+    });
 
+    describe('milestone', function() {
+        it('reset start date on milestone true', function() {
+            var tasks = new Tasks();
+            var task = tasks.add({
+                start : '2010-10-12',
+                end : '2010-10-16'
+            }, {parse:true});
+            task.set('milestone', true);
+            expect(task.get('start').toDateString()).to.equal(task.get('end').toDateString());
+        });
+
+        it('reset milestone on child add', function() {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1, milestone : true}, {id : 2}]);
+            expect(tasks.get(1).get('milestone')).to.equal(true);
+
+            tasks.get(2).set('parentid', 1);
+            expect(tasks.get(1).get('milestone')).to.equal(false);
+        });
     });
 });

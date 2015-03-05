@@ -14,6 +14,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
     _completeColor : '#e88134',
     _toolbarOffset : 20,
     _resourceListOffset : 20,
+    _milestoneColor : 'blue',
     initialize : function(params) {
         this.height = this._fullHeight;
         this.settings = params.settings;
@@ -37,7 +38,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
                 this._hideResourcesList();
                 this._grabPointer(e);
             },
-            'mouseleave' : function(e) {
+            'mouseleave' : function() {
                 this._hideTools();
                 this._showResourcesList();
                 this._defaultMouse();
@@ -69,6 +70,18 @@ var BasicTaskView = Backbone.KonvaView.extend({
             y : this._topPadding,
             height : this._barHeight,
             name : 'mainRect'
+        });
+        var diamond = new Konva.Rect({
+            fill : this._milestoneColor,
+            y : this._topPadding +this._barHeight / 2,
+            x : this._barHeight / 2,
+            height : this._barHeight,
+            width : this._barHeight,
+            offsetX : this._barHeight / 2,
+            offsetY : this._barHeight / 2,
+            name : 'diamond',
+            rotation : 45,
+            visible : false
         });
         var completeRect = new Konva.Rect({
             fill : this._completeColor,
@@ -129,7 +142,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
             listening : false
         });
 
-        group.add(fakeBackground, rect, completeRect, arc, toolbar, resourceList);
+        group.add(fakeBackground, diamond, rect, completeRect, arc, toolbar, resourceList);
         return group;
     },
     _editResources : function() {
@@ -285,6 +298,12 @@ var BasicTaskView = Backbone.KonvaView.extend({
         this.el.find('.completeRect')[0].width(this._calculateCompleteWidth());
         this.el.find('.completeRect')[0].x(0);
 
+        if (this.model.get('milestone')) {
+            rect.hide();
+            this.el.find('.completeRect').hide();
+            this.el.find('.diamond').show();
+        }
+
         // move tool position
         var tool = this.el.find('.dependencyTool')[0];
         tool.x(x.x2 - x.x1);
@@ -315,7 +334,6 @@ var BasicTaskView = Backbone.KonvaView.extend({
             }
         }.bind(this));
         resourceList.text(names.join(', '));
-
         this.el.getLayer().batchDraw();
         return this;
     },

@@ -55,13 +55,32 @@ var TaskModel = Backbone.Model.extend({
         hightlight : ''
     },
     initialize : function() {
+        // self validation
+        this.listenTo(this, 'change:resources', function() {
+            resLinks.updateResourcesForTask(this);
+        });
+
+        this.listenTo(this, 'change:milestone', function() {
+            if (this.get('milestone')) {
+                this.set('start', new Date(this.get('end')));
+            }
+        });
+
+        // children references
         this.children = new SubTasks();
+
+        this.listenTo(this.children, 'add', function() {
+            this.set('milestone', false);
+        });
+
+        // removing refs
         this.listenTo(this.children, 'change:parentid', function(child) {
             if (child.get('parentid') === this.id) {
                 return;
             }
             this.children.remove(child);
         });
+
         this.listenTo(this.children, 'add', function(child) {
             child.parent = this;
         });
@@ -93,10 +112,6 @@ var TaskModel = Backbone.Model.extend({
 
         // time checking
         this.listenTo(this.children, 'add remove change:complete', this._checkComplete);
-
-        this.listenTo(this, 'change:resources', function() {
-            resLinks.updateResourcesForTask(this);
-        });
     },
     isNested : function() {
         return !!this.children.length;
