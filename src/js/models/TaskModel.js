@@ -224,6 +224,9 @@ var TaskModel = Backbone.Model.extend({
         });
         response.Resources = undefined;
         response.resources = ids;
+        if (response.milestone) {
+            response.start = response.end;
+        }
         return response;
     },
     _checkTime : function() {

@@ -538,7 +538,19 @@ describe("Tasks", function(){
     });
 
     describe('milestone', function() {
-        it('reset start date on milestone true', function() {
+        it('reset start date on milestone true change', function() {
+            var tasks = new Tasks();
+            tasks.reset([{
+                id : 1,
+                start : '2010-10-12',
+                end : '2010-10-16',
+                milestone : true
+            }], {parse : true});
+            var task = tasks.get(1);
+            expect(task.get('start').toDateString()).to.equal(task.get('end').toDateString());
+        });
+
+        it('reset start date on milestone true change', function() {
             var tasks = new Tasks();
             var task = tasks.add({
                 start : '2010-10-12',
