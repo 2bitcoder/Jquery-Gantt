@@ -188,3 +188,16 @@ i.icon{
 #main-view {
     margin-top: 15px;
 }
+
+#main {
+    margin-top: 120px;
+    padding: 0;
+}
+
+#head {
+    position : fixed;
+    top: 0;
+    z-index: 10;
+    margin-top: 0;
+    width: 98%;
+}

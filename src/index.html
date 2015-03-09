@@ -17,7 +17,7 @@
 			width: 100%;
 			height: 100%;
 			background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iNiIgaGVpZ2h0PSI2Ij4KPHJlY3Qgd2lkdGg9IjYiIGhlaWdodD0iNiIgZmlsbD0iI2VlZWVlZSI+PC9yZWN0Pgo8ZyBpZD0iYyI+CjxyZWN0IHdpZHRoPSIzIiBoZWlnaHQ9IjMiIGZpbGw9IiNlNmU2ZTYiPjwvcmVjdD4KPHJlY3QgeT0iMSIgd2lkdGg9IjMiIGhlaWdodD0iMiIgZmlsbD0iI2Q4ZDhkOCI+PC9yZWN0Pgo8L2c+Cjx1c2UgeGxpbms6aHJlZj0iI2MiIHg9IjMiIHk9IjMiPjwvdXNlPgo8L3N2Zz4=");
-			z-index: 20;
+			z-index: 2000;
 		}
 
 		.spinner {
@@ -145,10 +145,9 @@
 	</div>
 
 	<div id="ganttChart" class="Gantt">
-		<div class="ui page grid segment">
+        <!--HEAD-->
+		<div id="head" class="ui page grid segment">
 			<div class="column">
-
-                <!--HEAD-->
 				<div class="ui seven column grid" id="top-menu">
 
                     <!--HEADER-->
@@ -268,9 +267,14 @@
 				</div>
 				
 				<div class="item-selector"></div>
+            </div>
+        </div>
 
-				<!--MAIN VIEW-->
-				<div class="ui" id="main-view">
+
+        <!--MAIN VIEW-->
+        <div id="main" class="">
+            <div class="">
+				<div class="ui segment" id="main-view">
 
 					<!--SIDE BAR-->
 					<div class="menu-container panel-collapsed">
