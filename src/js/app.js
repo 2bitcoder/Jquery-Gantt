@@ -36,14 +36,28 @@ function fetchCollection(app) {
 
 
 
-
-
 			new GanttView({
 				app : app,
 				collection : app.tasks
 			}).render();
 
-			$('#loader').fadeOut();
+
+            // hide loading
+			$('#loader').fadeOut(function() {
+
+                // display head always on top
+                $('#head').css({
+                    position : 'fixed'
+                });
+
+                // enable scrolling
+                $('body').removeClass('hold-scroll');
+            });
+
+            $(window).on('keydown', function() {
+                $('.task-container').contextMenu();
+            });
+
 		},
 		error : function(err) {
 			console.error('error loading');

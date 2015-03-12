@@ -153,6 +153,15 @@ var TaskItem = React.createClass({
             comments
         );
     },
+    showContext : function(e) {
+        var $el = $(e.target);
+        var ul = $el.parent();
+        var offset = $el.offset();
+        ul.contextMenu({
+            x : offset.left + 20,
+            y : offset.top
+        });
+    },
     render : function() {
         var model = this.props.model;
         return React.createElement('ul', {
@@ -172,6 +181,17 @@ var TaskItem = React.createClass({
                         'backgroundColor' : this.props.model.get('hightlight')
                     }
                 },
+                React.createElement('li', {
+                    key : 'info',
+                    className : 'col-info'
+                },
+                    React.createElement('img', {
+                        src : 'css/images/info.png',
+                        width : '21',
+                        height : '21',
+                        onClick : this.showContext
+                    })
+                ),
                 React.createElement('li', {
                     key : 'sortindex',
                     className : 'col-sortindex'

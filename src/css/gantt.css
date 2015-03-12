@@ -97,6 +97,18 @@ div.gantt-chart-container {
 	display: initial;
 }
 
+
+.task .col-info {
+    opacity:0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.task:hover .col-info{
+    opacity:1;
+}
+
 .task .col-name{
 	width:320px;
 	white-space: nowrap;
@@ -195,9 +207,12 @@ i.icon{
 }
 
 #head {
-    position : fixed;
     top: 0;
-    z-index: 10;
+    z-index: 2;
     margin-top: 0;
     width: 98%;
+}
+
+.hold-scroll {
+    overflow: hidden;
 }
