@@ -15,7 +15,8 @@ var ModalTaskEditComponent = Backbone.View.extend({
 
 
         this.$el.find('[name="start"], [name="end"]').datepicker({
-            dateFormat: "dd/mm/yy"
+//            dateFormat: "dd/mm/yy"
+            dateFormat : this.settings.getDateFormat()
         });
 
         this._fillData();
@@ -86,7 +87,8 @@ var ModalTaskEditComponent = Backbone.View.extend({
                 return;
             }
             if (key === 'start' || key === 'end') {
-                input.get(0).value = (val.toString('dd/MM/yyyy'));
+                var dateStr = $.datepicker.formatDate(this.settings.getDateFormat(), val);
+                input.get(0).value = dateStr;
                 input.datepicker( "refresh" );
             } else if (input.prop('type') === 'checkbox') {
                 input.prop('checked', val);

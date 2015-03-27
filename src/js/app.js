@@ -1,86 +1,61 @@
-"use strict";
-
+'use strict';
+require('babel/external-helpers');
 var TaskCollection = require('./collections/taskCollection');
 var Settings = require('./models/SettingModel');
 
 var GanttView = require('./views/GanttView');
-var util = require('./utils/util');
-var params = util.getURLParams();
+import {tasksURL, configURL} from './clientConfig';
 
-function getConfig(cb) {
-    var configURL;
-    // load statuses settings
-    if (window.location.hostname.indexOf('localhost') === -1) {
-        configURL = '/api/GanttConfig/wbs/' + params.project + '/' + params.sitekey;
-    } else {
-        configURL = '/api/GanttConfig';
-    }
-    $.getJSON(configURL, function(statuses) {
-        cb(statuses);
-    });
-}
 
-function fetchCollection(app) {
-	app.tasks.fetch({
+function loadTasks(tasks) {
+    var dfd = new $.Deferred();
+	tasks.fetch({
 		success : function() {
-            // add empty task if no tasks from server
-            if (app.tasks.length === 0) {
-                app.tasks.reset([{
-                    name : 'New task'
-                }]);
-
-            }
-			console.log('Success loading tasks.');
-			app.tasks.linkChildren();
-			app.tasks.checkSortedIndex();
-
-
-
-			new GanttView({
-				app : app,
-				collection : app.tasks
-			}).render();
-
-
-            // hide loading
-			$('#loader').fadeOut(function() {
-
-                // display head always on top
-                $('#head').css({
-                    position : 'fixed'
-                });
-
-                // enable scrolling
-                $('body').removeClass('hold-scroll');
-            });
-
-            $(window).on('keydown', function() {
-                $('.task-container').contextMenu();
-            });
-
+            dfd.resolve();
 		},
 		error : function(err) {
-			console.error('error loading');
-			console.error(err);
+            dfd.reject(err);
 		},
 		parse: true,
 		reset : true
 	});
+    return dfd.promise();
+}
+
+function loadSettings(settings) {
+    return $.getJSON(configURL)
+        .then((data) => {
+            settings.statuses = data;
+        });
 }
 
 
-$(function () {
-	var app = {};
-	app.tasks = new TaskCollection();
-    app.settings = new Settings({}, {app : app});
+$(() => {
+	let tasks = new TaskCollection();
+    tasks.url = tasksURL;
+    let settings = new Settings({}, {tasks : tasks});
 
-	// detect API params from get, e.g. ?project=143&profile=17&sitekey=2b00da46b57c0395
-	var params = util.getURLParams();
-	if (params.project && params.profile && params.sitekey) {
-		app.tasks.url = 'api/tasks/' + params.project + '/' + params.profile + '/' + params.sitekey;
-	}
-    getConfig(function(statuses) {
-        app.settings.statuses = statuses;
-        fetchCollection(app);
+    $.when(loadTasks(tasks))
+    .then(() => loadSettings(settings))
+    .then(() => {
+        console.log('Success loading tasks.');
+        new GanttView({
+            settings: settings,
+            collection: tasks
+        }).render();
+    })
+    .then(() => {
+        // hide loading
+        $('#loader').fadeOut(function() {
+
+            // display head always on top
+            $('#head').css({
+                position : 'fixed'
+            });
+            // enable scrolling
+            $('body').removeClass('hold-scroll');
+        });
+    }).fail((error) => {
+        console.error('Error while loading', error);
     });
 });

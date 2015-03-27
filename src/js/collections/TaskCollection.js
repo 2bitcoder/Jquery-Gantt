@@ -75,6 +75,14 @@ var TaskCollection = Backbone.Collection.extend({
 		this.sort();
 	},
 	subscribe : function() {
+        this.listenTo(this, 'reset', () => {
+            // add empty task if no tasks from server
+            if (this.length === 0) {
+                this.reset([{
+                    name : 'New task'
+                }]);
+            }
+        });
 		this.listenTo(this, 'add', function(model) {
 			if (model.get('parentid')) {
 				var parent = this.find(function(m) {

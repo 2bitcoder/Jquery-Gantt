@@ -9,7 +9,6 @@ var SettingModel = Backbone.Model.extend({
 		dpi: 1
 	},
 	initialize: function(attrs, params) {
-		this.app = params.app;
 		this.statuses = undefined;
 		this.sattr = {
 			hData: {},
@@ -30,7 +29,7 @@ var SettingModel = Backbone.Model.extend({
 			tableWidth: 710
 		};
 
-		this.collection = this.app.tasks;
+		this.collection = params.tasks;
 		this.calculateIntervals();
 		this.on('change:interval change:dpi', this.calculateIntervals);
         this.listenTo(this.collection, 'add change:end', _.debounce(function() {
@@ -140,6 +139,9 @@ var SettingModel = Backbone.Model.extend({
     },
     findDefaultWOId : function() {
         return this.statuses.wodata[0].data[0].ID;
+    },
+    getDateFormat : function() {
+        return 'dd/mm/yy';
     },
 	calcminmax: function() {
 		var minDate = new Date(), maxDate = minDate.clone().addYears(1);

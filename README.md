@@ -1,19 +1,15 @@
-Jquery-Gantt Editor
+Gantt.js Editor
 ============
 
-A Gantt Plugin using Jquery, Backbone and Kinetic
-
-### Jquery-Gantt Editor
-This jquery-gantt plugin utilises additional jquery libraries of [Backbone.js](http://backbonejs.org/) and [Kineticjs](http://kineticjs.com/)
+A Gantt Project using Backbone, React and Konva
 
 # Version 1.0 Beta
 
-The version 1.0 development is in Beta a stage, the Gantt Editor plugin allows for complex Project Gantt charts, dependency and resource assignments (not active yet). Data is being read from structured json files that should allow integration to any backend technologies such as .net, php, java etc.
+The version 1.0 development is in Beta a stage, the Gantt Editor plugin allows for complex
+Project Gantt charts, dependency and resource assignments. Data is being read from structured
+json files that should allow integration to any backend technologies such as .net, php, java etc.
 
-## Current State of Development
-Jquery-Gantt Editor currently reads in json files from api sources, and outputs the results in a gantt style chart to a browser screen. 
-
-### Functions available:
+## Functions available:
 *  Add, edit, delete tasks
 *  dependencies created between items
 *  gantt bars moved to change dates
@@ -23,7 +19,8 @@ Jquery-Gantt Editor currently reads in json files from api sources, and outputs 
 *  left mouse click context menu
 *  Indent / Outdent tasks to great grouping relationships
 *  Add tasks above and below line item 
-*  Changes are automatically saved to the server through an api 
+*  Changes are automatically saved to the server through an REST api
+*  Edit task resources 
 
 ### User Interface:
 *  different view options, Day, Week, Month, Quarter
@@ -34,12 +31,9 @@ Jquery-Gantt Editor currently reads in json files from api sources, and outputs 
 ### Video Link of Gantt Editor in Action
 [![Alt text for your video](http://img.youtube.com/vi/2EzHS1TR2v0/0.jpg)](http://www.youtube.com/watch?v=2EzHS1TR2v0)
 
-### Work Required to complete Version 1.0
-* Resource assignments to rows
-* Import / Export a basic Microsoft Project Plan
 
 ### Authors and Contributors
-This plugin is being developed to be used in the Cloud Based Project, Portfolio Management application <a href="https://demo.oneviewapps.com" target="_blank">OneView PPM</a> by <a href="http://www.level35.net" target="_blank">Level35</a>.
+This project is being developed to be used in the Cloud Based Project, Portfolio Management application <a href="https://demo.oneviewapps.com" target="_blank">OneView PPM</a> by <a href="http://www.level35.net" target="_blank">Level35</a>.
 
 We are currently looking for active contribition to complete this plugin. Please contact us if you have the skills and the time to contribute.
 

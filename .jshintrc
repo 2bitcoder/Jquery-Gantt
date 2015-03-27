@@ -1,4 +1,5 @@
 {
+  "esnext" : true,
   "curly": true,
   "immed": true,   
   "latedef": true, 
@@ -15,7 +16,6 @@
   "trailing" : true,
   "laxbreak" : true,
   "globals": { 
-    "Kinetic": false,
     "document": false,
     "window" : false,
     "navigator" : false,

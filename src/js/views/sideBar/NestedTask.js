@@ -20,7 +20,8 @@ var NestedTask = React.createClass({
                 return React.createElement(NestedTask, {
                     model: task,
                     isSubTask : true,
-                    key : task.cid
+                    key : task.cid,
+                    dateFormat : this.props.dateFormat
                 });
             }
             return React.createElement('li', {
@@ -31,10 +32,11 @@ var NestedTask = React.createClass({
                         },
                         React.createElement(TaskItem, {
                             model: task,
-                            isSubTask : true
+                            isSubTask : true,
+                            dateFormat : this.props.dateFormat
                         })
                     );
-        });
+        }, this);
         return React.createElement('li', {
                     className : 'task-list-container drag-item' + (this.props.isSubTask ? ' sub-task' : ''),
                     id : this.props.model.cid,
@@ -45,7 +47,8 @@ var NestedTask = React.createClass({
                         'data-id' : this.props.model.cid
                     },
                     React.createElement(TaskItem, {
-                        model : this.props.model
+                        model : this.props.model,
+                        dateFormat : this.props.dateFormat
                     })
                 ),
                 React.createElement('ol', {

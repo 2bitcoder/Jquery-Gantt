@@ -122,7 +122,8 @@ var SidePanel = React.createClass({
             if (task.children.length) {
                 tasks.push(React.createElement(NestedTask, {
                     model: task,
-                    key : task.cid
+                    key : task.cid,
+                    dateFormat : this.props.dateFormat
                 }));
             } else {
                 tasks.push(React.createElement('li', {
@@ -131,11 +132,12 @@ var SidePanel = React.createClass({
                         'data-id' : task.cid
                     },
                     React.createElement(TaskItem, {
-                        model: task
+                        model: task,
+                        dateFormat : this.props.dateFormat
                     })
                 ));
             }
-        });
+        }, this);
         return (
             React.createElement('ol', {
                     className : 'task-container sortable'

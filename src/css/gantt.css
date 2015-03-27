@@ -16,6 +16,128 @@ body {
 }
 
 
+/* Gantt chart style */
+/* author : Vineeth Krishnan */
+html,
+body {
+    font-size: 15px;
+    /*height: 100%;*/
+}
+
+body {
+    font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    background: #FFFFFF;
+    margin: 0;
+    padding: 0;
+    color: #555555;
+    text-rendering: optimizeLegibility;
+    min-width: 320px;
+}
+
+
+.ui.button {
+    font-weight: normal;
+    text-decoration: none;
+}
+
+a {
+    color: #009FDA;
+    text-decoration: none;
+    -webkit-transition: color 0.3s ease;
+    -moz-transition: color 0.3s ease;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #00BAFF;
+}
+
+p a {
+    font-weight: bold;
+}
+
+/*******************************
+            Global
+*******************************/
+.ui.page.grid.segment {
+    padding: 0.5rem 0;
+}
+
+.hdr-title {
+    padding-top: 1px;
+    margin-bottom: 12px;
+}
+
+.task:hover,.sub-task:hover{
+    cursor: -webkit-grab;
+    cursor: -moz-grab;
+    cursor: url(openhand.cur), move;
+}
+
+
+
+.task:active,.sub-task:active{
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;
+    cursor: url(closedhand.cur), move;
+}
+div.menu-container,#gantt-container{
+    transition: all 0.5s ease-in-out 0s;
+    -moz-transition: all 0.5s ease-in-out 0s;
+    -webkit-transition: all 0.5s ease-in-out 0s;
+    padding-left:0px;
+}
+
+.panel-collapsed {
+    width: 425px;
+}
+
+.panel-expanded {
+    width: 650px;
+}
+
+
+.menu-header{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.task:hover,.sub-task:hover{
+    background-color: rgba(199, 138, 51, 0.5);
+}
+.item-selector{
+    height: 22px;
+    position: fixed;
+    display: none;
+    width: 98%;
+    background-color: rgba(199, 138, 51, 0.5);
+    top:10px;
+    z-index: 1;
+}
+/*******************************
+          Responsive
+*******************************/
+
+/* Mobile Only */
+
+@media only screen and (max-width : 768px) {
+    .ui.page.grid.segment {
+        padding-top: 0.5rem;
+        padding-bottom: 2rem;
+    }
+    #gantt-container{
+        /*min-width: 1300px;*/
+    }
+}
+@media only screen and (max-width : 760px) {
+    /*Setting viewport for medium devices*/
+    .menu-container{
+        width: 230px  !important;
+    }
+}
+@media only screen and (max-width : 1000px) {
+
+}
 
 div.menu-container {
 	border-right: 3px solid rgba(0, 0, 0, 0.2);
@@ -28,10 +150,7 @@ div.menu-container {
 	position: absolute;
 	background: rgb(255, 255, 255);
 }
-div.head-bar{
-	/* height:36px; */
-	/* border-bottom: 1px solid #000; */
-}
+
 .menu-header{
 	position:relative;
 }
@@ -63,10 +182,6 @@ div.head-bar{
 	padding: 0px 2px 0px 2px;
 }
 
-.expand-menu{
-	cursor: pointer;
-}
-
 .task-container{
 	width: 750px;
 }
@@ -85,11 +200,6 @@ div.head-bar{
 	overflow: hidden;
 }
 
-.task-list-container > :first-child {
-	font-weight: bold;
-}
-
-
 div.gantt-chart-container {
 	float: right;
 	width: 100%;
@@ -103,6 +213,11 @@ div.gantt-chart-container {
     margin: 0;
     padding: 0;
     cursor: pointer;
+}
+
+.task .col-info img{
+    width: 21px;
+    height: 21px;
 }
 
 .task:hover .col-info{
@@ -147,55 +262,33 @@ div.gantt-chart-container {
 	text-align: center;
 	width: 40px;
 }
-.task .col-status{
-	padding-left: 10px;
-}
-.task .col-interval{
-	padding-left: 10px;
-}
+
 .task .col-duration{
 	padding-left: 10px;
 	width: 50px;
 }
-.task .remove-item{
-	padding-left: 3px;
-}
+
 i.icon{
 	margin: 0;
 }
-.ui.mini.buttons .button, .ui.mini.button{
-	padding: 2px;
-	margin-left: 3px;
-}
+
 .ui.button > .icon{
 	margin-right: 0;
 }
-.kineticjs-content{
-	float: right;
-	/*width: 100% !important;*/
-    transition: all 0.5s ease-in-out 0s;
-    -moz-transition: all 0.5s ease-in-out 0s;
-    -webkit-transition: all 0.5s ease-in-out 0s;
-}
-.kineticjs-content canvas{
-	/*width: 100% !important;*/
-}
+
 @media only screen and (max-width: 760px){
 	div.gantt-chart-container{
 		float: none;
 		clear: both;
 		width: 100%;
 	}
-	/*div.kineticjs-content,canvas{
-		width: 488px !important;
-		}*/
-	}
-
-#modalEditContainer {
-	position: absolute;
-	top : 50px;
-	left: 50%;
 }
+
+/*#modalEditContainer {*/
+	/*position: absolute;*/
+	/*top : 50px;*/
+	/*left: 50%;*/
+/*}*/
 
 #main-view {
     margin-top: 15px;
@@ -215,4 +308,66 @@ i.icon{
 
 .hold-scroll {
     overflow: hidden;
+}
+
+
+/*styles for modal edit*/
+.ui.form input[type="text"], .ui.form input[type="email"], .ui.form input[type="date"], .ui.form input[type="password"], .ui.form input[type="number"], .ui.form input[type="url"], .ui.form input[type="tel"] {
+    padding: 0.4em 0.5em !important;
+}
+.ui.form select {
+    padding: 0.2em 0.5em !important;
+    width: 160px !important;
+}
+
+.ui.textarea, .ui.form textarea {
+    height: 6em !important;
+    padding: 0.3em 0.5em !important;
+}
+.labelsolid {
+    background-color: white;
+    font-weight:bold;
+    float: left;
+    height: 100%;
+    line-height: 1em;
+    margin: 0;
+    padding: 0;
+    position: static;
+}
+.label_80 {
+    display: block !important;
+    float: left;
+    padding-right: 5px;
+    padding-top: 5px;
+    text-align: left;
+    width: 80px !important;
+}
+.textdiv{
+    padding:8px;
+}
+.ui.form .field {
+    margin: 0 0 0.5em !important;
+}
+.noborder {
+    border-width:0px !important;
+    border:none !important;
+}
+.ui.checkbox {
+    width: 130px !important;
+}
+.selectdiv{
+    padding:2px;
+}
+.column{
+    height:120px;
+}
+.right_top{
+    float:right;
+    border-left: 1px solid lightgray;
+}
+/*div.menu-container {*/
+/*top: 120px;*/
+/*}*/
+#top-menu{
+    z-index:1000 !important;
 }

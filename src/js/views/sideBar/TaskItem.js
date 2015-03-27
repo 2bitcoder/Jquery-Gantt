@@ -43,7 +43,8 @@ var TaskItem = React.createClass({
             return model.get(col) + '%';
         }
         if (col === 'start' || col === 'end') {
-            return model.get(col).toString('dd/MM/yyyy');
+            return $.datepicker.formatDate(this.props.dateFormat, model.get(col));
+//            return model.get(col).toString(this.props.dateFormat);
         }
         if (col === 'duration') {
             return Date.daysdiff(model.get('start'), model.get('end'))+' d';
@@ -54,6 +55,7 @@ var TaskItem = React.createClass({
         var val = this.props.model.get(col);
         return React.createElement(DatePicker, {
             value : val,
+            dateFormat : this.props.dateFormat,
             key : col,
             onChange : function(e) {
                 var newVal = e.target.value;
@@ -187,8 +189,6 @@ var TaskItem = React.createClass({
                 },
                     React.createElement('img', {
                         src : 'css/images/info.png',
-                        width : '21',
-                        height : '21',
                         onClick : this.showContext
                     })
                 ),
