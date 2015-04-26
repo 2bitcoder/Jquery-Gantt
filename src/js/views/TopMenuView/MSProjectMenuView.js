@@ -19,7 +19,7 @@ var MSProjectMenuView = Backbone.View.extend({
             _.each(files, function(file) {
                 var extention = file.name.split('.')[1].toLowerCase();
                 if (extention !== 'xml') {
-                    alert('The file type "' + extention + '" is not supported. Only xml files are allowed.');
+                    alert('The file type "' + extention + '" is not supported. Only xml files are allowed. Please save your MS project as a xml file and try again.');
                     return;
                 }
                 var reader = new FileReader();
