@@ -233,7 +233,7 @@ div.gantt-chart-container {
 }
 
 .task .col-name i{
-    margin-left: 15px;
+/*     margin-left: 15px; */
     margin-right: 5px;
     /* cursor: pointer; */
 }
