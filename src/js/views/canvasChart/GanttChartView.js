@@ -294,6 +294,7 @@ var GanttChartView = Backbone.View.extend({
                 this._resortViews();
                 waiting = false;
             }.bind(this), 5);
+            waiting = true;
         };
     }()),
     _resortViews : function() {

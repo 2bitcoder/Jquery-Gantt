@@ -45,6 +45,9 @@ module.exports.parseDepsFromXML = function(xmlString) {
         var outline = xmlItem.OutlineNumber[0]._text.toString();
         if (outline.indexOf('.') !== -1) {
             var parentOutline = outline.slice(0,outline.lastIndexOf('.'));
+            if (!parentOutline || !outlines[parentOutline]) {
+              return;
+            }
             parents.push([outlines[parentOutline], name]);
         }
     });
@@ -79,4 +82,3 @@ module.exports.JSONToXML = function(json) {
         finishDate : end
     });
 };
-

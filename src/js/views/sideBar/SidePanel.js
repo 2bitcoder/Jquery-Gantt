@@ -103,6 +103,7 @@ var SidePanel = React.createClass({
                 this.forceUpdate();
                 waiting = false;
             }.bind(this), 5);
+            waiting = true;
         };
     }()),
     componentWillUnmount  : function() {

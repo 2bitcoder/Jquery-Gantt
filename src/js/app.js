@@ -1,6 +1,6 @@
 'use strict';
 require('babel/external-helpers');
-var TaskCollection = require('./collections/taskCollection');
+var TaskCollection = require('./collections/TaskCollection');
 var Settings = require('./models/SettingModel');
 
 var GanttView = require('./views/GanttView');
