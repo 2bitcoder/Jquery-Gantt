@@ -232,6 +232,10 @@ div.gantt-chart-container {
 	overflow: hidden;
 }
 
+.nameInput {
+	width: 290px;
+}
+
 .task .col-name i{
 /*     margin-left: 15px; */
     margin-right: 5px;

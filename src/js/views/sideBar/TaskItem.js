@@ -113,6 +113,7 @@ var TaskItem = React.createClass({
             return this._createDurationField();
         }
         return React.createElement('input', {
+            className: "nameInput",
             value : val,
             key : col,
             onChange : function(e) {
