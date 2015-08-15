@@ -87,8 +87,18 @@ var GanttChartView = Backbone.View.extend({
             height : this.stage.height(),
             width : width
         });
+        var currentDayLine = new Konva.Rect({
+            height: this.stage.height(),
+            width: 2,
+            y: 0,
+            x: 0,
+            fill: 'green',
+            listening: false,
+            name: 'currentDayLine'
+        });
 
-        this.Blayer.add(back).add(shape);
+        this.Blayer.add(back).add(currentDayLine).add(shape);
+        this._updateTodayLine();
         this.stage.draw();
     },
     _getSceneFunction : function() {
@@ -158,7 +168,6 @@ var GanttChartView = Backbone.View.extend({
                 }
                 context._context.fillText(hData[s][i].text, x - length / 2, yi + rowHeight / 2);
                 context._context.restore();
-
             }
             context.fillStrokeShape(this);
         };
@@ -173,15 +182,26 @@ var GanttChartView = Backbone.View.extend({
             height : this.stage.height()
         });
     },
+    _updateTodayLine: function() {
+      var attrs= this.settings.getSetting('attr'),
+          boundaryMin = attrs.boundaryMin,
+          daysWidth = attrs.daysWidth;
+
+      var x = Date.daysdiff(boundaryMin, new Date()) * daysWidth;
+      this.Blayer.findOne('.currentDayLine').x(x).height(this.stage.height());
+      this.Blayer.batchDraw();
+    },
     _initSettingsEvents : function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this._updateStageAttrs();
+            this._updateTodayLine();
             this._cacheBackground();
         });
 
         this.listenTo(this.settings, 'change:width', function() {
             this._updateStageAttrs();
             this._cacheBackground();
+            this._updateTodayLine();
             this._taskViews.forEach(function(view) {
                 view.render();
             });
