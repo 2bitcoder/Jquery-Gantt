@@ -232,6 +232,10 @@ div.gantt-chart-container {
 	overflow: hidden;
 }
 
+.collapsed {
+	font-weight: bold;
+}
+
 .nameInput {
 	width: 290px;
 }

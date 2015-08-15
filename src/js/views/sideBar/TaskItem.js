@@ -168,7 +168,9 @@ var TaskItem = React.createClass({
     render : function() {
         var model = this.props.model;
         return React.createElement('ul', {
-                    className : 'task' + (this.props.isSubTask ? ' sub-task' : ''),
+                    className : 'task'
+                          + (this.props.isSubTask ? ' sub-task' : '')
+                          + (this.props.model.get('collapsed') ? ' collapsed' : ''),
                     'data-id' : this.props.model.cid,
                     onDoubleClick : function(e) {
                         var className = e.target.className;
