@@ -70,9 +70,10 @@ module.exports.JSONToXML = function(json) {
             end = task.end;
         }
         return {
+            id: task.sortindex,
             name : task.name,
-            start : task.start.toISOString(),
-            end : task.end.toISOString()
+            start : task.start.format('yyyy-mm-dd;hh:mm:ss').replace(';', 'T'),
+            end : task.end.format('yyyy-mm-dd;hh:mm:ss').replace(';', 'T')
         };
     });
     return compiled({

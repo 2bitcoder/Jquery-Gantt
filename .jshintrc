@@ -1,21 +1,21 @@
 {
   "esnext" : true,
   "curly": true,
-  "immed": true,   
-  "latedef": true, 
-  "newcap": true, 
-  "noarg": true,  
-  "sub": true,    
-  "undef": true,    
-  "boss": true,     
-  "eqnull": true,  
+  "immed": true,
+  "latedef": true,
+  "newcap": true,
+  "noarg": true,
+  "sub": true,
+  "undef": true,
+  "boss": true,
+  "eqnull": true,
   "node": true,
   "latedef": true,
   "quotmark": "single",
   "unused": true,
   "trailing" : true,
   "laxbreak" : true,
-  "globals": { 
+  "globals": {
     "document": false,
     "window" : false,
     "navigator" : false,
@@ -23,6 +23,7 @@
     "Image" : false,
     "$" : false,
     "Backbone" : false,
+    "Konva": false,
     "_" : false
   }
 }
