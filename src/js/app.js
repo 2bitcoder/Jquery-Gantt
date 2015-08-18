@@ -35,6 +35,8 @@ $(() => {
     tasks.url = tasksURL;
     let settings = new Settings({}, {tasks : tasks});
 
+    window.tasks = tasks;
+    
     $.when(loadTasks(tasks))
     .then(() => loadSettings(settings))
     .then(() => {

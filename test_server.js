@@ -6,7 +6,8 @@ var logger = require('morgan');
 var _ = require('lodash');
 var serveStatic = require('serve-static');
 
-var tasks = require('./data/tasks');
+// var tasks = require('./data/tasks');
+var tasks = [];
 var resources = require('./data/resources');
 var comments = require('./data/comments');
 

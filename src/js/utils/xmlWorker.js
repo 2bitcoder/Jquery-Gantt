@@ -15,7 +15,8 @@ function parseXMLObj(xmlString) {
             name : xmlItem.Name[0]._text,
             start : xmlItem.Start[0]._text,
             end : xmlItem.Finish[0]._text,
-            complete : xmlItem.PercentComplete[0]._text
+            complete : xmlItem.PercentComplete[0]._text,
+            outline: xmlItem.OutlineNumber[0]._text.toString()
         });
     });
     return tasks;
@@ -31,24 +32,43 @@ module.exports.parseDepsFromXML = function(xmlString) {
         if (!xmlItem.Name) {
             return;
         }
-        uids[xmlItem.UID[0]._text] = xmlItem.Name[0]._text.toString();
-        outlines[xmlItem.OutlineNumber[0]._text.toString()] = xmlItem.Name[0]._text;
+        var item = {
+            name: xmlItem.Name[0]._text.toString(),
+            outline: xmlItem.OutlineNumber[0]._text.toString()
+        };
+        uids[xmlItem.UID[0]._text] = item;
+        outlines[item.outline] = item;
     });
     _.each(obj.Project[0].Tasks[0].Task, function(xmlItem) {
         if (!xmlItem.Name) {
             return;
         }
-        var name = xmlItem.Name[0]._text;
+        var task = uids[xmlItem.UID[0]._text];
+        // var name = xmlItem.Name[0]._text;
+        var outline = task.outline;
+
         if (xmlItem.PredecessorLink) {
-            deps.push([uids[xmlItem.PredecessorLink[0].PredecessorUID[0]._text], name]);
+            var beforeUID = xmlItem.PredecessorLink[0].PredecessorUID[0]._text;
+            var before = uids[beforeUID];
+
+            deps.push({
+                before: before,
+                after: task
+            });
         }
-        var outline = xmlItem.OutlineNumber[0]._text.toString();
+
         if (outline.indexOf('.') !== -1) {
             var parentOutline = outline.slice(0,outline.lastIndexOf('.'));
-            if (!parentOutline || !outlines[parentOutline]) {
-              return;
+            var parent = outlines[parentOutline];
+            if (!parent) {
+                console.error('can not find parent');
+                return;
             }
-            parents.push([outlines[parentOutline], name]);
+
+            parents.push({
+                parent: parent,
+                child: task
+            });
         }
     });
     return {

@@ -209,27 +209,33 @@ var TaskCollection = Backbone.Collection.extend({
         });
     },
     createDeps : function(data) {
+		this._preventSorting = true;
+        data.parents.forEach(function(item) {
+            var parent = this.findWhere({
+                name : item.parent.name,
+				outline: item.parent.outline
+            });
+            var child = this.findWhere({
+                name : item.child.name,
+				outline: item.child.outline
+            });
+            child.save('parentid', parent.id);
+        }.bind(this));
 
-        data.deps.forEach(function(dep) {
+		data.deps.forEach(function(dep) {
             var beforeModel = this.findWhere({
-                name : dep[0]
+                name : dep.before.name,
+				outline: dep.before.outline
             });
             var afterModel = this.findWhere({
-                name : dep[1]
+                name : dep.after.name,
+				outline: dep.after.outline
             });
             this.createDependency(beforeModel, afterModel);
         }.bind(this));
-        data.parents.forEach(function(item) {
-            var parent = this.findWhere({
-                name : item[0]
-            });
-            var child = this.findWhere({
-                name : item[1]
-            });
-            child.save('parentid', parent.id);;
-        }.bind(this));
+		this._preventSorting = false;
+		this.checkSortedIndex();
     }
 });
 
 module.exports = TaskCollection;
-
