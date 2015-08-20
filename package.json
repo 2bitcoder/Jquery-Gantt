@@ -4,7 +4,8 @@
   "description": "",
   "main": "test_server.js",
   "scripts": {
-    "start": "node test_server.js"
+    "start": "node test_server.js",
+    "test": "node node_modules/mocha/bin/mocha --compilers js:babel/register"
   },
   "repository": {
     "type": "git",

@@ -22,6 +22,8 @@
     "define" : false,
     "Image" : false,
     "$" : false,
+    "describe": false,
+    "it": false,
     "Backbone" : false,
     "Konva": false,
     "_" : false

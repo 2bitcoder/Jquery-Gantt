@@ -569,4 +569,14 @@ describe("Tasks", function(){
             expect(tasks.get(1).get('milestone')).to.equal(false);
         });
     });
+
+    describe('check collapsing', () => {
+        it('must hide all child on collapse', () => {
+            var tasks = new Tasks();
+            tasks.reset([{id : 1}, {id : 2, parentid: 1}, {id : 3, parentid : 2}]);
+            tasks.get(1).set('collapsed', 'true');
+            expect(tasks.get(2).get('hidden')).to.equal(true);
+            expect(tasks.get(3).get('hidden')).to.equal(true);
+        });
+    });
 });

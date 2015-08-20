@@ -121,6 +121,9 @@ var TaskModel = Backbone.Model.extend({
     },
     hide : function() {
         this.set('hidden', true);
+        this.children.forEach((child) => {
+            child.hide();
+        });
     },
     dependOn : function(beforeModel, silent) {
         this.set('depend', beforeModel.id);
@@ -197,7 +200,7 @@ var TaskModel = Backbone.Model.extend({
         } else {
             start = new Date();
         }
-        
+
         if(_.isString(response.end)){
             end = Date.parseExact(util.correctdate(response.end),'dd/MM/yyyy') ||
                            new Date(response.end);
