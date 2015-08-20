@@ -7,7 +7,8 @@ var ReportsMenuView = Backbone.View.extend({
     },
     events : {
         'click #print' : 'generatePDF',
-        'click #showVideo' : 'showHelp'
+        'click #showVideo' : 'showHelp',
+        'click #delete-all' : 'deleteAll'
     },
     generatePDF : function(evt) {
         window.print();
@@ -21,6 +22,18 @@ var ReportsMenuView = Backbone.View.extend({
             onApprove : function() {
                 $(document.body).removeClass('dimmable');
             }
+        }).modal('show');
+    },
+    deleteAll: function() {
+        $('#confirm').modal({
+            onHidden : function() {
+                $(document.body).removeClass('dimmable');
+            },
+            onApprove : function() {
+                while(this.collection.at(0)) {
+                    this.collection.at(0).destroy();
+                }
+            }.bind(this)
         }).modal('show');
     }
 });

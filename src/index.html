@@ -41,7 +41,7 @@
                     <!--HEADER-->
 					<div class="column"><img src="css/images/OneViewPPMg.png" alt="Gantt Editor"/></div>
 
-                    <!--REPORTS MENU-->
+                    <!--MISC MENU-->
                     <div class="column right_top" id="reports-menu" style="width:150px">
                         <div class="header">
                             Report:
@@ -50,8 +50,13 @@
                         <div id="print" class="action">
                             Print
                         </div>
-                        <br><br>
-                        <div class="ui fitted divider"></div>
+						<div class="header">
+							Misc:
+							<div class="ui fitted divider"></div>
+						</div>
+						<div id="delete-all" class="action">
+							Delete all tasks
+						</div>
                         <div id="showVideo" class="action">
                             Help Video
                         </div>
@@ -152,8 +157,9 @@
                             Save as MS Project
                         </div>
                     </div>
+					<!--PROJECT MENU-->
 				</div>
-				
+
 				<div class="item-selector"></div>
             </div>
         </div>
@@ -357,6 +363,25 @@
         <div class="actions">
             <div class="ui positive button save">
                 Close
+            </div>
+        </div>
+    </div>
+
+	<!--HELP VIDEO MODAL-->
+    <div class="ui modal" id="confirm">
+        <i class="close icon"></i>
+        <div class="header">
+            Are you sure?
+        </div>
+        <div class="content">
+            Do you realy want to delete all tasks?
+        </div>
+        <div class="actions">
+            <div class="ui negative button approve">
+                Yes
+            </div>
+			<div class="ui button close">
+                No
             </div>
         </div>
     </div>

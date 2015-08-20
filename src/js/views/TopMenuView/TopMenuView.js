@@ -3,7 +3,7 @@ var ZoomMenuView = require('./ZoomMenuView');
 var GroupingMenuView = require('./GroupingMenuView');
 var FilterMenuView = require('./FilterMenuView');
 var MSProjectMenuView = require('./MSProjectMenuView');
-var ReportsMenuView = require('./ReportsMenuView');
+var MiscMenuView = require('./MiscMenuView');
 
 var TopMenuView = Backbone.View.extend({
     initialize : function(params) {
@@ -11,7 +11,7 @@ var TopMenuView = Backbone.View.extend({
         new GroupingMenuView(params).render();
         new FilterMenuView(params).render();
         new MSProjectMenuView(params).render();
-        new ReportsMenuView(params).render();
+        new MiscMenuView(params).render();
     }
 });
 
