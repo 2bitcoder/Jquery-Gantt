@@ -39,8 +39,7 @@ var GanttChartView = Backbone.View.extend({
         var self = this;
         var previousTaskX = this._taskViews.length ? this._taskViews[0].el.x() : 0;
         this.stage.setAttrs({
-//            x : this._leftPadding,
-            height: Math.max($(".tasks").innerHeight() + this._topPadding, window.innerHeight - $(this.stage.getContainer()).offset().top),
+            height: Math.max($('.tasks').innerHeight() + this._topPadding, window.innerHeight - $(this.stage.getContainer()).offset().top),
             width: this.$el.innerWidth(),
             draggable: true,
             dragBoundFunc:  function(pos) {
@@ -74,7 +73,7 @@ var GanttChartView = Backbone.View.extend({
 
     },
     _initBackground : function() {
-        var shape = new Konva.Shape({
+        var grid = new Konva.Shape({
             sceneFunc: this._getSceneFunction(),
             stroke: 'lightgray',
             strokeWidth : 0,
@@ -97,7 +96,13 @@ var GanttChartView = Backbone.View.extend({
             name: 'currentDayLine'
         });
 
-        this.Blayer.add(back).add(currentDayLine).add(shape);
+        window.addEventListener('scroll', () => {
+            var y = Math.max(0, document.body.scrollTop - 15);
+            grid.y(y);
+            grid.getLayer().batchDraw();
+        });
+
+        this.Blayer.add(back).add(currentDayLine).add(grid);
         this._updateTodayLine();
         this.stage.draw();
     },
