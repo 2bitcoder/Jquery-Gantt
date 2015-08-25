@@ -48,13 +48,16 @@ module.exports.parseDepsFromXML = function(xmlString) {
         var outline = task.outline;
 
         if (xmlItem.PredecessorLink) {
-            var beforeUID = xmlItem.PredecessorLink[0].PredecessorUID[0]._text;
-            var before = uids[beforeUID];
+            xmlItem.PredecessorLink.forEach((link) => {
+                var beforeUID = link.PredecessorUID[0]._text;
+                var before = uids[beforeUID];
 
-            deps.push({
-                before: before,
-                after: task
+                deps.push({
+                    before: before,
+                    after: task
+                });
             });
+
         }
 
         if (outline.indexOf('.') !== -1) {

@@ -1,10 +1,9 @@
-"use strict";
 var parseXML = require('../../utils/xmlWorker').parseXMLObj;
 var JSONToXML = require('../../utils/xmlWorker').JSONToXML;
 var parseDepsFromXML = require('../../utils/xmlWorker').parseDepsFromXML;
 
 var MSProjectMenuView = Backbone.View.extend({
-    el : '#project-menu',
+    el: '#project-menu',
 
     initialize : function(params) {
         this.settings = params.settings;
@@ -65,7 +64,6 @@ var MSProjectMenuView = Backbone.View.extend({
         }
     },
     progress : function(percent) {
-        console.error(percent);
         $('#importProgress').progress({
             percent : percent
         });

@@ -1,9 +1,7 @@
-"use strict";
-
 var ConnectorView = Backbone.KonvaView.extend({
-    _color : 'grey',
-    _wrongColor : 'red',
-    initialize : function (params) {
+    _color: 'grey',
+    _wrongColor: 'red',
+    initialize: function (params) {
         this.settings = params.settings;
         this.beforeModel = params.beforeModel;
         this.afterModel = params.afterModel;
@@ -12,23 +10,23 @@ var ConnectorView = Backbone.KonvaView.extend({
         this._initSettingsEvents();
         this._initModelEvents();
     },
-    el : function() {
+    el: function() {
         var line = new Konva.Line({
-            strokeWidth : 2,
-            stroke : 'black',
-            points : [0,0,0,0]
+            strokeWidth: 2,
+            stroke: 'black',
+            points: [0, 0, 0, 0]
         });
         return line;
     },
-    setY1 : function(y1) {
+    setY1: function(y1) {
         this._y1 = y1;
         this.render();
     },
-    setY2 : function(y2) {
+    setY2: function(y2) {
         this._y2 = y2;
         this.render();
     },
-    render : function() {
+    render: function() {
         var x = this._calculateX();
         if (x.x2 >= x.x1) {
             this.el.stroke(this._color);
@@ -47,12 +45,12 @@ var ConnectorView = Backbone.KonvaView.extend({
         this.el.getLayer().batchDraw();
         return this;
     },
-    _initSettingsEvents : function() {
+    _initSettingsEvents: function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this.render();
         });
     },
-    _initModelEvents : function() {
+    _initModelEvents: function() {
         this.listenTo(this.beforeModel, 'change', function() {
             this.render();
         });
@@ -76,8 +74,8 @@ var ConnectorView = Backbone.KonvaView.extend({
             }
         });
     },
-    _calculateX : function() {
-        var attrs= this.settings.getSetting('attr'),
+    _calculateX: function() {
+        var attrs = this.settings.getSetting('attr'),
             boundaryMin = attrs.boundaryMin,
             daysWidth = attrs.daysWidth;
         return {

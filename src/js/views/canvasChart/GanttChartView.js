@@ -1,12 +1,10 @@
-"use strict";
-
 var NestedTaskView = require('./NestedTaskView');
 var AloneTaskView = require('./AloneTaskView');
 var ConnectorView = require('./ConnectorView');
 
 var GanttChartView = Backbone.View.extend({
     el: '#gantt-container',
-    _topPadding : 73,
+    _topPadding: 73,
     initialize: function (params) {
         this.settings = params.settings;
         this._taskViews = [];
@@ -18,22 +16,22 @@ var GanttChartView = Backbone.View.extend({
         this._initSubViews();
         this._initCollectionEvents();
     },
-    setLeftPadding : function(offset) {
+    setLeftPadding: function(offset) {
         this._leftPadding = offset;
         this._updateStageAttrs();
     },
-    _initStage : function() {
+    _initStage: function() {
         this.stage = new Konva.Stage({
-            container : this.el
+            container: this.el
         });
         this._updateStageAttrs();
     },
-    _initLayers : function() {
+    _initLayers: function() {
         this.Flayer = new Konva.Layer();
         this.Blayer = new Konva.Layer();
         this.stage.add(this.Blayer, this.Flayer);
     },
-    _updateStageAttrs : function() {
+    _updateStageAttrs: function() {
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
         var self = this;
@@ -42,9 +40,9 @@ var GanttChartView = Backbone.View.extend({
             height: Math.max($('.tasks').innerHeight() + this._topPadding, window.innerHeight - $(this.stage.getContainer()).offset().top),
             width: this.$el.innerWidth(),
             draggable: true,
-            dragBoundFunc:  function(pos) {
+            dragBoundFunc: function(pos) {
                 var x;
-                var minX = - (lineWidth - this.width());
+                var minX = -(lineWidth - this.width());
                 if (pos.x > self._leftPadding) {
                     x = self._leftPadding;
                 } else if (pos.x < minX) {
@@ -72,19 +70,19 @@ var GanttChartView = Backbone.View.extend({
         }.bind(this), 5);
 
     },
-    _initBackground : function() {
+    _initBackground: function() {
         var grid = new Konva.Shape({
             sceneFunc: this._getSceneFunction(),
             stroke: 'lightgray',
-            strokeWidth : 0,
-            fill : 'rgba(0,0,0,0.1)',
-            name : 'grid'
+            strokeWidth: 0,
+            fill: 'rgba(0,0,0,0.1)',
+            name: 'grid'
         });
         var sattr = this.settings.sattr;
         var width = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
         var back = new Konva.Rect({
-            height : this.stage.height(),
-            width : width
+            height: this.stage.height(),
+            width: width
         });
         var currentDayLine = new Konva.Rect({
             height: this.stage.height(),
@@ -106,7 +104,7 @@ var GanttChartView = Backbone.View.extend({
         this._updateTodayLine();
         this.stage.draw();
     },
-    _getSceneFunction : function() {
+    _getSceneFunction: function() {
         var sdisplay = this.settings.sdisplay;
         var sattr = this.settings.sattr;
         var borderWidth = sdisplay.borderWidth || 1;
@@ -120,7 +118,7 @@ var GanttChartView = Backbone.View.extend({
 
             context.beginPath();
             //draw three lines
-            for(i = 1; i < 4 ; i++){
+            for(i = 1; i < 4; i++){
                 context.moveTo(offset, i * rowHeight - offset);
                 context.lineTo(lineWidth + offset, i * rowHeight - offset);
             }
@@ -129,7 +127,7 @@ var GanttChartView = Backbone.View.extend({
             for (s = 1; s < 3; s++){
                 x = 0; length = 0;
                 for (i = 0, iLen = hData[s].length; i < iLen; i++){
-                    length=hData[s][i].duration * daysWidth;
+                    length = hData[s][i].duration * daysWidth;
                     x = x + length;
                     xi = x - borderWidth + offset;
                     context.moveTo(xi, yi);
@@ -177,18 +175,18 @@ var GanttChartView = Backbone.View.extend({
             context.fillStrokeShape(this);
         };
     },
-    _cacheBackground : function() {
+    _cacheBackground: function() {
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
         this.Blayer.findOne('.grid').cache({
-            x : 0,
-            y : 0,
-            width : lineWidth,
-            height : this.stage.height()
+            x: 0,
+            y: 0,
+            width: lineWidth,
+            height: this.stage.height()
         });
     },
     _updateTodayLine: function() {
-      var attrs= this.settings.getSetting('attr'),
+      var attrs = this.settings.getSetting('attr'),
           boundaryMin = attrs.boundaryMin,
           daysWidth = attrs.daysWidth;
 
@@ -196,7 +194,7 @@ var GanttChartView = Backbone.View.extend({
       this.Blayer.findOne('.currentDayLine').x(x).height(this.stage.height());
       this.Blayer.batchDraw();
     },
-    _initSettingsEvents : function() {
+    _initSettingsEvents: function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this._updateStageAttrs();
             this._updateTodayLine();
@@ -216,7 +214,7 @@ var GanttChartView = Backbone.View.extend({
         });
 
     },
-    _initCollectionEvents : function() {
+    _initCollectionEvents: function() {
         this.listenTo(this.collection, 'add', function(task) {
             this._addTaskView(task);
             this._requestResort();
@@ -250,24 +248,24 @@ var GanttChartView = Backbone.View.extend({
             this._requestResort();
         });
     },
-    _removeViewForModel : function(model) {
+    _removeViewForModel: function(model) {
         var taskView = _.find(this._taskViews, function(view) {
             return view.model === model;
         });
         this._removeView(taskView);
     },
-    _removeView : function(taskView) {
+    _removeView: function(taskView) {
         taskView.remove();
         this._taskViews = _.without(this._taskViews, taskView);
     },
-    _removeConnector : function(task) {
+    _removeConnector: function(task) {
         var connectorView = _.find(this._connectorViews, function(view) {
             return view.afterModel === task;
         });
         connectorView.remove();
         this._connectorViews = _.without(this._connectorViews, connectorView);
     },
-    _initSubViews : function() {
+    _initSubViews: function() {
         this.collection.each(function(task) {
             this._addTaskView(task);
         }.bind(this));
@@ -277,39 +275,39 @@ var GanttChartView = Backbone.View.extend({
         this._resortViews();
         this.Flayer.draw();
     },
-    _addTaskView : function(task) {
+    _addTaskView: function(task) {
         var view;
         if (task.isNested()) {
             view = new NestedTaskView({
-                model : task,
-                settings : this.settings
+                model: task,
+                settings: this.settings
             });
         } else {
             view = new AloneTaskView({
-                model : task,
-                settings : this.settings
+                model: task,
+                settings: this.settings
             });
         }
         this.Flayer.add(view.el);
         view.render();
         this._taskViews.push(view);
     },
-    _addConnectorView : function(task) {
+    _addConnectorView: function(task) {
         var dependId = task.get('depend');
         if (!dependId) {
             return;
         }
         var view = new ConnectorView({
-            beforeModel : this.collection.get(dependId),
-            afterModel : task,
-            settings : this.settings
+            beforeModel: this.collection.get(dependId),
+            afterModel: task,
+            settings: this.settings
         });
         this.Flayer.add(view.el);
         view.el.moveToBottom();
         view.render();
         this._connectorViews.push(view);
     },
-    _requestResort : (function() {
+    _requestResort: (function() {
         var waiting = false;
         return function () {
             if (waiting) {
@@ -322,14 +320,14 @@ var GanttChartView = Backbone.View.extend({
             waiting = true;
         };
     }()),
-    _resortViews : function() {
+    _resortViews: function() {
         var lastY = this._topPadding;
         this.collection.each(function(task) {
             if (task.get('hidden')) {
                 return;
             }
-            var view = _.find(this._taskViews, function(view) {
-                return view.model === task;
+            var view = _.find(this._taskViews, function(v) {
+                return v.model === task;
             });
             if (!view) {
                 return;
@@ -353,7 +351,7 @@ var GanttChartView = Backbone.View.extend({
                 return view.beforeModel === beforeModel;
             });
             connectorView.setY1(beforeView.getY() + beforeView._fullHeight / 2);
-            connectorView.setY2(afterView.getY()  + afterView._fullHeight / 2);
+            connectorView.setY2(afterView.getY() + afterView._fullHeight / 2);
         }.bind(this));
         this.Flayer.batchDraw();
     }

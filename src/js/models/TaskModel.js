@@ -1,12 +1,10 @@
-"use strict";
-
 var ResCollection = require('../collections/ResourceReferenceCollection');
 
 var util = require('../utils/util');
 var params = util.getURLParams();
 
 var SubTasks = Backbone.Collection.extend({
-    comparator : function(model) {
+    comparator: function(model) {
         return model.get('sortindex');
     }
 });
@@ -21,17 +19,17 @@ var TaskModel = Backbone.Model.extend({
         description: '',
         complete: 0,  // 0% - 100% percents
         sortindex: 0,   // place on side menu, starts from 0
-        depend: undefined,  // id of task
+        depend: [],  // id of tasks
         status: '110',      // 110 - complete, 109  - open, 108 - ready
         start: new Date(),
         end: new Date(),
         parentid: 0,
-        Comments : 0,
+        Comments: 0,
 
         color: '#0090d3',   // user color, not used for now
 
         // some additional properties
-        resources : [],         //list of id
+        resources: [],         //list of id
         health: 21,
         reportable: false,
         wo: 2,                  //Select List in properties modal   (configdata)
@@ -43,18 +41,18 @@ var TaskModel = Backbone.Model.extend({
 
         // server specific params
         // don't use them on client side
-        ProjectRef : params.project,
-        WBS_ID : params.profile,
+        ProjectRef: params.project,
+        WBS_ID: params.profile,
         sitekey: params.sitekey,
 
 
         // params for application views
         // should be removed from JSON
-        hidden : false,
-        collapsed : false,
-        hightlight : ''
+        hidden: false,
+        collapsed: false,
+        hightlight: ''
     },
-    initialize : function() {
+    initialize: function() {
         // self validation
         this.listenTo(this, 'change:resources', function() {
             resLinks.updateResourcesForTask(this);
@@ -68,6 +66,7 @@ var TaskModel = Backbone.Model.extend({
 
         // children references
         this.children = new SubTasks();
+        this.depends = new Backbone.Collection();
 
         this.listenTo(this.children, 'add', function() {
             this.set('milestone', false);
@@ -112,31 +111,33 @@ var TaskModel = Backbone.Model.extend({
 
         // time checking
         this.listenTo(this.children, 'add remove change:complete', this._checkComplete);
+        this._listenDependsCollection();
     },
-    isNested : function() {
+    isNested: function() {
         return !!this.children.length;
     },
-    show : function() {
+    show: function() {
         this.set('hidden', false);
     },
-    hide : function() {
+    hide: function() {
         this.set('hidden', true);
         this.children.forEach((child) => {
             child.hide();
         });
     },
-    dependOn : function(beforeModel, silent) {
-        this.set('depend', beforeModel.id);
-        this.beforeModel = beforeModel;
+    dependOn: function(beforeModel, silent) {
+        this.depends.add(beforeModel);
         if (this.get('start') < beforeModel.get('end')) {
             this.moveToStart(beforeModel.get('end'));
         }
         if (!silent) {
             this.save();
         }
-        this._listenBeforeModel();
     },
-    toJSON : function() {
+    hasInDeps: function (model) {
+        return !!this.depends.get(model.id);
+    },
+    toJSON: function() {
         var json = Backbone.Model.prototype.toJSON.call(this);
         delete json.resources;
         delete json.hidden;
@@ -144,14 +145,7 @@ var TaskModel = Backbone.Model.extend({
         delete json.hightlight;
         return json;
     },
-    clearDependence : function() {
-        if (this.beforeModel) {
-            this.stopListening(this.beforeModel);
-            this.unset('depend').save();
-            this.beforeModel = undefined;
-        }
-    },
-    hasParent : function(parentForCheck) {
+    hasParent: function(parentForCheck) {
         var parent = this.parent;
         while(true) {
             if (!parent) {
@@ -163,47 +157,68 @@ var TaskModel = Backbone.Model.extend({
             parent = parent.parent;
         }
     },
-    _listenBeforeModel : function() {
-        this.listenTo(this.beforeModel, 'destroy', function() {
-            this.clearDependence();
+    clearDependence: function() {
+        this.depends.each((m) => {
+            this.depends.remove(m);
         });
-        this.listenTo(this.beforeModel, 'change:end', function() {
+    },
+    _listenDependsCollection: function() {
+        this.listenTo(this.depends, 'remove add', function() {
+            var ids = this.depends.map((m) => m.id);
+            this.set('depend', ids).save();
+        });
+        this.listenTo(this.depends, 'change:end', function(beforeModel) {
             if (this.parent && this.parent.underMoving) {
                 return;
             }
             // check infinite depend loop
-            var before = this;
-            var befores = [];
-            while(true) {
-                before = before.beforeModel;
-                if (!before) {
-                    break;
-                }
-                if (befores.indexOf(before) !== -1) {
+            var inDeps = [this];
+            var isInfinite = false;
+
+            function checkDeps(model) {
+                if (!model.depends.length) {
                     return;
                 }
-                befores.push(before);
+                model.depends.each((m) => {
+                    if (inDeps.indexOf(m) > -1 || isInfinite) {
+                        isInfinite = true;
+                        return;
+                    }
+                    inDeps.push(m);
+                    checkDeps(m);
+                });
             }
-            if (this.get('start') < this.beforeModel.get('end')) {
-                this.moveToStart(this.beforeModel.get('end'));
+            checkDeps(this);
+
+            if (isInfinite) {
+                return;
+            }
+            if (this.get('start') < beforeModel.get('end')) {
+                this.moveToStart(beforeModel.get('end'));
             }
         });
     },
-    _checkNested : function() {
+    _checkNested: function() {
         this.trigger('nestedStateChange', this);
     },
     parse: function(response) {
         var start, end;
         if(_.isString(response.start)){
-            start = Date.parseExact(util.correctdate(response.start),'dd/MM/yyyy') ||
+            start = Date.parseExact(util.correctdate(response.start), 'dd/MM/yyyy') ||
                              new Date(response.start);
+        } else if (_.isDate(response.start)) {
+            start = response.start;
         } else {
             start = new Date();
         }
 
+
+
         if(_.isString(response.end)){
-            end = Date.parseExact(util.correctdate(response.end),'dd/MM/yyyy') ||
+            end = Date.parseExact(util.correctdate(response.end), 'dd/MM/yyyy') ||
                            new Date(response.end);
+        } else if (_.isDate(response.end)) {
+            end = response.end;
         } else {
             end = new Date();
         }
@@ -230,9 +245,15 @@ var TaskModel = Backbone.Model.extend({
         if (response.milestone) {
             response.start = response.end;
         }
+
+
+        // update deps for new API (array of deps)
+        if (_.isNumber(response.depend)) {
+            response.depend = [response.depend];
+        }
         return response;
     },
-    _checkTime : function() {
+    _checkTime: function() {
         if (this.children.length === 0) {
             return;
         }
@@ -247,11 +268,11 @@ var TaskModel = Backbone.Model.extend({
             if(childEndTime > endTime){
                 endTime = childEndTime;
             }
-        }.bind(this));
+        });
         this.set('start', startTime);
         this.set('end', endTime);
     },
-    _checkComplete : function() {
+    _checkComplete: function() {
         var complete = 0;
         var length = this.children.length;
         if (length) {
@@ -261,7 +282,7 @@ var TaskModel = Backbone.Model.extend({
         }
         this.set('complete', Math.round(complete));
     },
-    moveToStart : function(newStart) {
+    moveToStart: function(newStart) {
         // do nothing if new start is the same as current
         if (newStart.toDateString() === this.get('start').toDateString()) {
             return;
@@ -276,8 +297,8 @@ var TaskModel = Backbone.Model.extend({
 
         // change dates
         this.set({
-            start : newStart.clone(),
-            end : this.get('end').clone().addDays(daysDiff)
+            start: newStart.clone(),
+            end: this.get('end').clone().addDays(daysDiff)
         });
 
         // changes dates in all children
@@ -285,18 +306,18 @@ var TaskModel = Backbone.Model.extend({
         this._moveChildren(daysDiff);
         this.underMoving = false;
     },
-    _moveChildren : function(days) {
+    _moveChildren: function(days) {
         this.children.each(function(child) {
             child.move(days);
         });
     },
-    saveWithChildren : function() {
+    saveWithChildren: function() {
         this.save();
         this.children.each(function(task) {
             task.saveWithChildren();
         });
     },
-    move : function(days) {
+    move: function(days) {
         this.set({
             start: this.get('start').clone().addDays(days),
             end: this.get('end').clone().addDays(days)

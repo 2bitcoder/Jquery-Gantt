@@ -1,18 +1,16 @@
-"use strict";
-
 var TaskModel = require('../models/TaskModel');
 
 var TaskCollection = Backbone.Collection.extend({
-	url : 'api/tasks',
+	url: 'api/tasks',
 	model: TaskModel,
-	initialize : function() {
+	initialize: function() {
 		this._preventSorting = false;
 		this.subscribe();
 	},
-	comparator : function(model) {
+	comparator: function(model) {
 		return model.get('sortindex');
 	},
-	linkChildren : function() {
+	linkChildren: function() {
 		this.each(function(task) {
 			if (!task.get('parentid')) {
 				return;
@@ -30,14 +28,14 @@ var TaskCollection = Backbone.Collection.extend({
 			}
 		}.bind(this));
 	},
-	_sortChildren : function (task, sortIndex) {
+	_sortChildren: function (task, sortIndex) {
 		task.children.toArray().forEach(function(child) {
 			child.set('sortindex', ++sortIndex);
 			sortIndex = this._sortChildren(child, sortIndex);
 		}.bind(this));
 		return sortIndex;
 	},
-	checkSortedIndex : function() {
+	checkSortedIndex: function() {
 		var sortIndex = -1;
 		this.toArray().forEach(function(task) {
 			if (task.get('parentid')) {
@@ -48,7 +46,7 @@ var TaskCollection = Backbone.Collection.extend({
 		}.bind(this));
 		this.sort();
 	},
-	_resortChildren : function(data, startIndex, parentID) {
+	_resortChildren: function(data, startIndex, parentID) {
 		var sortIndex = startIndex;
 		data.forEach(function(taskData) {
 			var task = this.get(taskData.id);
@@ -68,18 +66,18 @@ var TaskCollection = Backbone.Collection.extend({
 		}.bind(this));
 		return sortIndex;
 	},
-	resort : function(data) {
+	resort: function(data) {
 		this._preventSorting = true;
 		this._resortChildren(data, -1, 0);
 		this._preventSorting = false;
 		this.sort();
 	},
-	subscribe : function() {
+	subscribe: function() {
         this.listenTo(this, 'reset', () => {
             // add empty task if no tasks from server
             if (this.length === 0) {
                 this.reset([{
-                    name : 'New task'
+                    name: 'New task'
                 }]);
             }
         });
@@ -117,39 +115,46 @@ var TaskCollection = Backbone.Collection.extend({
 			}
 		});
 	},
-	createDependency : function (beforeModel, afterModel) {
+	createDependency: function (beforeModel, afterModel) {
 		if (this._canCreateDependence(beforeModel, afterModel)) {
 			afterModel.dependOn(beforeModel);
 		}
 	},
 
-	_canCreateDependence : function(beforeModel, afterModel) {
+	_canCreateDependence: function(beforeModel, afterModel) {
 		if (beforeModel.hasParent(afterModel) || afterModel.hasParent(beforeModel)) {
 			return false;
 		}
-		if ((beforeModel.get('depend') === afterModel.id) ||
-			(afterModel.get('depend') === beforeModel.id)) {
+		if (beforeModel.hasInDeps(afterModel) ||
+			afterModel.hasInDeps(beforeModel)) {
 			return false;
 		}
 		return true;
 	},
-	removeDependency : function(afterModel) {
+	removeDependency: function(afterModel) {
 		afterModel.clearDependence();
 	},
-	_checkDependencies : function() {
-		this.each(function(task) {
-			if (!task.get('depend')) {
+	_checkDependencies: function() {
+		this.each((task) => {
+			var ids = task.get('depend').concat([]);
+			var hasGoodDepends = false;
+			if (ids.length === 0) {
 				return;
 			}
-			var beforeModel = this.get(task.get('depend'));
-			if (!beforeModel) {
-				task.unset('depend').save();
-			} else {
-				task.dependOn(beforeModel, true);
+
+			_.each(ids, (id) => {
+				var beforeModel = this.get(id);
+				if (beforeModel) {
+					task.dependOn(beforeModel, true);
+					hasGoodDepends = true;
+				}
+			});
+			if (!hasGoodDepends) {
+				task.save('depend', []);
 			}
-		}.bind(this));
+		});
 	},
-	outdent : function(task) {
+	outdent: function(task) {
 		var underSublings = [];
 		if (task.parent) {
 			task.parent.children.each(function(child) {
@@ -162,7 +167,7 @@ var TaskCollection = Backbone.Collection.extend({
 
 		this._preventSorting = true;
 		underSublings.forEach(function(child) {
-            if (child.get('depend') === task.id) {
+            if (child.depends.get(task.id)) {
                 child.clearDependence();
             }
 			child.save('parentid', task.id);
@@ -174,9 +179,9 @@ var TaskCollection = Backbone.Collection.extend({
 			task.save('parentid', 0);
 		}
 	},
-	indent : function(task) {
+	indent: function(task) {
 		var prevTask, i, m;
-		for (i = this.length - 1; i >=0; i--) {
+		for (i = this.length - 1; i >= 0; i--) {
 			m = this.at(i);
 			if ((m.get('sortindex') < task.get('sortindex')) && (task.parent === m.parent)) {
 				prevTask = m;
@@ -187,20 +192,20 @@ var TaskCollection = Backbone.Collection.extend({
 			task.save('parentid', prevTask.id);
 		}
 	},
-    importTasks : function(taskJSONarray, callback) {
-    	var sortindex = 0;
-    	if (this.last()) {
+    importTasks: function(taskJSONarray, callback) {
+		var sortindex = 0;
+		if (this.last()) {
 			sortindex = this.last().get('sortindex');
-    	}
+		}
         taskJSONarray.forEach(function(taskItem) {
-            taskItem.sortindex =  ++sortindex;
-        }.bind(this));
+            taskItem.sortindex = ++sortindex;
+        });
         var length = taskJSONarray.length;
         var done = 0;
-        this.add(taskJSONarray, {parse : true}).forEach(function(task) {
-            task.save({},{
-                success : function() {
-                    done +=1;
+        this.add(taskJSONarray, {parse: true}).forEach(function(task) {
+            task.save({}, {
+                success: function() {
+                    done += 1;
                     if (done === length) {
                         callback();
                     }
@@ -208,15 +213,15 @@ var TaskCollection = Backbone.Collection.extend({
             });
         });
     },
-    createDeps : function(data) {
+    createDeps: function(data) {
 		this._preventSorting = true;
         data.parents.forEach(function(item) {
             var parent = this.findWhere({
-                name : item.parent.name,
+                name: item.parent.name,
 				outline: item.parent.outline
             });
             var child = this.findWhere({
-                name : item.child.name,
+                name: item.child.name,
 				outline: item.child.outline
             });
             child.save('parentid', parent.id);
@@ -224,11 +229,11 @@ var TaskCollection = Backbone.Collection.extend({
 
 		data.deps.forEach(function(dep) {
             var beforeModel = this.findWhere({
-                name : dep.before.name,
+                name: dep.before.name,
 				outline: dep.before.outline
             });
             var afterModel = this.findWhere({
-                name : dep.after.name,
+                name: dep.after.name,
 				outline: dep.after.outline
             });
             this.createDependency(beforeModel, afterModel);
