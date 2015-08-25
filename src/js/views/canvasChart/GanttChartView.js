@@ -234,14 +234,16 @@ var GanttChartView = Backbone.View.extend({
             this._requestResort();
         });
 
-        this.listenTo(this.collection, 'change:depend', function(task) {
-            if (task.get('depend')) {
-                this._addConnectorView(task);
-            } else {
-                this._removeConnector(task);
-            }
+        this.listenTo(this.collection, 'depend:add', function(before, after) {
+            this._addConnectorView(before, after);
             this._requestResort();
         });
+
+        this.listenTo(this.collection, 'depend:remove', function(before, after) {
+            this._removeConnectorView(before, after);
+            this._requestResort();
+        });
+
         this.listenTo(this.collection, 'nestedStateChange', function(task) {
             this._removeViewForModel(task);
             this._addTaskView(task);
@@ -258,20 +260,26 @@ var GanttChartView = Backbone.View.extend({
         taskView.remove();
         this._taskViews = _.without(this._taskViews, taskView);
     },
-    _removeConnector: function(task) {
+    _removeConnectorView: function(before, after) {
         var connectorView = _.find(this._connectorViews, function(view) {
-            return view.afterModel === task;
+            return view.afterModel === after &&
+                view.beforeModel === before;
         });
         connectorView.remove();
         this._connectorViews = _.without(this._connectorViews, connectorView);
     },
     _initSubViews: function() {
+
         this.collection.each(function(task) {
             this._addTaskView(task);
         }.bind(this));
-        this.collection.each(function(task) {
-            this._addConnectorView(task);
-        }.bind(this));
+
+        this.collection.each((after) => {
+            after.depends.each((before) => {
+                    this._addConnectorView(before, after);
+            });
+        });
+
         this._resortViews();
         this.Flayer.draw();
     },
@@ -292,14 +300,10 @@ var GanttChartView = Backbone.View.extend({
         view.render();
         this._taskViews.push(view);
     },
-    _addConnectorView: function(task) {
-        var dependId = task.get('depend');
-        if (!dependId) {
-            return;
-        }
+    _addConnectorView: function(before, after) {
         var view = new ConnectorView({
-            beforeModel: this.collection.get(dependId),
-            afterModel: task,
+            beforeModel: before,
+            afterModel: after,
             settings: this.settings
         });
         this.Flayer.add(view.el);
@@ -307,6 +311,7 @@ var GanttChartView = Backbone.View.extend({
         view.render();
         this._connectorViews.push(view);
     },
+
     _requestResort: (function() {
         var waiting = false;
         return function () {
@@ -335,24 +340,25 @@ var GanttChartView = Backbone.View.extend({
             view.setY(lastY);
             lastY += view.height;
         }.bind(this));
-        this.collection.each(function(task) {
-            var dependId = task.get('depend');
-            if (task.get('hidden') || !dependId) {
+        this.collection.each((after) => {
+            if (after.get('hidden')) {
                 return;
             }
-            var beforeModel = this.collection.get(dependId);
-            var beforeView = _.find(this._taskViews, function(view) {
-                return view.model === beforeModel;
+            after.depends.each((before) => {
+                var beforeView = _.find(this._taskViews, function(view) {
+                    return view.model === before;
+                });
+                var afterView = _.find(this._taskViews, function(view) {
+                    return view.model === after;
+                });
+                var connectorView = _.find(this._connectorViews, function(view) {
+                    return view.beforeModel === before &&
+                        view.afterModel === after;
+                });
+                connectorView.setY1(beforeView.getY() + beforeView._fullHeight / 2);
+                connectorView.setY2(afterView.getY() + afterView._fullHeight / 2);
             });
-            var afterView = _.find(this._taskViews, function(view) {
-                return view.model === task;
-            });
-            var connectorView = _.find(this._connectorViews, function(view) {
-                return view.beforeModel === beforeModel;
-            });
-            connectorView.setY1(beforeView.getY() + beforeView._fullHeight / 2);
-            connectorView.setY2(afterView.getY() + afterView._fullHeight / 2);
-        }.bind(this));
+        });
         this.Flayer.batchDraw();
     }
 });

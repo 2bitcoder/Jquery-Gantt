@@ -167,6 +167,15 @@ var TaskModel = Backbone.Model.extend({
             var ids = this.depends.map((m) => m.id);
             this.set('depend', ids).save();
         });
+
+        this.listenTo(this.depends, 'add', function(beforeModel) {
+            this.collection.trigger('depend:add', beforeModel, this);
+        });
+
+        this.listenTo(this.depends, 'remove', function(beforeModel) {
+            this.collection.trigger('depend:remove', beforeModel, this);
+        });
+
         this.listenTo(this.depends, 'change:end', function(beforeModel) {
             if (this.parent && this.parent.underMoving) {
                 return;
