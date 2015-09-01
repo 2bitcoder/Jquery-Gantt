@@ -143,6 +143,7 @@ var TaskModel = Backbone.Model.extend({
         delete json.hidden;
         delete json.collapsed;
         delete json.hightlight;
+        json.depend = json.depend.join(',');
         return json;
     },
     hasParent: function(parentForCheck) {
@@ -259,6 +260,9 @@ var TaskModel = Backbone.Model.extend({
         // update deps for new API (array of deps)
         if (_.isNumber(response.depend)) {
             response.depend = [response.depend];
+        }
+        if (_.isString(response.depend)) {
+            response.depend = response.depend.split(',');
         }
         return response;
     },
