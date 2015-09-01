@@ -66,8 +66,10 @@ var GanttChartView = Backbone.View.extend({
                 var x = this._leftPadding - (this.draggedToDay || 0) * self.settings.getSetting('attr').daysWidth;
                 this.stage.x(Math.max(minx, x));
             }
+            this._updateTodayLine();
             this.stage.draw();
         }.bind(this), 5);
+
 
     },
     _initBackground: function() {
