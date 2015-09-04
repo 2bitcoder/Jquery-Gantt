@@ -201,18 +201,18 @@ var TaskItem = React.createClass({
                 }, model.get('sortindex') + 1),
                 React.createElement('li', {
                         key: 'name',
-                        className: 'col-name'
+                        className: 'col-name',
+                        style: {
+                            paddingLeft: (this._findNestedLevel() * 10) + 'px'
+                        }
                     },
                     this.props.model.isNested() ? React.createElement('i', {
-                        className: 'triangle icon ' + (this.props.model.get('collapsed') ? 'right': 'down'),
+                        className: 'triangle icon ' + (this.props.model.get('collapsed') ? 'right' : 'down'),
                         onClick: function() {
                             this.props.model.set('collapsed', !this.props.model.get('collapsed'));
                         }.bind(this)
                     }): undefined,
                     React.createElement('div', {
-                            style: {
-                                paddingLeft: (this._findNestedLevel() * 10) + 'px'
-                            }
                         },
                         this._createField('name'))
                 ),
