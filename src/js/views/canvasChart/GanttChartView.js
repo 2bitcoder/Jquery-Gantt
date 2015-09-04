@@ -97,7 +97,7 @@ var GanttChartView = Backbone.View.extend({
         });
 
         window.addEventListener('scroll', () => {
-            var y = Math.max(0, document.body.scrollTop - 15);
+            var y = Math.max(0, document.body.scrollTop);
             grid.y(y);
             grid.getLayer().batchDraw();
         });

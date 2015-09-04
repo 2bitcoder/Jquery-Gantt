@@ -96,12 +96,6 @@ div.menu-container,#gantt-container{
     width: 650px;
 }
 
-
-.menu-header{
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
 .task:hover,.sub-task:hover{
     background-color: rgba(199, 138, 51, 0.5);
 }
@@ -154,13 +148,18 @@ div.menu-container {
 .menu-header{
 	position:relative;
 	background-color: white;
-	width: 102%
+	width: 102%;
+	margin-top: 5px;
+    margin-bottom: 5px;
+    padding-top: 4px;
 }
+
 .btnW{
 	position:absolute;
-	top:0;
+	top:4px;
 	right:0;
 	border: 1px solid #000;
+
 }
 .btnW:before{
 	content:'>'
@@ -205,7 +204,7 @@ div.menu-container {
 div.gantt-chart-container {
 	float: right;
 	width: 100%;
-	
+
 	display: initial;
 }
 
@@ -383,4 +382,8 @@ i.icon{
 /*}*/
 #top-menu{
     z-index:1000 !important;
+}
+
+#zoom-menu .selected {
+	background-color: lightgray;
 }

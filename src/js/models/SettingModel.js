@@ -4,7 +4,7 @@ var util = require('../utils/util');
 
 var SettingModel = Backbone.Model.extend({
 	defaults: {
-		interval: 'fix',
+		interval: 'daily',
 		//days per interval
 		dpi: 1
 	},
@@ -145,7 +145,7 @@ var SettingModel = Backbone.Model.extend({
     },
 	calcminmax: function() {
 		var minDate = new Date(), maxDate = minDate.clone().addYears(1);
-		
+
 		this.collection.each(function(model) {
 			if (model.get('start').compareTo(minDate) === -1) {
 				minDate=model.get('start');
@@ -159,7 +159,7 @@ var SettingModel = Backbone.Model.extend({
 	},
 	setAttributes: function() {
 		var end,sattr=this.sattr,dattr=this.sdisplay,duration,size,cellWidth,dpi,retfunc,start,last,i=0,j=0,iLen=0,next=null;
-		
+
 		var interval = this.get('interval');
 
 		if (interval === 'daily') {
@@ -173,7 +173,7 @@ var SettingModel = Backbone.Model.extend({
 				return date.clone().addDays(1);
 			};
 			sattr.mpc = 1;
-			
+
 		} else if(interval === 'weekly') {
 			this.set('dpi', 7, {silent: true});
 			end = sattr.maxDate.clone().addDays(20 * 7);
@@ -241,7 +241,7 @@ var SettingModel = Backbone.Model.extend({
 			'3': []
 		};
 		var hdata3 = [];
-		
+
 		start = sattr.boundaryMin;
 
 		last = start;
@@ -301,13 +301,13 @@ var SettingModel = Backbone.Model.extend({
 				text: end.getFullYear()
 			});
 		}
-		
+
 		//enter duration of first month
 		hData['2'].push({
 			duration: Date.daysdiff(start, start.clone().moveToLastDayOfMonth()),
 			text: util.formatdata(start.getMonth(), 'm')
 		});
-		
+
 		j = start.getMonth() + 1;
 		i = start.getFullYear();
 		iLen = end.getFullYear();
@@ -358,7 +358,7 @@ var SettingModel = Backbone.Model.extend({
 				};
 				return statuses[value];
 			}
-		
+
 		};
 		return function(field,value,model){
 			return dToText[field]?dToText[field](value,model):value;
