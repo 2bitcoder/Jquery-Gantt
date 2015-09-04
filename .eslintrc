@@ -29,6 +29,7 @@
       "describe": false,
       "it": false,
       "beforeEach": false,
-      "$": false
+      "$": false,
+      "React": false
 	}
 }

@@ -1,39 +1,24 @@
-"use strict";
-
 var ReportsMenuView = Backbone.View.extend({
-    el : '#reports-menu',
-    initialize : function(params) {
+    el: '#reports-menu',
+    initialize: function(params) {
         this.settings = params.settings;
     },
-    events : {
-        'click #print' : 'generatePDF',
-        'click #showVideo' : 'showHelp',
-        'click #delete-all' : 'deleteAll'
+    events: {
+        'click #print': 'generatePDF',
+        'click #showVideo': 'showHelp'
     },
-    generatePDF : function(evt) {
+    generatePDF: function(evt) {
         window.print();
         evt.preventDefault();
     },
-    showHelp : function() {
+    showHelp: function() {
         $('#showVideoModal').modal({
-            onHidden : function() {
+            onHidden: function() {
                 $(document.body).removeClass('dimmable');
             },
-            onApprove : function() {
+            onApprove: function() {
                 $(document.body).removeClass('dimmable');
             }
-        }).modal('show');
-    },
-    deleteAll: function() {
-        $('#confirm').modal({
-            onHidden : function() {
-                $(document.body).removeClass('dimmable');
-            },
-            onApprove : function() {
-                while(this.collection.at(0)) {
-                    this.collection.at(0).destroy();
-                }
-            }.bind(this)
         }).modal('show');
     }
 });
