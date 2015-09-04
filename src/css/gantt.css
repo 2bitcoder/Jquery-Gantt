@@ -153,6 +153,8 @@ div.menu-container {
 
 .menu-header{
 	position:relative;
+	background-color: white;
+	width: 102%
 }
 .btnW{
 	position:absolute;
@@ -301,7 +303,8 @@ i.icon{
 /*}*/
 
 #main-view {
-    margin-top: 15px;
+    /* margin-top: 15px; */
+    padding-top: 0px;
 }
 
 #main {
