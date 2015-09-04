@@ -1,13 +1,11 @@
-"use strict";
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
 var _ = require('lodash');
 var serveStatic = require('serve-static');
 
-// var tasks = require('./data/tasks');
-var tasks = [];
+var tasks = require('./data/tasks');
+// var tasks = [];
 var resources = require('./data/resources');
 var comments = require('./data/comments');
 
@@ -40,7 +38,7 @@ app.use(logger('dev'));
 
 
 app.get('/', function(req, res) {
-    res.send('please select a collection, e.g., /collections/messages')
+    res.send('please select a collection, e.g., /collections/messages');
 });
 
 function generateAPI(items, baseURL) {
@@ -72,8 +70,8 @@ function generateAPI(items, baseURL) {
         var id = req.params.id.toString();
         console.log('update item with id ' + id);
 
-        var item = _(items).find(function(item) {
-            return item.id.toString() === id;
+        var item = _(items).find(function(i) {
+            return i.id.toString() === id;
         });
 
         if (item) {
@@ -97,14 +95,14 @@ function generateAPI(items, baseURL) {
 
         console.log('delete item with id ' + req.params.id);
 
-        var item = _(items).find(function(item) {
-            return item.id.toString() === id;
+        var item = _(items).find(function(i) {
+            return i.id.toString() === id;
         });
 
         if (item) {
             items = _.without(items, item);
             res.send({
-                msg : 'success'
+                msg: 'success'
             });
         } else {
             console.error('no such task');
@@ -135,10 +133,10 @@ app.post('/api/comment/:id/', function(req, res) {
     var id = req.params.id.toString();
     console.log('add comment', req.body, 'to task', id);
     var comment = {
-        Comment : req.body.comment,
-        Id : ++commentsIdCounter,
-        Author : 'User',
-        Date : new Date(),
+        Comment: req.body.comment,
+        Id: ++commentsIdCounter,
+        Author: 'User',
+        Date: new Date(),
         UserAvatar: null,
         ParentId: null,
         CanDelete: false,

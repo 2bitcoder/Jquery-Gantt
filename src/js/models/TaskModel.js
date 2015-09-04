@@ -126,7 +126,7 @@ var TaskModel = Backbone.Model.extend({
         });
     },
     dependOn: function(beforeModel, silent) {
-        this.depends.add(beforeModel);
+        this.depends.add(beforeModel, {silent: silent});
         if (this.get('start') < beforeModel.get('end')) {
             this.moveToStart(beforeModel.get('end'));
         }

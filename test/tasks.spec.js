@@ -607,4 +607,18 @@ describe('Tasks', function(){
             expect(tasks.get(3).get('hidden')).to.equal(true);
         });
     });
+
+
+    it.only('check for no UPDATE sync on first loading', () => {
+        var tasks = new Tasks();
+        var counter = 0;
+        Backbone.sync = function(type) {
+            console.log(type);
+            if (type === 'update') {
+                counter += 1;
+            }
+        };
+        tasks.reset([{id: 1}, {id: 2, parentid: 1}, {id: 3, parentid: 2, depend: [2]}]);
+        expect(counter).to.equal(0);
+    });
 });
