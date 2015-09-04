@@ -233,7 +233,7 @@ div.gantt-chart-container {
 	overflow: hidden;
 }
 
-.collapsed {
+.nested {
 	font-weight: bold;
 }
 

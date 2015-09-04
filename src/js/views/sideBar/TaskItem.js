@@ -1,26 +1,25 @@
-"use strict";
 var DatePicker = require('./DatePicker');
 var CommetsView = require('../CommentsView');
 
 var TaskItem = React.createClass({
-    displayName : 'TaskItem',
-    getInitialState : function() {
+    displayName: 'TaskItem',
+    getInitialState: function() {
         return {
-            editRow : undefined
+            editRow: undefined
         };
     },
-    componentDidUpdate : function() {
+    componentDidUpdate: function() {
         $(this.getDOMNode()).find('input').focus();
     },
-    componentDidMount  : function() {
+    componentDidMount : function() {
         this.props.model.on('change:name change:complete change:start change:end change:duration change:hightlight change:Comments', function() {
             this.forceUpdate();
         }, this);
     },
-    componentWillUnmount  : function() {
+    componentWillUnmount : function() {
         this.props.model.off(null, null, this);
     },
-    _findNestedLevel : function() {
+    _findNestedLevel: function() {
         var level = 0;
         var parent = this.props.model.parent;
         while(true) {
@@ -31,13 +30,13 @@ var TaskItem = React.createClass({
             parent = parent.parent;
         }
     },
-    _createField : function(col) {
+    _createField: function(col) {
         if (this.state.editRow === col) {
             return this._createEditField(col);
         }
         return this._createReadFiled(col);
     },
-    _createReadFiled : function(col) {
+    _createReadFiled: function(col) {
         var model = this.props.model;
         if (col === 'complete') {
             return model.get(col) + '%';
@@ -51,13 +50,13 @@ var TaskItem = React.createClass({
         }
         return model.get(col);
     },
-    _createDateElement : function(col) {
+    _createDateElement: function(col) {
         var val = this.props.model.get(col);
         return React.createElement(DatePicker, {
-            value : val,
-            dateFormat : this.props.dateFormat,
-            key : col,
-            onChange : function(e) {
+            value: val,
+            dateFormat: this.props.dateFormat,
+            key: col,
+            onChange: function(e) {
                 var newVal = e.target.value;
                 var state = this.state;
                 state.editRow = undefined;
@@ -67,7 +66,7 @@ var TaskItem = React.createClass({
             }.bind(this)
         });
     },
-    _durationChange : function(value) {
+    _durationChange: function(value) {
         var number = parseInt(value.replace( /^\D+/g, ''), 10);
         if (!number) {
             return;
@@ -81,19 +80,19 @@ var TaskItem = React.createClass({
             this.props.model.set('end', this.props.model.get('start').clone().addDays(number));
         }
     },
-    _createDurationField : function() {
+    _createDurationField: function() {
         var val = Date.daysdiff(this.props.model.get('start'), this.props.model.get('end'))+' d';
         return React.createElement('input', {
-            value : this.state.val || val,
-            key : 'duration',
-            onChange : function(e) {
+            value: this.state.val || val,
+            key: 'duration',
+            onChange: function(e) {
                 var newVal = e.target.value;
                 this._durationChange(newVal);
                 var state = this.state;
                 state.val = newVal;
                 this.setState(state);
             }.bind(this),
-            onKeyDown : function(e) {
+            onKeyDown: function(e) {
                 if (e.keyCode === 13) {
                     var state = this.state;
                     state.editRow = undefined;
@@ -104,7 +103,7 @@ var TaskItem = React.createClass({
             }.bind(this)
         });
     },
-    _createEditField : function(col) {
+    _createEditField: function(col) {
         var val = this.props.model.get(col);
         if (col === 'start' || col === 'end') {
             return this._createDateElement(col);
@@ -114,13 +113,13 @@ var TaskItem = React.createClass({
         }
         return React.createElement('input', {
             className: "nameInput",
-            value : val,
-            key : col,
-            onChange : function(e) {
+            value: val,
+            key: col,
+            onChange: function(e) {
                 var newVal = e.target.value;
                 this.props.model.set(col, newVal);
             }.bind(this),
-            onKeyDown : function(e) {
+            onKeyDown: function(e) {
                 if (e.keyCode === 13) {
                     var state = this.state;
                     state.editRow = undefined;
@@ -128,7 +127,7 @@ var TaskItem = React.createClass({
                     this.props.model.save();
                 }
             }.bind(this),
-            onBlur : function() {
+            onBlur: function() {
                 var state = this.state;
                 state.editRow = undefined;
                 this.setState(state);
@@ -136,43 +135,44 @@ var TaskItem = React.createClass({
             }.bind(this)
         });
     },
-    createCommentField : function() {
+    createCommentField: function() {
         var comments = this.props.model.get('Comments') || 0;
         if (!comments) {
             return null;
         }
         return React.createElement('li', {
-                key : 'comments',
-                className : 'col-comments',
-                onClick : function() {
+                key: 'comments',
+                className: 'col-comments',
+                onClick: function() {
                     new CommetsView({
-                        model : this.props.model
+                        model: this.props.model
                     }).render();
                 }.bind(this)
             },
             React.createElement('img',{
-                src : 'css/images/comments.png'
+                src: 'css/images/comments.png'
             }),
             comments
         );
     },
-    showContext : function(e) {
+    showContext: function(e) {
         var $el = $(e.target);
         var ul = $el.parent();
         var offset = $el.offset();
         ul.contextMenu({
-            x : offset.left + 20,
-            y : offset.top
+            x: offset.left + 20,
+            y: offset.top
         });
     },
-    render : function() {
+    render: function() {
         var model = this.props.model;
         return React.createElement('ul', {
-                    className : 'task'
+                    className: 'task'
                           + (this.props.isSubTask ? ' sub-task' : '')
-                          + (this.props.model.get('collapsed') ? ' collapsed' : ''),
-                    'data-id' : this.props.model.cid,
-                    onDoubleClick : function(e) {
+                          + (this.props.model.get('collapsed') ? ' collapsed' : '')
+                          + (this.props.model.isNested() ? ' nested' : ''),
+                    'data-id': this.props.model.cid,
+                    onDoubleClick: function(e) {
                         var className = e.target.className;
                         if (!className) {
                             className = e.target.parentNode.className;
@@ -182,56 +182,56 @@ var TaskItem = React.createClass({
                         state.editRow = col;
                         this.setState(state);
                     }.bind(this),
-                    style : {
-                        'backgroundColor' : this.props.model.get('hightlight')
+                    style: {
+                        'backgroundColor': this.props.model.get('hightlight')
                     }
                 },
                 React.createElement('li', {
-                    key : 'info',
-                    className : 'col-info'
+                    key: 'info',
+                    className: 'col-info'
                 },
                     React.createElement('img', {
-                        src : 'css/images/info.png',
-                        onClick : this.showContext
+                        src: 'css/images/info.png',
+                        onClick: this.showContext
                     })
                 ),
                 React.createElement('li', {
-                    key : 'sortindex',
-                    className : 'col-sortindex'
+                    key: 'sortindex',
+                    className: 'col-sortindex'
                 }, model.get('sortindex') + 1),
                 React.createElement('li', {
-                        key : 'name',
-                        className : 'col-name'
+                        key: 'name',
+                        className: 'col-name'
                     },
                     this.props.model.isNested() ? React.createElement('i', {
-                        className : 'triangle icon ' + (this.props.model.get('collapsed') ? 'right' : 'down'),
-                        onClick : function() {
+                        className: 'triangle icon ' + (this.props.model.get('collapsed') ? 'right': 'down'),
+                        onClick: function() {
                             this.props.model.set('collapsed', !this.props.model.get('collapsed'));
                         }.bind(this)
-                    }) : undefined,
+                    }): undefined,
                     React.createElement('div', {
-                            style : {
-                                paddingLeft : (this._findNestedLevel() * 10) + 'px'
+                            style: {
+                                paddingLeft: (this._findNestedLevel() * 10) + 'px'
                             }
                         },
                         this._createField('name'))
                 ),
                 this.createCommentField(),
                 React.createElement('li', {
-                    key : 'complete',
-                    className : 'col-complete'
+                    key: 'complete',
+                    className: 'col-complete'
                 }, this._createField('complete')),
                 React.createElement('li', {
-                    key : 'start',
-                    className : 'col-start'
+                    key: 'start',
+                    className: 'col-start'
                 }, this._createField('start')),
                 React.createElement('li', {
-                    key : 'end',
-                    className : 'col-end'
+                    key: 'end',
+                    className: 'col-end'
                 }, this._createField('end')),
                 React.createElement('li', {
-                    key : 'duration',
-                    className : 'col-duration'
+                    key: 'duration',
+                    className: 'col-duration'
                 }, this._createField('duration'))
             );
     }
