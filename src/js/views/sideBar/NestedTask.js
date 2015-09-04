@@ -2,12 +2,12 @@ var TaskItem = require('./TaskItem');
 
 var NestedTask = React.createClass({
     displayName: 'NestedTask',
-    componentDidMount : function() {
+    componentDidMount: function() {
         this.props.model.on('change:hidden change:collapsed', function() {
             this.forceUpdate();
         }, this);
     },
-    componentWillUnmount : function() {
+    componentWillUnmount: function() {
         this.props.model.off(null, null, this);
     },
     render: function() {
@@ -37,7 +37,7 @@ var NestedTask = React.createClass({
                     );
         }, this);
         return React.createElement('li', {
-                    className: 'task-list-container drag-item' + (this.props.isSubTask ? ' sub-task': ''),
+                    className: 'task-list-container drag-item' + (this.props.isSubTask ? ' sub-task' : ''),
                     id: this.props.model.cid,
                     'data-id': this.props.model.cid
                 },

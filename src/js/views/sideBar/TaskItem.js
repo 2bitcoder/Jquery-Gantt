@@ -11,12 +11,12 @@ var TaskItem = React.createClass({
     componentDidUpdate: function() {
         $(this.getDOMNode()).find('input').focus();
     },
-    componentDidMount : function() {
+    componentDidMount: function() {
         this.props.model.on('change:name change:complete change:start change:end change:duration change:hightlight change:Comments', function() {
             this.forceUpdate();
         }, this);
     },
-    componentWillUnmount : function() {
+    componentWillUnmount: function() {
         this.props.model.off(null, null, this);
     },
     _findNestedLevel: function() {
@@ -43,10 +43,9 @@ var TaskItem = React.createClass({
         }
         if (col === 'start' || col === 'end') {
             return $.datepicker.formatDate(this.props.dateFormat, model.get(col));
-//            return model.get(col).toString(this.props.dateFormat);
         }
         if (col === 'duration') {
-            return Date.daysdiff(model.get('start'), model.get('end'))+' d';
+            return Date.daysdiff(model.get('start'), model.get('end')) + ' d';
         }
         return model.get(col);
     },
@@ -73,7 +72,7 @@ var TaskItem = React.createClass({
         }
         if (value.indexOf('w') > -1) {
             this.props.model.set('end', this.props.model.get('start').clone().addWeeks(number));
-        } else  if (value.indexOf('m') > -1) {
+        } else if (value.indexOf('m') > -1) {
             this.props.model.set('end', this.props.model.get('start').clone().addMonths(number));
         } else {
             number--;
@@ -81,7 +80,7 @@ var TaskItem = React.createClass({
         }
     },
     _createDurationField: function() {
-        var val = Date.daysdiff(this.props.model.get('start'), this.props.model.get('end'))+' d';
+        var val = Date.daysdiff(this.props.model.get('start'), this.props.model.get('end')) + ' d';
         return React.createElement('input', {
             value: this.state.val || val,
             key: 'duration',
@@ -112,7 +111,7 @@ var TaskItem = React.createClass({
             return this._createDurationField();
         }
         return React.createElement('input', {
-            className: "nameInput",
+            className: 'nameInput',
             value: val,
             key: col,
             onChange: function(e) {
@@ -149,7 +148,7 @@ var TaskItem = React.createClass({
                     }).render();
                 }.bind(this)
             },
-            React.createElement('img',{
+            React.createElement('img', {
                 src: 'css/images/comments.png'
             }),
             comments
@@ -211,7 +210,7 @@ var TaskItem = React.createClass({
                         onClick: function() {
                             this.props.model.set('collapsed', !this.props.model.get('collapsed'));
                         }.bind(this)
-                    }): undefined,
+                    }) : undefined,
                     React.createElement('div', {
                         },
                         this._createField('name'))

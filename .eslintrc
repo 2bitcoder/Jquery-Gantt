@@ -11,7 +11,8 @@
     },
     "rules": {
         "semi": 2,
-        "no-constant-condition": 0,
+        "no-constant-condition": 1,
+        "consistent-return": 0,
         "quotes": [1, "single"],
         "no-constant-condition": 2,
         "strict": [2, "never"],
