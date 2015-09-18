@@ -34,7 +34,10 @@ var TaskItem = React.createClass({
         if (this.state.editRow === col) {
             return this._createEditField(col);
         }
-        return this._createReadFiled(col);
+        // console.log(this.state.selectedCol);
+        return React.createElement('span', {
+                // className: this.state.selectedCol === col ? 'selected' : ''
+            }, this._createReadFiled(col));
     },
     _createReadFiled: function(col) {
         var model = this.props.model;
@@ -163,6 +166,14 @@ var TaskItem = React.createClass({
             y: offset.top
         });
     },
+    findRaw: function(e) {
+        var className = e.target.parentNode.className;
+        if (!className) {
+            className = e.target.parentNode.parentNode.className;
+        }
+        var col = className.slice(4, className.length);
+        return col;
+    },
     render: function() {
         var model = this.props.model;
         return React.createElement('ul', {
@@ -172,15 +183,15 @@ var TaskItem = React.createClass({
                           + (this.props.model.isNested() ? ' nested' : ''),
                     'data-id': this.props.model.cid,
                     onDoubleClick: function(e) {
-                        var className = e.target.className;
-                        if (!className) {
-                            className = e.target.parentNode.className;
-                        }
-                        var col = className.slice(4, className.length);
-                        var state = this.state;
-                        state.editRow = col;
-                        this.setState(state);
+                        this.setState({
+                            editRaw: this.findRaw(e)
+                        });
                     }.bind(this),
+                    onClick: (e) => {
+                        this.setState({
+                            selectedCol: this.findRaw(e)
+                        });
+                    },
                     style: {
                         'backgroundColor': this.props.model.get('hightlight')
                     }

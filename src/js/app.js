@@ -1,23 +1,23 @@
-'use strict';
 require('babel/external-helpers');
-var TaskCollection = require('./collections/TaskCollection');
-var Settings = require('./models/SettingModel');
 
-var GanttView = require('./views/GanttView');
+import TaskCollection from './collections/TaskCollection';
+import Settings from './models/SettingModel';
+
+import GanttView from './views/GanttView';
 import {tasksURL, configURL} from './clientConfig';
 
 
 function loadTasks(tasks) {
     var dfd = new $.Deferred();
 	tasks.fetch({
-		success : function() {
+		success: function() {
             dfd.resolve();
 		},
-		error : function(err) {
+		error: function(err) {
             dfd.reject(err);
 		},
 		parse: true,
-		reset : true
+		reset: true
 	});
     return dfd.promise();
 }
@@ -33,10 +33,10 @@ function loadSettings(settings) {
 $(() => {
 	let tasks = new TaskCollection();
     tasks.url = tasksURL;
-    let settings = new Settings({}, {tasks : tasks});
+    let settings = new Settings({}, {tasks: tasks});
 
     window.tasks = tasks;
-    
+
     $.when(loadTasks(tasks))
     .then(() => loadSettings(settings))
     .then(() => {
@@ -47,13 +47,17 @@ $(() => {
         }).render();
     })
     .then(() => {
+
+
+
         // hide loading
         $('#loader').fadeOut(function() {
 
             // display head always on top
             $('#head').css({
-                position : 'fixed'
+                position: 'fixed'
             });
+
             // enable scrolling
             $('body').removeClass('hold-scroll');
         });

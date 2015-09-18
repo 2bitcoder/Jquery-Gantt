@@ -23,8 +23,8 @@ var TaskCollection = Backbone.Collection.extend({
 					parentTask.children.add(task);
 				}
 			} else {
-				task.set('parentid', 0);
 				console.error('task has parent with id ' + task.get('parentid') + ' - but there is no such task');
+				task.unset('parentid');
 			}
 		}.bind(this));
 	},

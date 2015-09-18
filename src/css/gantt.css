@@ -149,8 +149,6 @@ div.menu-container {
 	position:relative;
 	background-color: white;
 	width: 102%;
-	margin-top: 5px;
-    margin-bottom: 5px;
     padding-top: 4px;
 }
 
@@ -277,6 +275,10 @@ div.gantt-chart-container {
 .task .col-duration{
 	padding-left: 10px;
 	width: 50px;
+}
+
+.task .selected {
+	border: 1px solid lightblue;
 }
 
 i.icon{

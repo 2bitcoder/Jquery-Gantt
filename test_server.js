@@ -5,19 +5,27 @@ var _ = require('lodash');
 var serveStatic = require('serve-static');
 
 var tasks = require('./data/tasks');
-// var tasks = [];
+
+_.times(0, function() {
+    tasks = tasks.concat(JSON.parse(JSON.stringify(tasks)));
+});
+
+
 var resources = require('./data/resources');
 var comments = require('./data/comments');
 
 var config = require('./data/config');
 
-var taskIdCounter = 0;
+var taskIdCounter = 1;
+var ids = [];
 _(tasks).each(function(task) {
-    if (!task.id) {
-        task.id = taskIdCounter++;
+    if (!task.id || ids.indexOf(task.id) >= 0) {
+        task.id = Math.round(Math.random() * 100000);
     }
+    ids.push(task.id);
     taskIdCounter = Math.max(parseInt(task.id), taskIdCounter);
 });
+
 
 var resourceIdCounter = 0;
 _(resources).each(function(resource) {

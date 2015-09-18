@@ -1,4 +1,4 @@
-"use strict";
+
 var ResourceEditor = require('../ResourcesEditor');
 
 var linkImage = new Image();
@@ -8,153 +8,153 @@ var userImage = new Image();
 userImage.src = 'css/images/user.png';
 
 var BasicTaskView = Backbone.KonvaView.extend({
-    _fullHeight : 21,
-    _topPadding : 3,
-    _barHeight : 15,
-    _completeColor : '#e88134',
-    _toolbarOffset : 20,
-    _resourceListOffset : 20,
-    _milestoneColor : 'blue',
-    _milestoneOffset : 0,
-    initialize : function(params) {
+    _fullHeight: 21,
+    _topPadding: 3,
+    _barHeight: 15,
+    _completeColor: '#e88134',
+    _toolbarOffset: 20,
+    _resourceListOffset: 20,
+    _milestoneColor: 'blue',
+    _milestoneOffset: 0,
+    initialize: function(params) {
         this.height = this._fullHeight;
         this.settings = params.settings;
         this._initModelEvents();
         this._initSettingsEvents();
     },
-    events : function() {
+    events: function() {
         return {
-            'dragmove' : function(e) {
+            'dragmove': function(e) {
                 if (e.target.nodeType !== 'Group') {
                     return;
                 }
                 this._updateDates();
             },
-            'dragend' : function() {
+            'dragend': function() {
                 this.model.saveWithChildren();
                 this.render();
             },
-            'mouseenter' : function(e) {
+            'mouseenter': function(e) {
                 this._showTools();
                 this._hideResourcesList();
                 this._grabPointer(e);
             },
-            'mouseleave' : function() {
+            'mouseleave': function() {
                 this._hideTools();
                 this._showResourcesList();
                 this._defaultMouse();
             },
-            'dragstart .dependencyTool' : '_startConnecting',
-            'dragmove .dependencyTool' : '_moveConnect',
-            'dragend .dependencyTool' : '_createDependency',
-            'click .resources' : '_editResources'
+            'dragstart .dependencyTool': '_startConnecting',
+            'dragmove .dependencyTool': '_moveConnect',
+            'dragend .dependencyTool': '_createDependency',
+            'click .resources': '_editResources'
         };
     },
-    el : function() {
+    el: function() {
         var group = new Konva.Group({
-            dragBoundFunc : function(pos) {
+            dragBoundFunc: function(pos) {
                 return {
-                    x : pos.x,
-                    y : this._y
+                    x: pos.x,
+                    y: this._y
                 };
             }.bind(this),
-            id : this.model.cid,
-            draggable : true
+            id: this.model.cid,
+            draggable: true
         });
         var fakeBackground = new Konva.Rect({
-            y : this._topPadding,
-            height : this._barHeight,
-            name : 'fakeBackground'
+            y: this._topPadding,
+            height: this._barHeight,
+            name: 'fakeBackground'
         });
         var rect = new Konva.Rect({
-            fill : this._color,
-            y : this._topPadding,
-            height : this._barHeight,
-            name : 'mainRect'
+            fill: this._color,
+            y: this._topPadding,
+            height: this._barHeight,
+            name: 'mainRect'
         });
         var diamond = new Konva.Rect({
-            fill : this._milestoneColor,
-            y : this._topPadding +this._barHeight / 2,
-            x : this._barHeight / 2,
-            height : this._barHeight * 0.8,
-            width : this._barHeight * 0.8,
-            offsetX : this._barHeight * 0.8 / 2,
-            offsetY : this._barHeight * 0.8 / 2,
-            name : 'diamond',
-            rotation : 45,
-            visible : false
+            fill: this._milestoneColor,
+            y: this._topPadding + this._barHeight / 2,
+            x: this._barHeight / 2,
+            height: this._barHeight * 0.8,
+            width: this._barHeight * 0.8,
+            offsetX: this._barHeight * 0.8 / 2,
+            offsetY: this._barHeight * 0.8 / 2,
+            name: 'diamond',
+            rotation: 45,
+            visible: false
         });
         var completeRect = new Konva.Rect({
-            fill : this._completeColor,
-            y : this._topPadding,
-            height : this._barHeight,
-            name : 'completeRect'
+            fill: this._completeColor,
+            y: this._topPadding,
+            height: this._barHeight,
+            name: 'completeRect'
         });
         var self = this;
         var arc = new Konva.Shape({
             y: this._topPadding,
-            fill : 'lightgreen',
+            fill: 'lightgreen',
             drawFunc: function(context) {
                 var horOffset = 6;
-                var size =  self._barHeight + (self._borderSize || 0);
+                var size = self._barHeight + (self._borderSize || 0);
                 context.beginPath();
                 context.moveTo(0, 0);
                 context.lineTo(horOffset, 0);
-                context.arc(horOffset, size / 2, size / 2, - Math.PI / 2, Math.PI / 2);
+                context.arc(horOffset, size / 2, size / 2, -Math.PI / 2, Math.PI / 2);
                 context.lineTo(0, size);
                 context.lineTo(0, 0);
                 context.fillShape(this);
                 var imgSize = size - 4;
                 context.drawImage(linkImage, 1, (size - imgSize) / 2, imgSize, imgSize);
             },
-            hitFunc : function(context) {
+            hitFunc: function(context) {
                 context.beginPath();
                 context.rect(0, 0, 6 + self._barHeight, self._barHeight);
                 context.fillShape(this);
             },
-            name : 'dependencyTool',
-            visible : false,
-            draggable : true
+            name: 'dependencyTool',
+            visible: false,
+            draggable: true
         });
 
         var toolbar = new Konva.Group({
             y: this._topPadding,
-            name : 'resources',
-            visible : false
+            name: 'resources',
+            visible: false
         });
         var size = self._barHeight + (self._borderSize || 0);
         var toolback = new Konva.Rect({
-            fill : 'lightgrey',
-            width : size,
-            height : size,
-            cornerRadius : 2
+            fill: 'lightgrey',
+            width: size,
+            height: size,
+            cornerRadius: 2
         });
 
         var userIm = new Konva.Image({
-            image : userImage,
-            width : size,
-            height : size
+            image: userImage,
+            width: size,
+            height: size
         });
         toolbar.add(toolback, userIm);
 
         var resourceList = new Konva.Text({
-            name : 'resourceList',
-            y : this._topPadding,
-            listening : false
+            name: 'resourceList',
+            y: this._topPadding,
+            listening: false
         });
 
         group.add(fakeBackground, diamond, rect, completeRect, arc, toolbar, resourceList);
         return group;
     },
-    _editResources : function() {
+    _editResources: function() {
         var view = new ResourceEditor({
-            model : this.model,
-            settings : this.settings
+            model: this.model,
+            settings: this.settings
         });
         var pos = this.el.getStage().getPointerPosition();
         view.render(pos);
     },
-    _updateDates : function() {
+    _updateDates: function() {
         var attrs = this.settings.getSetting('attr'),
             boundaryMin = attrs.boundaryMin,
             daysWidth = attrs.daysWidth;
@@ -169,49 +169,52 @@ var BasicTaskView = Backbone.KonvaView.extend({
             end: boundaryMin.clone().addDays(days2 - 1)
         });
     },
-    _showTools : function() {
+    _showTools: function() {
         this.el.find('.dependencyTool').show();
         this.el.find('.resources').show();
         this.el.getLayer().draw();
     },
-    _hideTools : function() {
+    _hideTools: function() {
         this.el.find('.dependencyTool').hide();
         this.el.find('.resources').hide();
         this.el.getLayer().draw();
     },
-    _showResourcesList : function() {
+    _showResourcesList: function() {
         this.el.find('.resourceList').show();
         this.el.getLayer().batchDraw();
     },
-    _hideResourcesList : function() {
+    _hideResourcesList: function() {
         this.el.find('.resourceList').hide();
         this.el.getLayer().batchDraw();
     },
-    _grabPointer : function(e) {
+    _grabPointer: function(e) {
         var name = e.target.name();
         if ((name === 'mainRect') || (name === 'dependencyTool') ||
             (name === 'completeRect') || (e.target.getParent().name() === 'resources')) {
             document.body.style.cursor = 'pointer';
         }
     },
-    _defaultMouse : function() {
+    _defaultMouse: function() {
         document.body.style.cursor = 'default';
     },
-    _startConnecting : function() {
+    _startConnecting: function() {
         var stage = this.el.getStage();
         var tool = this.el.find('.dependencyTool')[0];
         tool.hide();
         var pos = tool.getAbsolutePosition();
-        var connector = new Konva.Line({
-            stroke : 'black',
-            strokeWidth : 1,
-            points : [pos.x - stage.x(), pos.y, pos.x - stage.x(), pos.y],
-            name : 'connector'
+        var connector = new Konva.Arrow({
+            stroke: 'darkgreen',
+            strokeWidth: 1,
+            pointerWidth: 6,
+            pointerHeight: 10,
+            fill: 'grey',
+            points: [pos.x - stage.x(), pos.y + this._barHeight / 2, pos.x - stage.x(), pos.y],
+            name: 'connector'
         });
         this.el.getLayer().add(connector);
         this.el.getLayer().batchDraw();
     },
-    _moveConnect : function() {
+    _moveConnect: function() {
         var connector = this.el.getLayer().find('.connector')[0];
         var stage = this.el.getStage();
         var points = connector.points();
@@ -219,7 +222,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
         points[3] = stage.getPointerPosition().y;
         connector.points(points);
     },
-    _createDependency : function() {
+    _createDependency: function() {
         var connector = this.el.getLayer().find('.connector')[0];
         connector.destroy();
         this.render();
@@ -240,12 +243,12 @@ var BasicTaskView = Backbone.KonvaView.extend({
             }
         }
     },
-    _initSettingsEvents : function() {
+    _initSettingsEvents: function() {
         this.listenTo(this.settings, 'change:interval change:dpi', function() {
             this.render();
         });
     },
-    _initModelEvents : function() {
+    _initModelEvents: function() {
         // don't update element while dragging
         this.listenTo(this.model, 'change:start change:end change:complete change:resources', function() {
             var dragging = this.el.isDragging();
@@ -266,8 +269,8 @@ var BasicTaskView = Backbone.KonvaView.extend({
             }
         });
     },
-    _calculateX : function() {
-        var attrs= this.settings.getSetting('attr'),
+    _calculateX: function() {
+        var attrs = this.settings.getSetting('attr'),
             boundaryMin = attrs.boundaryMin,
             daysWidth = attrs.daysWidth;
 
@@ -276,18 +279,18 @@ var BasicTaskView = Backbone.KonvaView.extend({
             x2: (Date.daysdiff(boundaryMin, this.model.get('end'))) * daysWidth
         };
     },
-    _calculateCompleteWidth : function() {
+    _calculateCompleteWidth: function() {
         var x = this._calculateX();
         return (x.x2 - x.x1) * this.model.get('complete') / 100;
     },
-    render : function() {
+    render: function() {
         var x = this._calculateX();
         // move group
         this.el.x(x.x1);
 
         // update fake background rect params
         var back = this.el.find('.fakeBackground')[0];
-        back.x( - 20);
+        back.x(-20);
         back.width(x.x2 - x.x1 + 60);
 
         // update main rect params
@@ -321,14 +324,16 @@ var BasicTaskView = Backbone.KonvaView.extend({
         var names = [];
         var list = this.model.get('resources');
         list.forEach(function(resourceId) {
-            var res = _.find((this.settings.statuses.resourcedata || []), function(res) {
-                return res.UserId.toString() === resourceId.toString();
+            var res = _.find((this.settings.statuses.resourcedata || []), function(r) {
+                return r.UserId.toString() === resourceId.toString();
             });
             if (res) {
                 if (list.length < 3) {
                     names.push(res.Username);
                 } else {
-                    var aliases = _.map(res.Username.split(' '), function(str) { return str[0];}).join('');
+                    var aliases = _.map(res.Username.split(' '), function(str) {
+                        return str[0];
+                    }).join('');
                     names.push(aliases);
                 }
             }
@@ -337,11 +342,11 @@ var BasicTaskView = Backbone.KonvaView.extend({
         this.el.getLayer().batchDraw();
         return this;
     },
-    setY : function(y) {
+    setY: function(y) {
         this._y = y;
         this.el.y(y);
     },
-    getY : function() {
+    getY: function() {
         return this._y;
     }
 });
