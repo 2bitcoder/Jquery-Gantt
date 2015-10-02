@@ -9,8 +9,8 @@ gulp.task('scripts', function() {
     // Single entry point to browserify
     gulp.src('src/js/app.js')
         .pipe(browserify({
-            debug : true,
-            transform : [[ {externalHelpers : true}, 'babelify'], 'brfs']
+            debug: true,
+            transform: [[ {externalHelpers: true}, 'babelify'], 'brfs']
         }).on('error', gutil.log))
         .pipe(rename('bundle.js'))
         .pipe(gulp.dest('./src/'))
