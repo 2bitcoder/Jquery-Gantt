@@ -29,7 +29,8 @@ var GanttChartView = Backbone.View.extend({
     _initLayers: function() {
         this.Flayer = new Konva.Layer();
         this.Blayer = new Konva.Layer();
-        this.stage.add(this.Blayer, this.Flayer);
+        this.TopBarLayer = new Konva.Layer();
+        this.stage.add(this.Blayer, this.Flayer, this.TopBarLayer);
     },
     _updateStageAttrs: function() {
         var sattr = this.settings.sattr;
@@ -73,8 +74,15 @@ var GanttChartView = Backbone.View.extend({
 
     },
     _initBackground: function() {
+        var topBar = new Konva.Shape({
+            sceneFunc: this._getTopBarSceneFunction(),
+            stroke: 'lightgray',
+            strokeWidth: 0,
+            fill: 'rgba(0,0,0,0.1)',
+            name: 'topBar'
+        });
         var grid = new Konva.Shape({
-            sceneFunc: this._getSceneFunction(),
+            sceneFunc: this._getGridSceneFunction(),
             stroke: 'lightgray',
             strokeWidth: 0,
             fill: 'rgba(0,0,0,0.1)',
@@ -98,15 +106,16 @@ var GanttChartView = Backbone.View.extend({
 
         window.addEventListener('scroll', () => {
             var y = Math.max(0, document.body.scrollTop || window.scrollY);
-            grid.y(y);
-            grid.getLayer().batchDraw();
+            topBar.y(y);
+            topBar.getLayer().batchDraw();
         });
 
         this.Blayer.add(back).add(currentDayLine).add(grid);
+        this.TopBarLayer.add(topBar);
         this._updateTodayLine();
         this.stage.draw();
     },
-    _getSceneFunction: function() {
+    _getTopBarSceneFunction() {
         var sdisplay = this.settings.sdisplay;
         var sattr = this.settings.sattr;
         var borderWidth = sdisplay.borderWidth || 1;
@@ -118,13 +127,26 @@ var GanttChartView = Backbone.View.extend({
             var i, s, iLen = 0,	daysWidth = sattr.daysWidth, x,	length,	hData = sattr.hData;
             var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
 
+            // clear backgound
+            // so all shapes under will be not visible
+            context.fillStyle = 'white';
+            context.rect(0, 0, lineWidth + offset, 3 * rowHeight - offset);
+            context.fill();
+
+
+
+            //draw three horizontal lines
+            context.strokeStyle = 'lightgrey';
             context.beginPath();
-            //draw three lines
             for(i = 1; i < 4; i++){
                 context.moveTo(offset, i * rowHeight - offset);
                 context.lineTo(lineWidth + offset, i * rowHeight - offset);
             }
+            context.stroke();
 
+
+            // draw years/month
+            // with lines
             var yi = 0, yf = rowHeight, xi = 0;
             for (s = 1; s < 3; s++){
                 x = 0; length = 0;
@@ -134,7 +156,8 @@ var GanttChartView = Backbone.View.extend({
                     xi = x - borderWidth + offset;
                     context.moveTo(xi, yi);
                     context.lineTo(xi, yf);
-
+                    context.stroke();
+                    context.fillStyle = 'black';
                     context._context.save();
                     context._context.font = '10pt Arial,Helvetica,sans-serif';
                     context._context.textAlign = 'center';
@@ -145,12 +168,58 @@ var GanttChartView = Backbone.View.extend({
                 yi = yf; yf = yf + rowHeight;
             }
 
+            // draw days
             x = 0; length = 0; s = 3;
             var dragInt = parseInt(sattr.dragInterval, 10);
             var hideDate = false;
             if( dragInt === 14 || dragInt === 30){
                 hideDate = true;
             }
+            for (i = 0, iLen = hData[s].length; i < iLen; i++) {
+                length = hData[s][i].duration * daysWidth;
+                x = x + length;
+                xi = x - borderWidth + offset;
+                if (hData[s][i].holy) {
+                    context.beginPath();
+                    context.fillStyle = 'lightgray';
+                    context.moveTo(xi, yi);
+                    context.lineTo(xi, yi + rowHeight);
+                    context.lineTo(xi - length, yi + rowHeight);
+                    context.lineTo(xi - length, yi);
+                    context.closePath();
+                    context.fill();
+                }
+                context._context.save();
+                context.fillStyle = 'black';
+                context._context.font = '6pt Arial,Helvetica,sans-serif';
+                context._context.textAlign = 'center';
+                context._context.textBaseline = 'middle';
+                if (hideDate) {
+                    context._context.font = '1pt Arial,Helvetica,sans-serif';
+                }
+                // console.log(hData[s][i].text);
+                context._context.fillText(hData[s][i].text, x - length / 2, yi + rowHeight / 2);
+                context._context.restore();
+            }
+
+            context.stroke();
+        };
+    },
+    _getGridSceneFunction: function() {
+        var sdisplay = this.settings.sdisplay;
+        var sattr = this.settings.sattr;
+        var borderWidth = sdisplay.borderWidth || 1;
+        var offset = 1;
+
+
+        return function(context){
+            var i, s, iLen = 0,	daysWidth = sattr.daysWidth, x,	length,	hData = sattr.hData;
+
+            context.beginPath();
+
+            var yi = 0, xi = 0;
+
+            x = 0; length = 0; s = 3;
             for (i = 0, iLen = hData[s].length; i < iLen; i++) {
                 length = hData[s][i].duration * daysWidth;
                 x = x + length;
@@ -164,15 +233,6 @@ var GanttChartView = Backbone.View.extend({
                     context.moveTo(xi, yi);
                     context.lineTo(xi, this.getStage().height());
                 }
-                context._context.save();
-                context._context.font = '6pt Arial,Helvetica,sans-serif';
-                context._context.textAlign = 'center';
-                context._context.textBaseline = 'middle';
-                if (hideDate) {
-                    context._context.font = '1pt Arial,Helvetica,sans-serif';
-                }
-                context._context.fillText(hData[s][i].text, x - length / 2, yi + rowHeight / 2);
-                context._context.restore();
             }
             context.fillStrokeShape(this);
         };
@@ -180,12 +240,20 @@ var GanttChartView = Backbone.View.extend({
     _cacheBackground: function() {
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
-        this.Blayer.findOne('.grid').cache({
+        this.stage.find('.grid .topBar').cache({
             x: 0,
             y: 0,
             width: lineWidth,
             height: this.stage.height()
         });
+        // var sattr = this.settings.sattr;
+        // var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
+        // this.Blayer.findOne('.grid').cache({
+        //     x: 0,
+        //     y: 0,
+        //     width: lineWidth,
+        //     height: this.stage.height()
+        // });
     },
     _updateTodayLine: function() {
       var attrs = this.settings.getSetting('attr'),

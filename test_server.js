@@ -6,7 +6,7 @@ var serveStatic = require('serve-static');
 
 var tasks = require('./data/tasks');
 
-_.times(0, function() {
+_.times(2, function() {
     tasks = tasks.concat(JSON.parse(JSON.stringify(tasks)));
 });
 
