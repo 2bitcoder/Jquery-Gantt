@@ -216,8 +216,8 @@ var SidePanel = React.createClass({
                         dateFormat: this.props.dateFormat,
                         onSelectRow: this.onSelectRow,
                         onEditRow: this.onEditRow,
-                        editedRow: (this.props.selectedModelCid === task.cid) && this.state.editedRow,
-                        selectedRow: (this.props.selectedModelCid === task.cid) && this.state.selectedRow
+                        editedRow: (this.state.selectedModelCid === task.cid) && this.state.editedRow,
+                        selectedRow: (this.state.selectedModelCid === task.cid) && this.state.selectedRow
                     })
                 ));
             }
