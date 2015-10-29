@@ -20,20 +20,20 @@ ContextMenuView.prototype.render = function() {
             }
             if(key === 'properties'){
                 var view = new ModalEdit({
-                    model : model,
-                    settings : self.settings
+                    model: model,
+                    settings: self.settings
                 });
                 view.render();
             }
             if(key === 'comments'){
                 new Comments({
-                    model : model,
-                    settings : self.settings
+                    model: model,
+                    settings: self.settings
                 }).render();
             }
             if (key === 'rowAbove'){
                 var data = {
-                    reference_id : id
+                    reference_id: id
                 };
                 self.addTask(data, 'above');
             }
@@ -69,11 +69,12 @@ ContextMenuView.prototype.addTask = function(data, insertPos) {
     if (ref_model) {
         sortindex = ref_model.get('sortindex') + (insertPos === 'above' ? -0.5 : 0.5);
     } else {
-        sortindex = (this.app.tasks.last().get('sortindex') + 1);
+        sortindex = (this.collection.last().get('sortindex') + 1);
     }
     data.sortindex = sortindex;
     data.parentid = ref_model.get('parentid');
     var task = this.collection.add(data, {parse : true});
+    this.collection.checkSortedIndex();
     task.save();
 };
 

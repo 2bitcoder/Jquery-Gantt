@@ -3,13 +3,26 @@ var CommetsView = require('../CommentsView');
 
 var TaskItem = React.createClass({
     displayName: 'TaskItem',
-    getInitialState: function() {
+    getInitialState() {
         return {
-            editRow: undefined
+            val: null
         };
     },
+    shouldComponentUpdate: function(props) {
+        if (_.isEqual(props, this.props)) {
+            return false;
+        }
+        return true;
+    },
     componentDidUpdate: function() {
-        $(this.getDOMNode()).find('input').focus();
+        const $input = $(this.getDOMNode()).find('input');
+        $input.focus();
+        // move cursor to the end of input. Tip from:
+        // http://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end-of-text-in-text-input-element
+        const val = $input.val(); //store the value of the element
+        $input.val(''); //clear the value of the element
+        $input.val(val); //set that value back.
+
     },
     componentDidMount: function() {
         let events = [
@@ -36,7 +49,8 @@ var TaskItem = React.createClass({
         }
     },
     _createField: function(col) {
-        if (this.state.editRow === col) {
+        const isColInEdit = (this.props.editedRow === col);
+        if (isColInEdit) {
             return this._createEditField(col);
         }
         return React.createElement('span', {}, this._createReadFiled(col));
@@ -62,11 +76,9 @@ var TaskItem = React.createClass({
             key: col,
             onChange: function(e) {
                 var newVal = e.target.value;
-                var state = this.state;
-                state.editRow = undefined;
-                this.setState(state);
                 this.props.model.set(col, newVal);
                 this.props.model.save();
+                this.props.onEditRow(this.props.model.cid, null);
             }.bind(this)
         });
     },
@@ -90,18 +102,16 @@ var TaskItem = React.createClass({
             value: this.state.val || val,
             key: 'duration',
             onChange: function(e) {
-                var newVal = e.target.value;
-                this._durationChange(newVal);
-                var state = this.state;
-                state.val = newVal;
-                this.setState(state);
+                var value = e.target.value;
+                this._durationChange(value);
+                this.setState({value});
             }.bind(this),
             onKeyDown: function(e) {
-                if (e.keyCode === 13) {
-                    var state = this.state;
-                    state.editRow = undefined;
-                    state.val = undefined;
-                    this.setState(state);
+                if (e.keyCode === 13 || e.keyCode === 27) {
+                    this.props.onEditRow(this.props.model.cid, null);
+                    this.setState({
+                        val: undefined
+                    });
                     this.props.model.save();
                 }
             }.bind(this)
@@ -124,17 +134,13 @@ var TaskItem = React.createClass({
                 this.props.model.set(col, newVal);
             }.bind(this),
             onKeyDown: function(e) {
-                if (e.keyCode === 13) {
-                    var state = this.state;
-                    state.editRow = undefined;
-                    this.setState(state);
+                if (e.keyCode === 13 || e.keyCode === 27) {
+                    this.props.onEditRow(this.props.model.cid, null);
                     this.props.model.save();
                 }
             }.bind(this),
             onBlur: function() {
-                var state = this.state;
-                state.editRow = undefined;
-                this.setState(state);
+                this.props.onEditRow(this.props.model.cid, null);
                 this.props.model.save();
             }.bind(this)
         });
@@ -168,85 +174,84 @@ var TaskItem = React.createClass({
             y: offset.top
         });
     },
-    findRaw: function(e) {
-        var className = e.target.parentNode.className;
-        if (!className) {
-            className = e.target.parentNode.parentNode.className;
-        }
-        var col = className.slice(4, className.length);
+    findCol: function(e) {
+        const col = $(e.target).closest('.task-col').data('col');
         return col;
     },
     render: function() {
-        var model = this.props.model;
-        return React.createElement('ul', {
-                    className: 'task'
-                          + (this.props.isSubTask ? ' sub-task' : '')
-                          + (this.props.model.get('collapsed') ? ' collapsed' : '')
-                          + (this.props.model.isNested() ? ' nested' : ''),
-                    'data-id': this.props.model.cid,
-                    onDoubleClick: function(e) {
-                        var row = this.findRaw(e);
-                        this.setState({
-                            editRow: row
-                        });
-                    }.bind(this),
-                    // onClick: (e) => {
-                    //     this.setState({
-                    //         selectedCol: this.findRaw(e)
-                    //     });
-                    // },
-                    style: {
-                        'backgroundColor': this.props.model.get('hightlight')
-                    }
-                },
-                React.createElement('li', {
-                    key: 'info',
-                    className: 'col-info'
-                },
-                    React.createElement('img', {
-                        src: 'css/images/info.png',
-                        onClick: this.showContext
-                    })
-                ),
-                React.createElement('li', {
-                    key: 'sortindex',
-                    className: 'col-sortindex'
-                }, model.get('sortindex') + 1),
-                React.createElement('li', {
-                        key: 'name',
-                        className: 'col-name',
-                        style: {
-                            paddingLeft: (this._findNestedLevel() * 10) + 'px'
-                        }
-                    },
-                    this.props.model.isNested() ? React.createElement('i', {
-                        className: 'triangle icon ' + (this.props.model.get('collapsed') ? 'right' : 'down'),
-                        onClick: function() {
-                            this.props.model.set('collapsed', !this.props.model.get('collapsed'));
-                        }.bind(this)
-                    }) : undefined,
-                    React.createElement('div', {
-                        },
-                        this._createField('name'))
-                ),
-                this.createCommentField(),
-                React.createElement('li', {
-                    key: 'complete',
-                    className: 'col-complete'
-                }, this._createField('complete')),
-                React.createElement('li', {
-                    key: 'start',
-                    className: 'col-start'
-                }, this._createField('start')),
-                React.createElement('li', {
-                    key: 'end',
-                    className: 'col-end'
-                }, this._createField('end')),
-                React.createElement('li', {
-                    key: 'duration',
-                    className: 'col-duration'
-                }, this._createField('duration'))
+        const model = this.props.model;
+        const selectedRow = this.props.selectedRow;
+        const shadowBorder = '0 0 0 2px #3879d9 inset';
+
+        let collapseButton;
+        if (model.isNested()) {
+            const className = 'triangle icon ' + (this.props.model.get('collapsed') ? 'right' : 'down');
+            collapseButton = (
+                <i
+                    className={className}
+                    onClick={() => {
+                        this.props.model.set('collapsed', !this.props.model.get('collapsed'));
+                    }}/>
             );
+        }
+        const ulClass = 'task'
+          + (this.props.isSubTask ? ' sub-task' : '')
+          + (this.props.model.get('collapsed') ? ' collapsed' : '')
+          + (this.props.model.isNested() ? ' nested' : '');
+        return (
+            <ul
+                className={ulClass}
+                data-id={this.props.model.cid}
+                onDoubleClick={(e) => {
+                    this.props.onEditRow(model.cid, this.findCol(e));
+                }}
+                onClick={(e) => {
+                    this.props.onSelectRow(model.cid, this.findCol(e));
+                }}
+                style={{
+                    backgroundColor: this.props.model.get('hightlight')
+                }}
+            >
+                <li key="info" className="task-col col-info">
+                    <img src="css/images/info.png" onClick={this.onClick}/>
+                </li>
+                <li key="sortindex" className="col-sortindex">
+                    {model.get('sortindex') + 1}
+                </li>
+                <li key="name" className="task-col col-name" data-col="name"
+                    style={{
+                        paddingLeft: (this._findNestedLevel() * 10) + 'px',
+                        boxShadow: selectedRow === 'name' ? shadowBorder : null
+                    }}
+                >
+                    {collapseButton}
+                    <div>
+                        {this._createField('name')}
+                    </div>
+                </li>
+                {this.createCommentField()}
+                <li key="complete" className="task-col col-complete" data-col="complete"
+                    style={{boxShadow: selectedRow === 'complete' ? shadowBorder : null}}
+                >
+                    {this._createField('complete')}
+                </li>
+                <li key="start" className="task-col col-start" data-col="start"
+                    style={{boxShadow: selectedRow === 'start' ? shadowBorder : null}}
+                >
+                    {this._createField('start')}
+                </li>
+                <li key="end" className="task-col col-end" data-col="end"
+                    style={{boxShadow: selectedRow === 'end' ? shadowBorder : null}}
+                >
+                    {this._createField('end')}
+                </li>
+                <li key="duration" className="task-col col-duration" data-col="duration"
+                    style={{boxShadow: selectedRow === 'duration' ? shadowBorder : null}}
+                >
+                    {this._createField('duration')}
+                </li>
+            </ul>
+        );
     }
 });
 

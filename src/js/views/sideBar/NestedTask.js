@@ -11,7 +11,7 @@ var NestedTask = React.createClass({
         this.props.model.off(null, null, this);
     },
     render: function() {
-        var subtasks = this.props.model.children.map(function(task) {
+        var subtasks = this.props.model.children.map((task) => {
             if (task.get('hidden')) {
                 return;
             }
@@ -20,7 +20,12 @@ var NestedTask = React.createClass({
                     model: task,
                     isSubTask: true,
                     key: task.cid,
-                    dateFormat: this.props.dateFormat
+                    dateFormat: this.props.dateFormat,
+                    onSelectRow: this.props.onSelectRow,
+                    onEditRow: this.props.onEditRow,
+                    editedRow: this.props.editedRow,
+                    selectedRow: this.props.selectedRow,
+                    selectedModelCid: this.props.selectedModelCid
                 });
             }
             return React.createElement('li', {
@@ -32,10 +37,14 @@ var NestedTask = React.createClass({
                         React.createElement(TaskItem, {
                             model: task,
                             isSubTask: true,
-                            dateFormat: this.props.dateFormat
+                            dateFormat: this.props.dateFormat,
+                            onSelectRow: this.props.onSelectRow,
+                            onEditRow: this.props.onEditRow,
+                            editedRow: (this.props.selectedModelCid === task.cid) && this.props.editedRow,
+                            selectedRow: (this.props.selectedModelCid === task.cid) && this.props.selectedRow
                         })
                     );
-        }, this);
+        });
         return React.createElement('li', {
                     className: 'task-list-container drag-item' + (this.props.isSubTask ? ' sub-task' : ''),
                     id: this.props.model.cid,
@@ -47,7 +56,11 @@ var NestedTask = React.createClass({
                     },
                     React.createElement(TaskItem, {
                         model: this.props.model,
-                        dateFormat: this.props.dateFormat
+                        dateFormat: this.props.dateFormat,
+                        onSelectRow: this.props.onSelectRow,
+                        onEditRow: this.props.onEditRow,
+                        editedRow: (this.props.selectedModelCid === this.props.model.cid) && this.props.editedRow,
+                        selectedRow: (this.props.selectedModelCid === this.props.model.cid) && this.props.selectedRow
                     })
                 ),
                 React.createElement('ol', {

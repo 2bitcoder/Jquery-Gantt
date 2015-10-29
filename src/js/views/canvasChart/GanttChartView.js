@@ -79,14 +79,16 @@ var GanttChartView = Backbone.View.extend({
             stroke: 'lightgray',
             strokeWidth: 0,
             fill: 'rgba(0,0,0,0.1)',
-            name: 'topBar'
+            name: 'topBar',
+            hitGraphEnabled: false
         });
         var grid = new Konva.Shape({
             sceneFunc: this._getGridSceneFunction(),
             stroke: 'lightgray',
             strokeWidth: 0,
             fill: 'rgba(0,0,0,0.1)',
-            name: 'grid'
+            name: 'grid',
+            hitGraphEnabled: false
         });
         var sattr = this.settings.sattr;
         var width = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
@@ -240,20 +242,12 @@ var GanttChartView = Backbone.View.extend({
     _cacheBackground: function() {
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
-        this.stage.find('.grid .topBar').cache({
+        this.stage.find('.grid,.topBar').cache({
             x: 0,
             y: 0,
             width: lineWidth,
             height: this.stage.height()
         });
-        // var sattr = this.settings.sattr;
-        // var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
-        // this.Blayer.findOne('.grid').cache({
-        //     x: 0,
-        //     y: 0,
-        //     width: lineWidth,
-        //     height: this.stage.height()
-        // });
     },
     _updateTodayLine: function() {
       var attrs = this.settings.getSetting('attr'),

@@ -1,18 +1,7 @@
 {
     "ecmaFeatures": {
-      "arrowFunctions" : 2,
-      "blockBindings": true,
-      "classes": 2,
-      "defaultParams": 2,
-      "destructuring": 2,
-      "forOf": 2,
-      "generators": 2,
-      "modules": 2,
-      "objectLiteralComputedProperties": 2,
-      "objectLiteralShorthandMethods": 2,
-      "objectLiteralShorthandProperties": 2,
-      "superInFunctions": 2,
-      "templateStrings": 2,
+      "jsx": true,
+      "modules": 2
     },
     "parser": "espree",
     "env": {
@@ -28,7 +17,7 @@
         "no-bitwise": 2,
         "no-caller": 2,
         "no-catch-shadow": 2,
-        "no-comma-dangle": 2,
+        "comma-dangle": 2,
         "no-underscore-dangle": 0,
         "no-cond-assign": 2,
         "no-console": 0,
@@ -54,7 +43,6 @@
         "no-extra-boolean-cast": 2,
         "no-extra-parens": 0,
         "no-extra-semi": 2,
-        "no-extra-strict": 2,
         "no-fallthrough": 2,
         "no-floating-decimal": 0,
         "no-func-assign": 2,
@@ -102,7 +90,6 @@
         "no-sequences": 2,
         "no-shadow": 2,
         "no-shadow-restricted-names": 2,
-        "no-space-before-semi": 2,
         "no-spaced-func": 2,
         "no-sparse-arrays": 2,
         "no-sync": 0,
@@ -122,7 +109,6 @@
         "prefer-const": 0,
         "no-warning-comments": [0, { "terms": ["todo", "fixme", "xxx"], "location": "start" }],
         "no-with": 2,
-        "no-wrap-func": 2,
 
         "accessor-pairs": 0,
         "block-scoped-var": 0,
@@ -133,7 +119,7 @@
         "comma-style": 0,
         "complexity": [1, 11],
         "computed-property-spacing": [0, "never"],
-        "consistent-return": 2,
+        "consistent-return": 0,
         "consistent-this": [0, "that"],
         "curly": [2, "all"],
         "default-case": 0,
@@ -145,7 +131,6 @@
         "func-style": [1, "declaration"],
         "generator-star": 0,
         "generator-star-spacing": 0,
-        "global-strict": [2, "never"],
         "guard-for-in": 1,
         "handle-callback-err": 2,
         "indent": 0,
@@ -190,12 +175,13 @@
         "vars-on-top": 0,
         "wrap-iife": 0,
         "wrap-regex": 0,
-        "yoda": [2, "never"],
+        "yoda": [2, "never"]
     },
     "globals": {
-        "$": true,
-        "React": true,
-        "Backbone": true,
-        "Konva": true
+        "$": false,
+        "Backbone": false,
+        "_": false,
+        "Konva": false,
+        "React": false
     }
 }

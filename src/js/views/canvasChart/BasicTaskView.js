@@ -91,11 +91,11 @@ var BasicTaskView = Backbone.KonvaView.extend({
             name: 'completeRect'
         });
         var self = this;
+        var horOffset = 6;
         var arc = new Konva.Shape({
             y: this._topPadding,
             fill: 'lightgreen',
-            drawFunc: function(context) {
-                var horOffset = 6;
+            sceneFunc: function(context) {
                 var size = self._barHeight + (self._borderSize || 0);
                 context.beginPath();
                 context.moveTo(0, 0);
