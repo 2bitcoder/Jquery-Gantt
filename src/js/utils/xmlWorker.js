@@ -11,6 +11,10 @@ function parseXMLObj(xmlString) {
             return;
             // xmlItem.Name = [{_text: 'no name ' + xmlItem.UID[0]._text}];
         }
+        // skip root project task
+        if (xmlItem.OutlineNumber[0]._text.toString() === '0') {
+            return;
+        }
         tasks.push({
             name: xmlItem.Name[0]._text,
             start: xmlItem.Start[0]._text,
@@ -99,13 +103,12 @@ module.exports.tasksToXML = function(tasks) {
             end = task.get('end');
         }
 
-        console.log(task.get('depend'));
         const depend = _.map(task.get('depend'), (id) => {
-            return tasks.get(id).get('sortindex');
+            return tasks.get(id).get('sortindex') + 1;
         });
 
         return {
-            id: task.get('sortindex'),
+            id: task.get('sortindex') + 1,
             name: task.get('name'),
             outlineNumber: task.getOutlineNumber(),
             outlineLevel: task.getOutlineLevel(),

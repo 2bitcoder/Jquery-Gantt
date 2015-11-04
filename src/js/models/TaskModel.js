@@ -338,7 +338,7 @@ var TaskModel = Backbone.Model.extend({
         this._moveChildren(days);
     },
     getOutlineLevel: function() {
-        var level = 0;
+        var level = 1;
         var parent = this.parent;
         while(true) {
             if (!parent) {
@@ -350,11 +350,12 @@ var TaskModel = Backbone.Model.extend({
     },
     getOutlineNumber: function() {
         if (this.parent) {
-            return this.parent.children.models.indexOf(this);
+            const index = this.parent.children.models.indexOf(this);
+            return this.parent.getOutlineNumber() + '.' + (index + 1);
         }
 
-        let number = 0;
-        for(let i = 0; i < this.collection.length; i ++) {
+        let number = 1;
+        for(let i = 0; i < this.collection.length; i++) {
             const model = this.collection.at(i);
             if (model === this) {
                 return number;

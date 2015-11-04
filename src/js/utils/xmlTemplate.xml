@@ -153,6 +153,7 @@
         <Task>
             <UID>0</UID>
             <ID>0</ID>
+            <Name>Gantt Project</Name>
             <Active>1</Active>
             <Manual>0</Manual>
             <Type>1</Type>
@@ -230,17 +231,17 @@
             <CommitmentType>0</CommitmentType>
         </Task><% tasks.forEach(function(task){ %>
         <Task>
-            <UID><%= task.id + 1%></UID>
-            <ID><%= task.id + 1%></ID>
+            <UID><%= task.id %></UID>
+            <ID><%= task.id %></ID>
             <Name><%= task.name %></Name>
             <Active>1</Active>
             <Manual>0</Manual>
             <Type>1</Type>
             <IsNull>0</IsNull>
             <CreateDate><%= task.start %></CreateDate>
-            <WBS><%= task.outlineNumber + 1 %></WBS>
-            <OutlineNumber><%= task.outlineNumber + 1 %></OutlineNumber>
-            <OutlineLevel><%= task.outlineLevel + 1 %></OutlineLevel>
+            <WBS><%= task.outlineNumber %></WBS>
+            <OutlineNumber><%= task.outlineNumber %></OutlineNumber>
+            <OutlineLevel><%= task.outlineLevel %></OutlineLevel>
             <Priority>500</Priority>
             <Start><%= task.start %></Start>
             <Finish><%= task.finish %></Finish>
@@ -307,7 +308,7 @@
             <PhysicalPercentComplete>0</PhysicalPercentComplete>
             <EarnedValueMethod>0</EarnedValueMethod><% if (task.depend !== undefined) {%>
             <PredecessorLink>
-                <PredecessorUID><%= task.depend + 1 %></PredecessorUID>
+                <PredecessorUID><%= task.depend %></PredecessorUID>
                 <Type>1</Type>
                 <CrossProject>0</CrossProject>
                 <LinkLag>0</LinkLag>

@@ -193,7 +193,7 @@ var TaskCollection = Backbone.Collection.extend({
 		}
 	},
     importTasks: function(taskJSONarray, callback) {
-		var sortindex = 0;
+		var sortindex = -1;
 		if (this.last()) {
 			sortindex = this.last().get('sortindex');
 		}
@@ -202,9 +202,9 @@ var TaskCollection = Backbone.Collection.extend({
         });
         var length = taskJSONarray.length;
         var done = 0;
-        this.add(taskJSONarray, {parse: true}).forEach(function(task) {
+        this.add(taskJSONarray, {parse: true}).forEach((task) => {
             task.save({}, {
-                success: function() {
+                success: () => {
                     done += 1;
                     if (done === length) {
                         callback();

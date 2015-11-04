@@ -38,7 +38,7 @@ var TaskItem = React.createClass({
         this.props.model.off(null, null, this);
     },
     _findNestedLevel: function() {
-        return this.props.model.getOutlineLevel();
+        return this.props.model.getOutlineLevel() - 1;
     },
     _createField: function(col) {
         const isColInEdit = (this.props.editedRow === col);
