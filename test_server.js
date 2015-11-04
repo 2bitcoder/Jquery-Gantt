@@ -57,9 +57,9 @@ function generateAPI(items, baseURL) {
 
 
     app.post(baseURL, function(req, res) {
-        console.log('add item', req.body);
         req.body.id = ++taskIdCounter;
-        tasks.push(req.body);
+        console.log('add item', req.body);
+        items.push(req.body);
         return res.send(req.body);
     });
 
@@ -67,17 +67,16 @@ function generateAPI(items, baseURL) {
         var id = req.params.id.toString();
         console.log('return item with id ' + id);
 
-        var task = _(items).find(function(item) {
-            return item.id.toString() === id;
+        var task = _.find(items, function(item) {
+            return item.id.toString() === id.toString();
         });
 
-        res.send(task || {});
+        res.send(task || null);
     });
 
     app.put(baseURL + '/:id', function(req, res) {
         var id = req.params.id.toString();
         console.log('update item with id ' + id);
-
         var item = _(items).find(function(i) {
             return i.id.toString() === id;
         });

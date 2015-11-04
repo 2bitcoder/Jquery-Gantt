@@ -59,22 +59,7 @@
     <KeepTaskOnNearestWorkingTimeWhenMadeAutoScheduled>0</KeepTaskOnNearestWorkingTimeWhenMadeAutoScheduled>
     <OutlineCodes/>
     <WBSMasks/>
-    <ExtendedAttributes>
-        <ExtendedAttribute>
-            <FieldID>188743752</FieldID>
-            <FieldName>Flag1</FieldName>
-            <Guid>000039B7-8BBE-4CEB-82C4-FA8C0B400048</Guid>
-            <SecondaryPID>255868938</SecondaryPID>
-            <SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F40400A</SecondaryGuid>
-        </ExtendedAttribute>
-        <ExtendedAttribute>
-            <FieldID>188744006</FieldID>
-            <FieldName>Text20</FieldName>
-            <Guid>000039B7-8BBE-4CEB-82C4-FA8C0B400146</Guid>
-            <SecondaryPID>255869047</SecondaryPID>
-            <SecondaryGuid>000039B7-8BBE-4CEB-82C4-FA8C0F404077</SecondaryGuid>
-        </ExtendedAttribute>
-    </ExtendedAttributes>
+    <ExtendedAttributes/>
     <Calendars>
         <Calendar>
             <UID>1</UID>
@@ -163,145 +148,174 @@
                 </WeekDay>
             </WeekDays>
         </Calendar>
-        <Calendar>
-            <UID>3</UID>
-            <Name>Management</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>4</UID>
-            <Name>Project Manager</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>5</UID>
-            <Name>Analyst</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>6</UID>
-            <Name>Developer</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>7</UID>
-            <Name>Testers</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>8</UID>
-            <Name>Trainers</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>9</UID>
-            <Name>Technical Communicators</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
-        <Calendar>
-            <UID>10</UID>
-            <Name>Deployment Team</Name>
-            <IsBaseCalendar>0</IsBaseCalendar>
-            <IsBaselineCalendar>0</IsBaselineCalendar>
-            <BaseCalendarUID>1</BaseCalendarUID>
-        </Calendar>
     </Calendars>
     <Tasks>
-        <% tasks.forEach(function(task){ %>
-            <Task>
-                <UID><%= task.id %></UID>
-                <ID><%= task.id %></ID>
-                <Name><%= task.name %></Name>
-                <Active>1</Active>
-                <Manual>0</Manual>
+        <Task>
+            <UID>0</UID>
+            <ID>0</ID>
+            <Active>1</Active>
+            <Manual>0</Manual>
+            <Type>1</Type>
+            <IsNull>0</IsNull>
+            <CreateDate><%= startDate %></CreateDate>
+            <WBS>0</WBS>
+            <OutlineNumber>0</OutlineNumber>
+            <OutlineLevel>0</OutlineLevel>
+            <Priority>500</Priority>
+            <Start><%= startDate %></Start>
+            <Finish><%= finishDate %></Finish>
+            <Duration>PT104H0M0S</Duration>
+            <ManualStart><%= startDate %></ManualStart>
+            <ManualFinish><%= finishDate %></ManualFinish>
+            <ManualDuration>PT104H0M0S</ManualDuration>
+            <DurationFormat>53</DurationFormat>
+            <Work>PT0H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>1</Summary>
+            <DisplayAsSummary>0</DisplayAsSummary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <EarlyStart><%= startDate %></EarlyStart>
+            <EarlyFinish><%= finishDate %></EarlyFinish>
+            <LateStart><%= startDate %></LateStart>
+            <LateFinish><%= finishDate %></LateFinish>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0.00</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <StartSlack>0</StartSlack>
+            <FinishSlack>0</FinishSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <PercentComplete>0</PercentComplete>
+            <PercentWorkComplete>0</PercentWorkComplete>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration>PT104H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT0H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0.00</ACWP>
+            <CV>0.00</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>1</LevelAssignments>
+            <LevelingCanSplit>1</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>8</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0.00</BCWS>
+            <BCWP>0.00</BCWP>
+            <PhysicalPercentComplete>0</PhysicalPercentComplete>
+            <EarnedValueMethod>0</EarnedValueMethod>
+            <IsPublished>0</IsPublished>
+            <CommitmentType>0</CommitmentType>
+        </Task><% tasks.forEach(function(task){ %>
+        <Task>
+            <UID><%= task.id + 1%></UID>
+            <ID><%= task.id + 1%></ID>
+            <Name><%= task.name %></Name>
+            <Active>1</Active>
+            <Manual>0</Manual>
+            <Type>1</Type>
+            <IsNull>0</IsNull>
+            <CreateDate><%= task.start %></CreateDate>
+            <WBS><%= task.outlineNumber + 1 %></WBS>
+            <OutlineNumber><%= task.outlineNumber + 1 %></OutlineNumber>
+            <OutlineLevel><%= task.outlineLevel + 1 %></OutlineLevel>
+            <Priority>500</Priority>
+            <Start><%= task.start %></Start>
+            <Finish><%= task.finish %></Finish>
+            <Duration>PT766H0M0S</Duration>
+            <ManualStart><%= task.start %></ManualStart>
+            <ManualFinish><%= task.finish %></ManualFinish>
+            <ManualDuration>PT766H0M0S</ManualDuration>
+            <DurationFormat>21</DurationFormat>
+            <Work>PT1532H0M0S</Work>
+            <ResumeValid>0</ResumeValid>
+            <EffortDriven>0</EffortDriven>
+            <Recurring>0</Recurring>
+            <OverAllocated>0</OverAllocated>
+            <Estimated>1</Estimated>
+            <Milestone>0</Milestone>
+            <Summary>1</Summary>
+            <DisplayAsSummary>0</DisplayAsSummary>
+            <Critical>1</Critical>
+            <IsSubproject>0</IsSubproject>
+            <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
+            <ExternalTask>0</ExternalTask>
+            <EarlyStart><%= task.start %></EarlyStart>
+            <EarlyFinish><%= task.finish %></EarlyFinish>
+            <LateStart><%= task.start %></LateStart>
+            <LateFinish><%= task.finish %></LateFinish>
+            <StartVariance>0</StartVariance>
+            <FinishVariance>0</FinishVariance>
+            <WorkVariance>0.00</WorkVariance>
+            <FreeSlack>0</FreeSlack>
+            <TotalSlack>0</TotalSlack>
+            <StartSlack>0</StartSlack>
+            <FinishSlack>0</FinishSlack>
+            <FixedCost>0</FixedCost>
+            <FixedCostAccrual>3</FixedCostAccrual>
+            <PercentComplete>0</PercentComplete>
+            <PercentWorkComplete>0</PercentWorkComplete>
+            <Cost>0</Cost>
+            <OvertimeCost>0</OvertimeCost>
+            <OvertimeWork>PT0H0M0S</OvertimeWork>
+            <ActualDuration>PT0H0M0S</ActualDuration>
+            <ActualCost>0</ActualCost>
+            <ActualOvertimeCost>0</ActualOvertimeCost>
+            <ActualWork>PT0H0M0S</ActualWork>
+            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
+            <RegularWork>PT1532H0M0S</RegularWork>
+            <RemainingDuration>PT766H0M0S</RemainingDuration>
+            <RemainingCost>0</RemainingCost>
+            <RemainingWork>PT1532H0M0S</RemainingWork>
+            <RemainingOvertimeCost>0</RemainingOvertimeCost>
+            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
+            <ACWP>0.00</ACWP>
+            <CV>0.00</CV>
+            <ConstraintType>0</ConstraintType>
+            <CalendarUID>-1</CalendarUID>
+            <LevelAssignments>1</LevelAssignments>
+            <LevelingCanSplit>1</LevelingCanSplit>
+            <LevelingDelay>0</LevelingDelay>
+            <LevelingDelayFormat>8</LevelingDelayFormat>
+            <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
+            <HideBar>0</HideBar>
+            <Rollup>0</Rollup>
+            <BCWS>0.00</BCWS>
+            <BCWP>0.00</BCWP>
+            <PhysicalPercentComplete>0</PhysicalPercentComplete>
+            <EarnedValueMethod>0</EarnedValueMethod><% if (task.depend !== undefined) {%>
+            <PredecessorLink>
+                <PredecessorUID><%= task.depend + 1 %></PredecessorUID>
                 <Type>1</Type>
-                <IsNull>0</IsNull>
-                <CreateDate><%= task.start %></CreateDate>
-                <WBS>0</WBS>
-                <OutlineNumber>0</OutlineNumber>
-                <OutlineLevel>0</OutlineLevel>
-                <Priority>500</Priority>
-                <Start><%= task.start %></Start>
-                <Finish><%= task.finish %></Finish>
-                <Duration>PT766H0M0S</Duration>
-                <ManualStart><%= task.start %></ManualStart>
-                <ManualFinish><%= task.finish %></ManualFinish>
-                <ManualDuration>PT766H0M0S</ManualDuration>
-                <DurationFormat>21</DurationFormat>
-                <Work>PT1532H0M0S</Work>
-                <ResumeValid>0</ResumeValid>
-                <EffortDriven>0</EffortDriven>
-                <Recurring>0</Recurring>
-                <OverAllocated>0</OverAllocated>
-                <Estimated>0</Estimated>
-                <Milestone>0</Milestone>
-                <Summary>1</Summary>
-                <DisplayAsSummary>0</DisplayAsSummary>
-                <Critical>1</Critical>
-                <IsSubproject>0</IsSubproject>
-                <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
-                <ExternalTask>0</ExternalTask>
-                <EarlyStart><%= task.start %>0</EarlyStart>
-                <EarlyFinish><%= task.finish %></EarlyFinish>
-                <LateStart><%= task.start %></LateStart>
-                <LateFinish><%= task.finish %></LateFinish>
-                <StartVariance>0</StartVariance>
-                <FinishVariance>0</FinishVariance>
-                <WorkVariance>91920000.00</WorkVariance>
-                <FreeSlack>0</FreeSlack>
-                <TotalSlack>0</TotalSlack>
-                <StartSlack>0</StartSlack>
-                <FinishSlack>0</FinishSlack>
-                <FixedCost>0</FixedCost>
-                <FixedCostAccrual>3</FixedCostAccrual>
-                <PercentComplete>0</PercentComplete>
-                <PercentWorkComplete>0</PercentWorkComplete>
-                <Cost>0</Cost>
-                <OvertimeCost>0</OvertimeCost>
-                <OvertimeWork>PT0H0M0S</OvertimeWork>
-                <ActualDuration>PT0H0M0S</ActualDuration>
-                <ActualCost>0</ActualCost>
-                <ActualOvertimeCost>0</ActualOvertimeCost>
-                <ActualWork>PT0H0M0S</ActualWork>
-                <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-                <RegularWork>PT1532H0M0S</RegularWork>
-                <RemainingDuration>PT766H0M0S</RemainingDuration>
-                <RemainingCost>0</RemainingCost>
-                <RemainingWork>PT1532H0M0S</RemainingWork>
-                <RemainingOvertimeCost>0</RemainingOvertimeCost>
-                <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-                <ACWP>0.00</ACWP>
-                <CV>0.00</CV>
-                <ConstraintType>0</ConstraintType>
-                <CalendarUID>-1</CalendarUID>
-                <LevelAssignments>1</LevelAssignments>
-                <LevelingCanSplit>1</LevelingCanSplit>
-                <LevelingDelay>0</LevelingDelay>
-                <LevelingDelayFormat>8</LevelingDelayFormat>
-                <IgnoreResourceCalendar>0</IgnoreResourceCalendar>
-                <HideBar>0</HideBar>
-                <Rollup>0</Rollup>
-                <BCWS>0.00</BCWS>
-                <BCWP>0.00</BCWP>
-                <PhysicalPercentComplete>0</PhysicalPercentComplete>
-                <EarnedValueMethod>0</EarnedValueMethod>
-                <IsPublished>0</IsPublished>
-                <CommitmentType>0</CommitmentType>
-            </Task><% }); %>
+                <CrossProject>0</CrossProject>
+                <LinkLag>0</LinkLag>
+                <LagFormat>7</LagFormat>
+            </PredecessorLink><% } %> 
+            <IsPublished>0</IsPublished>
+            <CommitmentType>0</CommitmentType>
+        </Task><% }); %>
     </Tasks>
     <Resources>
         <Resource>
@@ -346,60 +360,10 @@
             <IsInactive>0</IsInactive>
             <IsEnterprise>0</IsEnterprise>
             <BookingType>0</BookingType>
-            <CreationDate>2012-08-07T08:59:00</CreationDate>
+            <CreationDate><%= currentDate %></CreationDate>
             <IsCostResource>0</IsCostResource>
             <IsBudget>0</IsBudget>
         </Resource>
     </Resources>
-    <Assignments>
-        <Assignment>
-            <UID>6</UID>
-            <TaskUID>6</TaskUID>
-            <ResourceUID>-65535</ResourceUID>
-            <PercentWorkComplete>0</PercentWorkComplete>
-            <ActualCost>0</ActualCost>
-            <ActualOvertimeCost>0</ActualOvertimeCost>
-            <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <ActualWork>PT0H0M0S</ActualWork>
-            <ACWP>0.00</ACWP>
-            <Confirmed>0</Confirmed>
-            <Cost>0</Cost>
-            <CostRateTable>0</CostRateTable>
-            <RateScale>0</RateScale>
-            <CostVariance>0</CostVariance>
-            <CV>0.00</CV>
-            <Delay>0</Delay>
-            <Finish>2014-04-18T12:00:00</Finish>
-            <FinishVariance>0</FinishVariance>
-            <WorkVariance>0.00</WorkVariance>
-            <HasFixedRateUnits>1</HasFixedRateUnits>
-            <FixedMaterial>0</FixedMaterial>
-            <LevelingDelay>0</LevelingDelay>
-            <LevelingDelayFormat>7</LevelingDelayFormat>
-            <LinkedFields>0</LinkedFields>
-            <Milestone>1</Milestone>
-            <Overallocated>0</Overallocated>
-            <OvertimeCost>0</OvertimeCost>
-            <OvertimeWork>PT0H0M0S</OvertimeWork>
-            <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingCost>0</RemainingCost>
-            <RemainingOvertimeCost>0</RemainingOvertimeCost>
-            <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
-            <RemainingWork>PT0H0M0S</RemainingWork>
-            <ResponsePending>0</ResponsePending>
-            <Start>2014-04-18T12:00:00</Start>
-            <StartVariance>0</StartVariance>
-            <Units>1</Units>
-            <UpdateNeeded>0</UpdateNeeded>
-            <VAC>0.00</VAC>
-            <Work>PT0H0M0S</Work>
-            <WorkContour>0</WorkContour>
-            <BCWS>0.00</BCWS>
-            <BCWP>0.00</BCWP>
-            <BookingType>0</BookingType>
-            <CreationDate>2012-08-07T08:59:00</CreationDate>
-            <BudgetCost>0</BudgetCost>
-            <BudgetWork>PT0H0M0S</BudgetWork>
-        </Assignment>
-    </Assignments>
+    <Assignments/>
 </Project>

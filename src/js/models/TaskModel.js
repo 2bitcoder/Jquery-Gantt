@@ -262,7 +262,7 @@ var TaskModel = Backbone.Model.extend({
             response.depend = [response.depend];
         }
         if (_.isString(response.depend)) {
-            response.depend = response.depend.split(',');
+            response.depend = _.compact(response.depend.split(','));
         }
         return response;
     },
@@ -336,6 +336,32 @@ var TaskModel = Backbone.Model.extend({
             end: this.get('end').clone().addDays(days)
         });
         this._moveChildren(days);
+    },
+    getOutlineLevel: function() {
+        var level = 0;
+        var parent = this.parent;
+        while(true) {
+            if (!parent) {
+                return level;
+            }
+            level++;
+            parent = parent.parent;
+        }
+    },
+    getOutlineNumber: function() {
+        if (this.parent) {
+            return this.parent.children.models.indexOf(this);
+        }
+
+        let number = 0;
+        for(let i = 0; i < this.collection.length; i ++) {
+            const model = this.collection.at(i);
+            if (model === this) {
+                return number;
+            } else if (!model.parent) {
+                number += 1;
+            }
+        }
     }
 });
 

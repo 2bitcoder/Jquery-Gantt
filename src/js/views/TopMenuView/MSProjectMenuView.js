@@ -1,16 +1,16 @@
 var parseXML = require('../../utils/xmlWorker').parseXMLObj;
-var JSONToXML = require('../../utils/xmlWorker').JSONToXML;
+var tasksToXML = require('../../utils/xmlWorker').tasksToXML;
 var parseDepsFromXML = require('../../utils/xmlWorker').parseDepsFromXML;
 
 var MSProjectMenuView = Backbone.View.extend({
     el: '#project-menu',
 
-    initialize : function(params) {
+    initialize: function(params) {
         this.settings = params.settings;
         this.importing = false;
         this._setupInput();
     },
-    _setupInput : function() {
+    _setupInput: function() {
         var input = $('#importFile');
         var self = this;
         input.on('change', function(evt) {
@@ -35,7 +35,7 @@ var MSProjectMenuView = Backbone.View.extend({
             });
         });
     },
-    events : {
+    events: {
         'click #upload-project' : function() {
             $('#msimport').modal({
                 onHidden : function() {
@@ -58,7 +58,7 @@ var MSProjectMenuView = Backbone.View.extend({
             $("#importFile").show();
         },
         'click #download-project' : function() {
-            var data = JSONToXML(this.collection.toJSON());
+            var data = tasksToXML(this.collection);
             var blob = new Blob([data], {type : 'application/json'});
             saveAs(blob, 'GanttTasks.xml');
         }
@@ -112,11 +112,6 @@ var MSProjectMenuView = Backbone.View.extend({
                 }.bind(this), delay);
             }.bind(this), delay);
         }.bind(this), delay);
-
-
-
-
-
     }
 });
 
