@@ -92,6 +92,18 @@ function cut(date) {
     return formated.slice(0, formated.indexOf('.'));
 }
 
+function getDuration(end, start) {
+    var diff = end.getTime() - start.getTime();
+    const days = Math.floor(diff / 1000 / 60 / 60 / 24) + 1;
+    // if (days >= 1) {
+
+    // }
+    var hours = days * 8;
+    // var mins = Math.floor((diff - hours * 1000 * 60 * 60) / 1000 /60);
+    // var secs = Math.floor((diff - hours * 1000 * 60 * 60 - mins * 1000 * 60) / 1000);
+    return `PT${hours}H0M0S`;
+}
+
 module.exports.tasksToXML = function(tasks) {
     var start = tasks.at(0).get('start');
     var end = tasks.at(0).get('end');
@@ -114,6 +126,7 @@ module.exports.tasksToXML = function(tasks) {
             outlineLevel: task.getOutlineLevel(),
             start: cut(task.get('start')),
             finish: cut(task.get('end')),
+            duration: getDuration(task.get('end'), task.get('start')),
             depend: depend[0]
         };
     });
@@ -121,6 +134,7 @@ module.exports.tasksToXML = function(tasks) {
         tasks: data,
         currentDate: cut(new Date()),
         startDate: cut(start),
-        finishDate: cut(end)
+        finishDate: cut(end),
+        duration: getDuration(end, start)
     });
 };

@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/project">
     <SaveVersion>14</SaveVersion>
     <Name>Gantt Tasks.xml</Name>
-    <Title>Gantt Tasks</Title>
+    <Title>Project</Title>
     <CreationDate><%= currentDate %></CreationDate>
     <LastSaved><%= currentDate %></LastSaved>
     <ScheduleFromStart>1</ScheduleFromStart>
@@ -30,7 +30,7 @@
     <HonorConstraints>0</HonorConstraints>
     <InsertedProjectsLikeSummary>1</InsertedProjectsLikeSummary>
     <MultipleCriticalPaths>0</MultipleCriticalPaths>
-    <NewTasksEffortDriven>1</NewTasksEffortDriven>
+    <NewTasksEffortDriven>0</NewTasksEffortDriven>
     <NewTasksEstimated>1</NewTasksEstimated>
     <SplitsInProgressTasks>1</SplitsInProgressTasks>
     <SpreadActualCost>0</SpreadActualCost>
@@ -46,9 +46,9 @@
     <AutoAddNewResourcesAndTasks>1</AutoAddNewResourcesAndTasks>
     <CurrentDate><%= currentDate %></CurrentDate>
     <MicrosoftProjectServerURL>1</MicrosoftProjectServerURL>
-    <Autolink>1</Autolink>
+    <Autolink>0</Autolink>
     <NewTaskStartDate>0</NewTaskStartDate>
-    <NewTasksAreManual>0</NewTasksAreManual>
+    <NewTasksAreManual>1</NewTasksAreManual>
     <DefaultTaskEVMethod>0</DefaultTaskEVMethod>
     <ProjectExternallyEdited>0</ProjectExternallyEdited>
     <ExtendedCreationDate>1984-01-01T00:00:00</ExtendedCreationDate>
@@ -153,7 +153,7 @@
         <Task>
             <UID>0</UID>
             <ID>0</ID>
-            <Name>Gantt Project</Name>
+            <Name>Project</Name>
             <Active>1</Active>
             <Manual>0</Manual>
             <Type>1</Type>
@@ -165,10 +165,10 @@
             <Priority>500</Priority>
             <Start><%= startDate %></Start>
             <Finish><%= finishDate %></Finish>
-            <Duration>PT104H0M0S</Duration>
+            <Duration><%= duration %></Duration>
             <ManualStart><%= startDate %></ManualStart>
             <ManualFinish><%= finishDate %></ManualFinish>
-            <ManualDuration>PT104H0M0S</ManualDuration>
+            <ManualDuration><%= duration %></ManualDuration>
             <DurationFormat>53</DurationFormat>
             <Work>PT0H0M0S</Work>
             <ResumeValid>0</ResumeValid>
@@ -207,7 +207,7 @@
             <ActualWork>PT0H0M0S</ActualWork>
             <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
             <RegularWork>PT0H0M0S</RegularWork>
-            <RemainingDuration>PT104H0M0S</RemainingDuration>
+            <RemainingDuration><%= duration %></RemainingDuration>
             <RemainingCost>0</RemainingCost>
             <RemainingWork>PT0H0M0S</RemainingWork>
             <RemainingOvertimeCost>0</RemainingOvertimeCost>
@@ -245,21 +245,21 @@
             <Priority>500</Priority>
             <Start><%= task.start %></Start>
             <Finish><%= task.finish %></Finish>
-            <Duration>PT766H0M0S</Duration>
+            <Duration><%= task.duration %></Duration>
             <ManualStart><%= task.start %></ManualStart>
             <ManualFinish><%= task.finish %></ManualFinish>
-            <ManualDuration>PT766H0M0S</ManualDuration>
-            <DurationFormat>21</DurationFormat>
-            <Work>PT1532H0M0S</Work>
+            <ManualDuration><%= task.duration %></ManualDuration>
+            <DurationFormat>53</DurationFormat>
+            <Work>PT0H0M0S</Work>
             <ResumeValid>0</ResumeValid>
             <EffortDriven>0</EffortDriven>
             <Recurring>0</Recurring>
             <OverAllocated>0</OverAllocated>
             <Estimated>1</Estimated>
             <Milestone>0</Milestone>
-            <Summary>1</Summary>
+            <Summary>0</Summary>
             <DisplayAsSummary>0</DisplayAsSummary>
-            <Critical>1</Critical>
+            <Critical>0</Critical>
             <IsSubproject>0</IsSubproject>
             <IsSubprojectReadOnly>0</IsSubprojectReadOnly>
             <ExternalTask>0</ExternalTask>
@@ -286,10 +286,10 @@
             <ActualOvertimeCost>0</ActualOvertimeCost>
             <ActualWork>PT0H0M0S</ActualWork>
             <ActualOvertimeWork>PT0H0M0S</ActualOvertimeWork>
-            <RegularWork>PT1532H0M0S</RegularWork>
-            <RemainingDuration>PT766H0M0S</RemainingDuration>
+            <RegularWork>PT0H0M0S</RegularWork>
+            <RemainingDuration><%= task.duration %></RemainingDuration>
             <RemainingCost>0</RemainingCost>
-            <RemainingWork>PT1532H0M0S</RemainingWork>
+            <RemainingWork>PT0H0M0S</RemainingWork>
             <RemainingOvertimeCost>0</RemainingOvertimeCost>
             <RemainingOvertimeWork>PT0H0M0S</RemainingOvertimeWork>
             <ACWP>0.00</ACWP>
@@ -314,7 +314,7 @@
                 <LinkLag>0</LinkLag>
                 <LagFormat>7</LagFormat>
             </PredecessorLink><% } %> 
-            <IsPublished>0</IsPublished>
+            <IsPublished>1</IsPublished>
             <CommitmentType>0</CommitmentType>
         </Task><% }); %>
     </Tasks>
