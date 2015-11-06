@@ -13,7 +13,7 @@ var ResourceReference = Backbone.Model.extend({
         // some server params
         WBSProfileID : params.profile,
         WBS_ID : params.profile,
-        PartitNo : '2b00da46b57c0395', // have no idea what is that
+        PartitNo : params.sitekey, // have no idea what is that
         ProjectRef : params.project,
         sitekey: params.sitekey
 
