@@ -8,7 +8,7 @@ var NestedTaskView = BasicTaskView.extend({
     _color : '#b3d1fc',
     _borderSize : 6,
     _barHeight : 10,
-    _completeColor : '#C95F10',
+    _completeColor : '#336699',
     el : function() {
         var group = BasicTaskView.prototype.el.call(this);
         var leftBorder = new Konva.Line({
