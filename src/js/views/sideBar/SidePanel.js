@@ -121,6 +121,9 @@ var SidePanel = React.createClass({
         this.hightlighter.remove();
     },
     onSelectRow(selectedModelCid, selectedRow) {
+        if (this.selecteableRows.indexOf(selectedRow) === -1) {
+            return;
+        }
         this.setState({
             selectedRow,
             selectedModelCid
@@ -140,12 +143,13 @@ var SidePanel = React.createClass({
             editedRow
         });
     },
+    selecteableRows: ['name', 'complete', 'start', 'end', 'duration'],
     onKeyDown(e) {
         if (e.target.tagName === 'INPUT') {
             return;
         }
         e.preventDefault();
-        const rows = ['name', 'complete', 'start', 'end', 'duration'];
+        const rows = this.selecteableRows;
         let i = rows.indexOf(this.state.selectedRow);
         const tasks = this.props.collection;
         let modelIndex = tasks.get(this.state.selectedModelCid).get('sortindex');

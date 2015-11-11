@@ -28,6 +28,8 @@ var TaskItem = React.createClass({
         let events = [
             'change:name', 'change:complete', 'change:start',
             'change:end', 'change:duration', 'change:hightlight',
+            'change:milestone', 'change:deliverable', 'change:reportable',
+            'change:timesheets', 'change:acttimesheets',
             'change:Comments'
         ];
         this.props.model.on(events.join(' '), function() {
@@ -39,6 +41,20 @@ var TaskItem = React.createClass({
     },
     _findNestedLevel: function() {
         return this.props.model.getOutlineLevel() - 1;
+    },
+    _createStatusField: function(col) {
+        const handleClick = () => {
+            if (col === 'milestone') {
+                return;
+            }
+            this.props.model.set(col, !this.props.model.get(col));
+        };
+        if (this.props.model.get(col)) {
+            return (
+                <img src={`/img/icon-${col}.png`} onClick={handleClick}></img>
+            );
+        }
+        return (<div onClick={handleClick} style={{width: '20px', height: '20px'}}></div>);
     },
     _createField: function(col) {
         const isColInEdit = (this.props.editedRow === col);
@@ -241,6 +257,31 @@ var TaskItem = React.createClass({
                     style={{boxShadow: selectedRow === 'duration' ? shadowBorder : null}}
                 >
                     {this._createField('duration')}
+                </li>
+                <li key="milestone" className="task-col col-milestone" data-col="milestone"
+                    style={{boxShadow: selectedRow === 'milestone' ? shadowBorder : null}}
+                >
+                    {this._createStatusField('milestone')}
+                </li>
+                <li key="deliverable" className="task-col col-deliverable" data-col="deliverable"
+                    style={{boxShadow: selectedRow === 'deliverable' ? shadowBorder : null}}
+                >
+                    {this._createStatusField('deliverable')}
+                </li>
+                <li key="reportable" className="task-col col-reportable" data-col="reportable"
+                    style={{boxShadow: selectedRow === 'reportable' ? shadowBorder : null}}
+                >
+                    {this._createStatusField('reportable')}
+                </li>
+                <li key="timesheets" className="task-col col-timesheets" data-col="timesheets"
+                    style={{boxShadow: selectedRow === 'timesheets' ? shadowBorder : null}}
+                >
+                    {this._createStatusField('timesheets')}
+                </li>
+                <li key="acttimesheets" className="task-col col-acttimesheets" data-col="acttimesheets"
+                    style={{boxShadow: selectedRow === 'acttimesheets' ? shadowBorder : null}}
+                >
+                    {this._createStatusField('acttimesheets')}
                 </li>
             </ul>
         );

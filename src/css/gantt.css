@@ -2,6 +2,15 @@ body {
 	line-height: 1;
 }
 
+.ui.segment {
+    border-radius: 0 !important;   
+}
+
+ol.sortable li {
+/*     border: 1px solid #f3f3f3 !important; */
+    box-shadow: 0 0 0 0.3px lightgrey;
+}
+
 body {
 	font-family: tahoma, verdana, helvetica;
 	font-size: 0.8em;
@@ -11,8 +20,8 @@ body {
 
 .Gantt {
 	height: 100%;
-	width: 98%;
-	margin-left: 1%;
+	/* width: 98%;
+	margin-left: 1%;*/
 }
 
 
@@ -93,7 +102,7 @@ div.menu-container,#gantt-container{
 }
 
 .panel-expanded {
-    width: 650px;
+    width: 750px;
 }
 
 .task:hover,.sub-task:hover{
@@ -139,7 +148,7 @@ div.menu-container {
 	/* display: inline-block; */
 	min-height: 100%;
 	left: 0%;
-	padding: 0 10px;
+	padding: 0 1px;
 	z-index: 1;
 	position: absolute;
 	background: rgb(255, 255, 255);
@@ -273,8 +282,29 @@ div.gantt-chart-container {
 }
 
 .task .col-duration{
-	padding-left: 10px;
-	width: 50px;
+    padding-left: 10px;
+    width: 50px;
+}
+
+.task .col-milestone{
+    width: 20px;
+    min-height: 20px; 
+}
+.task .col-deliverable{
+    width: 20px;
+    min-height: 20px; 
+}
+.task .col-reportable{
+    width: 20px;
+    min-height: 20px; 
+}
+.task .col-timesheets{
+    width: 20px;
+    min-height: 20px; 
+}
+.task .col-acttimesheets{
+    width: 20px;
+    min-height: 20px; 
 }
 
 .task .selected {
@@ -317,7 +347,7 @@ i.icon{
     top: 0;
     z-index: 2;
     margin-top: 0;
-    width: 98%;
+    width: 100%;
 }
 
 .hold-scroll {
@@ -384,6 +414,7 @@ i.icon{
 /*}*/
 #top-menu{
     z-index:1000 !important;
+    background-color: #fafafa;
 }
 
 #zoom-menu .selected {
