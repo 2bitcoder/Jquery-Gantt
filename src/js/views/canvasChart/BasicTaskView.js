@@ -11,10 +11,10 @@ var BasicTaskView = Backbone.KonvaView.extend({
     _fullHeight: 21,
     _topPadding: 3,
     _barHeight: 15,
-    _completeColor: '#e88134',
+    _completeColor: '#77A4D2',
     _toolbarOffset: 20,
     _resourceListOffset: 20,
-    _milestoneColor: 'blue',
+    _milestoneColor: '#336699',
     _milestoneOffset: 0,
     initialize: function(params) {
         this.height = this._fullHeight;
