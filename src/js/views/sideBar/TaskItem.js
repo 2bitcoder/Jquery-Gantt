@@ -44,14 +44,14 @@ var TaskItem = React.createClass({
     },
     _createStatusField: function(col) {
         const handleClick = () => {
-            if (col === 'milestone') {
+            if (col === 'milestone' && this.props.model.isNested()) {
                 return;
             }
             this.props.model.set(col, !this.props.model.get(col));
         };
         if (this.props.model.get(col)) {
             return (
-                <img src={`/img/icon-${col}.png`} onClick={handleClick}></img>
+                <img src={`img/icon-${col}.png`} onClick={handleClick}></img>
             );
         }
         return (<div onClick={handleClick} style={{width: '20px', height: '20px'}}></div>);
@@ -221,7 +221,7 @@ var TaskItem = React.createClass({
                 }}
             >
                 <li key="info" className="task-col col-info">
-                    <img src="css/images/info.png" onClick={this.onClick}/>
+                    <img src="img/info.png" onClick={this.showContext}/>
                 </li>
                 <li key="sortindex" className="col-sortindex">
                     {model.get('sortindex') + 1}
