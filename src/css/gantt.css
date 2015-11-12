@@ -7,8 +7,7 @@ body {
 }
 
 ol.sortable li {
-/*     border: 1px solid #f3f3f3 !important; */
-    box-shadow: 0 0 0 0.3px lightgrey;
+    box-shadow: 0 0 0 1px #E6E6E6;
 }
 
 body {
