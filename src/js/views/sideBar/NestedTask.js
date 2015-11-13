@@ -25,7 +25,9 @@ var NestedTask = React.createClass({
                     onEditRow: this.props.onEditRow,
                     editedRow: this.props.editedRow,
                     selectedRow: this.props.selectedRow,
-                    selectedModelCid: this.props.selectedModelCid
+                    selectedModelCid: this.props.selectedModelCid,
+                    getAllStatuses: this.props.getAllStatuses,
+                    getStatusId: this.props.getStatusId
                 });
             }
             return React.createElement('li', {
@@ -41,7 +43,9 @@ var NestedTask = React.createClass({
                             onSelectRow: this.props.onSelectRow,
                             onEditRow: this.props.onEditRow,
                             editedRow: (this.props.selectedModelCid === task.cid) && this.props.editedRow,
-                            selectedRow: (this.props.selectedModelCid === task.cid) && this.props.selectedRow
+                            selectedRow: (this.props.selectedModelCid === task.cid) && this.props.selectedRow,
+                            getAllStatuses: this.props.getAllStatuses,
+                            getStatusId: this.props.getStatusId
                         })
                     );
         });
@@ -60,7 +64,9 @@ var NestedTask = React.createClass({
                         onSelectRow: this.props.onSelectRow,
                         onEditRow: this.props.onEditRow,
                         editedRow: (this.props.selectedModelCid === this.props.model.cid) && this.props.editedRow,
-                        selectedRow: (this.props.selectedModelCid === this.props.model.cid) && this.props.selectedRow
+                        selectedRow: (this.props.selectedModelCid === this.props.model.cid) && this.props.selectedRow,
+                        getAllStatuses: this.props.getAllStatuses,
+                        getStatusId: this.props.getStatusId
                     })
                 ),
                 React.createElement('ol', {

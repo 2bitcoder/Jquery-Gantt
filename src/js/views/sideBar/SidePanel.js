@@ -143,7 +143,7 @@ var SidePanel = React.createClass({
             editedRow
         });
     },
-    selecteableRows: ['name', 'complete', 'start', 'end', 'duration'],
+    selecteableRows: ['name', 'complete', 'status', 'start', 'end', 'duration'],
     onKeyDown(e) {
         if (e.target.tagName === 'INPUT') {
             return;
@@ -189,6 +189,17 @@ var SidePanel = React.createClass({
             selectedRow: null
         });
     },
+    getAllStatuses() {
+        return [
+            'Backlog',
+            'Ready',
+            'In Progress',
+            'Complete'
+        ];
+    },
+    getStatusId(statusText) {
+        return this.props.settings.findStatusId(statusText);
+    },
     render: function() {
         var tasks = [];
         this.props.collection.each((task) => {
@@ -207,7 +218,9 @@ var SidePanel = React.createClass({
                     onEditRow: this.onEditRow,
                     editedRow: this.state.editedRow,
                     selectedRow: this.state.selectedRow,
-                    selectedModelCid: this.state.selectedModelCid
+                    selectedModelCid: this.state.selectedModelCid,
+                    getAllStatuses: this.getAllStatuses,
+                    getStatusId: this.getStatusId
                 }));
             } else {
                 tasks.push(React.createElement('li', {
@@ -221,7 +234,9 @@ var SidePanel = React.createClass({
                         onSelectRow: this.onSelectRow,
                         onEditRow: this.onEditRow,
                         editedRow: (this.state.selectedModelCid === task.cid) && this.state.editedRow,
-                        selectedRow: (this.state.selectedModelCid === task.cid) && this.state.selectedRow
+                        selectedRow: (this.state.selectedModelCid === task.cid) && this.state.selectedRow,
+                        getAllStatuses: this.getAllStatuses,
+                        getStatusId: this.getStatusId
                     })
                 ));
             }

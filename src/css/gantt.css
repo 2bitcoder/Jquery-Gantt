@@ -97,11 +97,11 @@ div.menu-container,#gantt-container{
 }
 
 .panel-collapsed {
-    width: 425px;
+    width: 414px;
 }
 
 .panel-expanded {
-    width: 750px;
+    width: 826px;
 }
 
 .task:hover,.sub-task:hover{
@@ -190,10 +190,10 @@ div.menu-container {
 }
 
 .task-container{
-	width: 750px;
+	width: 850px;
 }
 .task-container-title{
-    width: 750px;
+    width: 850px;
 }
 .task{
 	white-space: nowrap;
@@ -265,6 +265,11 @@ div.gantt-chart-container {
 
 .task .col-name div{
 	display: inline-block;
+}
+
+.task .col-status{
+    /*padding-left: 10px;*/
+    width: 80px;
 }
 
 .task .col-start{

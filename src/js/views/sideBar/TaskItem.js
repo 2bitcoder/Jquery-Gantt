@@ -15,20 +15,24 @@ var TaskItem = React.createClass({
         return true;
     },
     componentDidUpdate: function() {
-        const $input = $(this.getDOMNode()).find('input');
+        let $input = $(this.getDOMNode()).find('input');
+        if ($input.length > 0) {
+            $input.focus();
+            // move cursor to the end of input. Tip from:
+            // http://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end-of-text-in-text-input-element
+            const val = $input.val(); //store the value of the element
+            $input.val(''); //clear the value of the element
+            $input.val(val); //set that value back.
+        }
+        $input = $(this.getDOMNode()).find('select');
         $input.focus();
-        // move cursor to the end of input. Tip from:
-        // http://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end-of-text-in-text-input-element
-        const val = $input.val(); //store the value of the element
-        $input.val(''); //clear the value of the element
-        $input.val(val); //set that value back.
-
     },
     componentDidMount: function() {
         let events = [
             'change:name', 'change:complete', 'change:start',
             'change:end', 'change:duration', 'change:hightlight',
             'change:milestone', 'change:deliverable', 'change:reportable',
+            'change:status',
             'change:timesheets', 'change:acttimesheets',
             'change:Comments'
         ];
@@ -42,7 +46,7 @@ var TaskItem = React.createClass({
     _findNestedLevel: function() {
         return this.props.model.getOutlineLevel() - 1;
     },
-    _createStatusField: function(col) {
+    _createStatusIconField: function(col) {
         const handleClick = () => {
             if (col === 'milestone' && this.props.model.isNested()) {
                 return;
@@ -73,6 +77,12 @@ var TaskItem = React.createClass({
         }
         if (col === 'duration') {
             return Date.daysdiff(model.get('start'), model.get('end')) + ' d';
+        }
+        if (col === 'status') {
+            const text = _.find(this.props.getAllStatuses(), (t) => {
+                return this.props.getStatusId(t).toString() === this.props.model.get('status').toString();
+            });
+            return text || 'Unrecognized';
         }
         return model.get(col);
     },
@@ -125,6 +135,32 @@ var TaskItem = React.createClass({
             }.bind(this)
         });
     },
+    _createStatusField() {
+        const options = this.props.getAllStatuses().map((statusText) => {
+            const statusId = this.props.getStatusId(statusText);
+            return (
+                <option key={statusText} value={statusId}>{statusText}</option>
+            );
+        });
+        return (
+            <select
+                value = {this.props.model.get('status')}
+                onClick={(e) => {
+                    // e.stopPropagation();
+                }}
+                onChange={(e) => {
+                    this.props.model.save('status', e.target.value);
+                    this.props.onEditRow(this.props.model.cid, null);
+                }}
+                style={{
+                    width: '100%',
+                    fontSize: '11px'
+                }}
+            >
+                {options}
+            </select>
+        );
+    },
     _createEditField: function(col) {
         var val = this.props.model.get(col);
         if (col === 'start' || col === 'end') {
@@ -132,6 +168,9 @@ var TaskItem = React.createClass({
         }
         if (col === 'duration') {
             return this._createDurationField();
+        }
+        if (col === 'status') {
+            return this._createStatusField();
         }
         return React.createElement('input', {
             className: 'nameInput',
@@ -243,6 +282,11 @@ var TaskItem = React.createClass({
                 >
                     {this._createField('complete')}
                 </li>
+                <li key="status" className="task-col col-status" data-col="status"
+                    style={{boxShadow: selectedRow === 'status' ? shadowBorder : null}}
+                >
+                    {this._createField('status')}
+                </li>
                 <li key="start" className="task-col col-start" data-col="start"
                     style={{boxShadow: selectedRow === 'start' ? shadowBorder : null}}
                 >
@@ -261,27 +305,27 @@ var TaskItem = React.createClass({
                 <li key="milestone" className="task-col col-milestone" data-col="milestone"
                     style={{boxShadow: selectedRow === 'milestone' ? shadowBorder : null}}
                 >
-                    {this._createStatusField('milestone')}
+                    {this._createStatusIconField('milestone')}
                 </li>
                 <li key="deliverable" className="task-col col-deliverable" data-col="deliverable"
                     style={{boxShadow: selectedRow === 'deliverable' ? shadowBorder : null}}
                 >
-                    {this._createStatusField('deliverable')}
+                    {this._createStatusIconField('deliverable')}
                 </li>
                 <li key="reportable" className="task-col col-reportable" data-col="reportable"
                     style={{boxShadow: selectedRow === 'reportable' ? shadowBorder : null}}
                 >
-                    {this._createStatusField('reportable')}
+                    {this._createStatusIconField('reportable')}
                 </li>
                 <li key="timesheets" className="task-col col-timesheets" data-col="timesheets"
                     style={{boxShadow: selectedRow === 'timesheets' ? shadowBorder : null}}
                 >
-                    {this._createStatusField('timesheets')}
+                    {this._createStatusIconField('timesheets')}
                 </li>
                 <li key="acttimesheets" className="task-col col-acttimesheets" data-col="acttimesheets"
                     style={{boxShadow: selectedRow === 'acttimesheets' ? shadowBorder : null}}
                 >
-                    {this._createStatusField('acttimesheets')}
+                    {this._createStatusIconField('acttimesheets')}
                 </li>
             </ul>
         );
