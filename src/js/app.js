@@ -1,4 +1,4 @@
-require('babel/external-helpers');
+// require('babel/external-helpers');
 
 import TaskCollection from './collections/TaskCollection';
 import Settings from './models/SettingModel';

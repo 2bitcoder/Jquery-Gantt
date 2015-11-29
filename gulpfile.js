@@ -10,7 +10,7 @@ gulp.task('scripts', function() {
     gulp.src('src/js/app.js')
         .pipe(browserify({
             debug: true,
-            transform: [[ {externalHelpers: true}, 'babelify'], 'brfs']
+            transform: [['babelify'], 'brfs']
         }).on('error', gutil.log))
         .pipe(rename('bundle.js'))
         .pipe(gulp.dest('./src/'))

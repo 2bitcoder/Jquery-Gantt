@@ -4,7 +4,7 @@
   "description": "",
   "main": "test_server.js",
   "scripts": {
-    "start": "node test_server.js",
+    "start": "gulp",
     "test": "node node_modules/mocha/bin/mocha --compilers js:babel/register",
     "debug-test": "node node_modules/mocha/bin/mocha --debug-brk --compilers js:babel/register"
   },

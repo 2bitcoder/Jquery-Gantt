@@ -51,7 +51,7 @@ var TaskItem = React.createClass({
             if (col === 'milestone' && this.props.model.isNested()) {
                 return;
             }
-            this.props.model.set(col, !this.props.model.get(col));
+            this.props.model.save(col, !this.props.model.get(col));
         };
         if (this.props.model.get(col)) {
             return (
