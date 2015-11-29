@@ -7,6 +7,12 @@ var TaskCollection = Backbone.Collection.extend({
 		this._preventSorting = false;
 		this.subscribe();
 	},
+	setDefaultStatusId(id){
+		this.defaultStatusId = id;
+	},
+	setClosedStatusId(id) {
+		this.closedStatusId = id;
+	},
 	comparator: function(model) {
 		return model.get('sortindex');
 	},
@@ -94,6 +100,9 @@ var TaskCollection = Backbone.Collection.extend({
 					model.set('parentid', 0);
 				}
 			}
+			if (this.defaultStatusId) {
+				model.set('status', this.defaultStatusId);
+			}
 		});
 		this.listenTo(this, 'reset', function() {
 			this.linkChildren();
@@ -112,6 +121,11 @@ var TaskCollection = Backbone.Collection.extend({
 			}
 			if (!this._preventSorting) {
 				this.checkSortedIndex();
+			}
+		});
+		this.listenTo(this, 'change:complete', (task) => {
+			if (task.get('complete') == 100 && this.closedStatusId !== undefined) {
+				task.set('status', this.closedStatusId);
 			}
 		});
 	},

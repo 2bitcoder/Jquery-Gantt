@@ -47,9 +47,10 @@ $(() => {
         }).render();
     })
     .then(() => {
-
-
-
+        tasks.setDefaultStatusId(settings.getDefaultStatusId());
+        tasks.setClosedStatusId(settings.getClosedStatusId());
+    })
+    .then(() => {
         // hide loading
         $('#loader').fadeOut(function() {
 

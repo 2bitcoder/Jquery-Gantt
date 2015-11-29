@@ -82,7 +82,35 @@ var SettingModel = Backbone.Model.extend({
         }
         return statuses;
     },
-    findDefaultStatusId : function() {
+    getDefaultStatusId() {
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Status') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    if (statusItem.cDefault) {
+                        return statusItem.ID;
+                    }
+                }
+                console.warn('no default status in config');
+            }
+        }
+    },
+    getClosedStatusId() {
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Status') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    if (statusItem.cClose) {
+                        return statusItem.ID;
+                    }
+                }
+                console.warn('no closed status in config');
+            }
+        }
+    },
+    findDefaultStatusId: function() {
         for(var category in this.statuses.cfgdata) {
             var data = this.statuses.cfgdata[category];
             if (data.Category === 'Task Status') {
