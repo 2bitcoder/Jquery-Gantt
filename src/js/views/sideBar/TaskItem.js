@@ -161,6 +161,16 @@ var TaskItem = React.createClass({
             </select>
         );
     },
+    _requestSave() {
+        if (this.waiting) {
+            return;
+        }
+        this.waiting = true;
+        setTimeout(() => {
+            this.waiting = false;
+            this.props.model.save();
+        }, 500);
+    },
     _createEditField: function(col) {
         var val = this.props.model.get(col);
         if (col === 'start' || col === 'end') {
@@ -183,12 +193,12 @@ var TaskItem = React.createClass({
             onKeyDown: function(e) {
                 if (e.keyCode === 13 || e.keyCode === 27) {
                     this.props.onEditRow(this.props.model.cid, null);
-                    this.props.model.save();
+                    this._requestSave();
                 }
             }.bind(this),
             onBlur: function() {
                 this.props.onEditRow(this.props.model.cid, null);
-                this.props.model.save();
+                this._requestSave();
             }.bind(this)
         });
     },
