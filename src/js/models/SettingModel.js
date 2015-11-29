@@ -69,6 +69,19 @@ var SettingModel = Backbone.Model.extend({
             }
         }
     },
+    getAllStatuses() {
+        const statuses = [];
+        for(var category in this.statuses.cfgdata) {
+            var data = this.statuses.cfgdata[category];
+            if (data.Category === 'Task Status') {
+                for (var i in data.data) {
+                    var statusItem = data.data[i];
+                    statuses.push(statusItem.cfg_item);
+                }
+            }
+        }
+        return statuses;
+    },
     findDefaultStatusId : function() {
         for(var category in this.statuses.cfgdata) {
             var data = this.statuses.cfgdata[category];

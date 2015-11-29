@@ -190,12 +190,13 @@ var SidePanel = React.createClass({
         });
     },
     getAllStatuses() {
-        return [
-            'Backlog',
-            'Ready',
-            'In Progress',
-            'Complete'
-        ];
+        // return [
+        //     'Backlog',
+        //     'Ready',
+        //     'In Progress',
+        //     'Complete'
+        // ];
+        return this.props.settings.getAllStatuses();
     },
     getStatusId(statusText) {
         return this.props.settings.findStatusId(statusText);
