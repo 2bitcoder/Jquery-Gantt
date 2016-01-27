@@ -16,7 +16,7 @@ var TaskItem = React.createClass({
     },
     componentDidUpdate: function() {
         let $input = $(this.getDOMNode()).find('input');
-        if ($input.length > 0) {
+        if ($input.length > 0 && !$input.is(':focus')) {
             $input.focus();
             // move cursor to the end of input. Tip from:
             // http://stackoverflow.com/questions/511088/use-javascript-to-place-cursor-at-end-of-text-in-text-input-element
@@ -24,8 +24,7 @@ var TaskItem = React.createClass({
             $input.val(''); //clear the value of the element
             $input.val(val); //set that value back.
         }
-        $input = $(this.getDOMNode()).find('select');
-        $input.focus();
+        $input = $(this.getDOMNode()).find('select').focus();
     },
     componentDidMount: function() {
         let events = [
