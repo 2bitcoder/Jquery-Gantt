@@ -46,6 +46,7 @@ var SidePanel = React.createClass({
             containerSelector: 'ol',
             itemSelector: '.drag-item',
             placeholder: '<li class="placeholder sort-placeholder"/>',
+            handle: '.col-sortindex',
             onDragStart: ($item, position, _super, event) => {
                 _super($item, position, _super, event);
                 this.hightlighter.remove();
