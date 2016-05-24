@@ -17,7 +17,6 @@
         "no-bitwise": 2,
         "no-caller": 2,
         "no-catch-shadow": 2,
-        "comma-dangle": 2,
         "no-underscore-dangle": 0,
         "no-cond-assign": 2,
         "no-console": 0,

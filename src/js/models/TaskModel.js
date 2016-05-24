@@ -137,6 +137,9 @@ var TaskModel = Backbone.Model.extend({
     hasInDeps: function (model) {
         return !!this.depends.get(model.id);
     },
+    hasDeps: function() {
+        return this.depends.length !== 0;
+    },
     toJSON: function() {
         var json = Backbone.Model.prototype.toJSON.call(this);
         delete json.resources;
@@ -159,7 +162,7 @@ var TaskModel = Backbone.Model.extend({
         }
     },
     clearDependence: function() {
-        this.depends.each((m) => {
+        this.depends.toArray().forEach((m) => {
             this.depends.remove(m);
         });
     },

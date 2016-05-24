@@ -123,6 +123,7 @@ var GanttChartView = Backbone.View.extend({
         var borderWidth = sdisplay.borderWidth || 1;
         var offset = 1;
         var rowHeight = 20;
+        var stage = this.stage;
 
 
         return function(context){
@@ -242,12 +243,15 @@ var GanttChartView = Backbone.View.extend({
     _cacheBackground: function() {
         var sattr = this.settings.sattr;
         var lineWidth = Date.daysdiff(sattr.boundaryMin, sattr.boundaryMax) * sattr.daysWidth;
-        this.stage.find('.grid,.topBar').cache({
-            x: 0,
-            y: 0,
-            width: lineWidth,
-            height: this.stage.height()
-        });
+        this.stage.find('.grid,.topBar').clearCache();
+        if (lineWidth < 5000) {
+            this.stage.find('.grid,.topBar').cache({
+                x: 0,
+                y: 0,
+                width: lineWidth,
+                height: this.stage.height()
+            });
+        }
     },
     _updateTodayLine: function() {
       var attrs = this.settings.getSetting('attr'),

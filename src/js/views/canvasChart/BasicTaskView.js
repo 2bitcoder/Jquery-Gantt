@@ -47,7 +47,8 @@ var BasicTaskView = Backbone.KonvaView.extend({
             'dragstart .dependencyTool': '_startConnecting',
             'dragmove .dependencyTool': '_moveConnect',
             'dragend .dependencyTool': '_createDependency',
-            'click .resources': '_editResources'
+            'click .resources': '_editResources',
+            'click .deleteDeps': '_deleteDeps'
         };
     },
     el: function() {
@@ -122,6 +123,25 @@ var BasicTaskView = Backbone.KonvaView.extend({
             name: 'resources',
             visible: false
         });
+
+        var deleteDeps = new Konva.Group({
+            y: this._topPadding,
+            x: -this._barHeight,
+            name: 'deleteDeps',
+            visible: false
+        });
+        deleteDeps.add(new Konva.Rect({
+            fill: 'red',
+            width: this._barHeight,
+            height: this._barHeight
+        }));
+        deleteDeps.add(new Konva.Text({
+            text: 'X',
+            fill: 'white',
+            x: 3,
+            fontSize: this._barHeight
+        }));
+
         var size = self._barHeight + (self._borderSize || 0);
         var toolback = new Konva.Rect({
             fill: 'lightgrey',
@@ -143,7 +163,7 @@ var BasicTaskView = Backbone.KonvaView.extend({
             listening: false
         });
 
-        group.add(fakeBackground, diamond, rect, completeRect, arc, toolbar, resourceList);
+        group.add(fakeBackground, diamond, rect, completeRect, arc, toolbar, resourceList, deleteDeps);
         return group;
     },
     _editResources: function() {
@@ -153,6 +173,9 @@ var BasicTaskView = Backbone.KonvaView.extend({
         });
         var pos = this.el.getStage().getPointerPosition();
         view.render(pos);
+    },
+    _deleteDeps: function() {
+        this.model.clearDependence();
     },
     _updateDates: function() {
         var attrs = this.settings.getSetting('attr'),
@@ -172,12 +195,16 @@ var BasicTaskView = Backbone.KonvaView.extend({
     _showTools: function() {
         this.el.find('.dependencyTool').show();
         this.el.find('.resources').show();
-        this.el.getLayer().draw();
+        if (this.model.hasDeps()) {
+            this.el.find('.deleteDeps').show();
+        }
+        this.el.getLayer().batchDraw();
     },
     _hideTools: function() {
         this.el.find('.dependencyTool').hide();
         this.el.find('.resources').hide();
-        this.el.getLayer().draw();
+        this.el.find('.deleteDeps').hide();
+        this.el.getLayer().batchDraw();
     },
     _showResourcesList: function() {
         this.el.find('.resourceList').show();
