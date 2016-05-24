@@ -239,6 +239,8 @@ var TaskModel = Backbone.Model.extend({
         response.start = start < end ? start : end;
         response.end = start < end ? end : start;
 
+        response.start = util.convertDateToUTC(response.start);
+        response.end = util.convertDateToUTC(response.end);
         response.parentid = parseInt(response.parentid || '0', 10);
 
         // remove null params

@@ -40,3 +40,9 @@ module.exports.getURLParams = function() {
 	return prmstr !== null && prmstr !== '' ? transformToAssocArray(prmstr) : {};
 };
 
+module.exports.convertDateToUTC = function(date) {
+    return new Date(
+		date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(),
+		date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()
+	);
+};
