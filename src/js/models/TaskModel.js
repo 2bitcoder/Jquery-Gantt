@@ -218,7 +218,7 @@ var TaskModel = Backbone.Model.extend({
         var start, end;
         if(_.isString(response.start)){
             start = Date.parseExact(util.correctdate(response.start), 'dd/MM/yyyy') ||
-                             new Date(response.start);
+                             new Date(util.correctdate(response.start));
         } else if (_.isDate(response.start)) {
             start = response.start;
         } else {
@@ -229,7 +229,7 @@ var TaskModel = Backbone.Model.extend({
 
         if(_.isString(response.end)){
             end = Date.parseExact(util.correctdate(response.end), 'dd/MM/yyyy') ||
-                           new Date(response.end);
+                           new Date(util.correctdate(response.end));
         } else if (_.isDate(response.end)) {
             end = response.end;
         } else {

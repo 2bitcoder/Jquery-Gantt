@@ -1,7 +1,11 @@
 var monthsCode=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var _ = require('underscore');
 
 module.exports.correctdate = function(str) {
 	"use strict";
+	if (_.last(str) !== 'Z') {
+		return str + 'Z';
+	}
 	return str;
 };
 
